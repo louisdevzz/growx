@@ -1,4 +1,5 @@
 export interface Project {
+  id: string;
   title: string;
   handle?: string;
   description: string;
@@ -20,10 +21,11 @@ export interface Project {
 
 export const featuredProjects: Project[] = [
   {
+    id: "1",
     title: "Food Bank Wallet",
     handle: "@v1.foodbank.near",
     description: "Redistributed all funds to approved public goods on Potlock registry. Used by YEAR of CHEF for auto-redistribution of royalties",
-    image: "/images/food-bank-banner.png",
+    image: "https://ipfs.near.social/ipfs/bafkreie3uy6ihgj37ctnpvqvm5svfmlfeatuvzbzxmu5vtn35spv6x7s4u",
     tags: ["Public Good"],
     amount: 35.20,
     currency: "NEAR",
@@ -41,12 +43,49 @@ export const featuredProjects: Project[] = [
     ]
   },
   {
-    title: "Support Plastic Free Oceans",
-    description: "Support this project to have 90% of the floating ocean plastic removed by 2040...",
-    image: "/images/plastic-free.png",
-    tags: ["Climate", "Social Impact", "NonProfit", "Public Good"],
-    amount: 0.20,
+    id: "2",
+    title: "YEAR OF THE CHEF",
+    handle: "@yearofthechef.near",
+    description: "NFT series of 2024 hand drawn design chef NFTs for public goods supporters",
+    image: "https://ipfs.near.social/ipfs/bafkreihmhep3svtsrihtyrgozms2a57idj7qlfsexifzm3wfwxbzwir6w4",
+    tags: ["Public Good"],
+    amount: 497.26,
     currency: "NEAR",
-    raised: true
+    donors: 42,
+    isApproved: true,
+    followers: 12,
+    following: 3,
+    whyPublicGood: "Supporting public goods through NFT art",
+    teamMembers: "Chef Artists Collective",
+    githubRepos: "None provided",
+    smartContracts: "yearofthechef.near",
+    overview: [
+      "Limited edition NFT collection featuring hand-drawn chef designs",
+      "Portion of sales automatically redistributed to public goods",
+      "Supporting the intersection of art and public goods funding"
+    ]
+  },
+  {
+    id: "3",
+    title: "PotLock",
+    handle: "@potlock.near",
+    description: "PotLock is bringing funding to the table. First public goods funding platform to...",
+    image: "https://ipfs.near.social/ipfs/bafkreianlsqm4fvjk57uzhodrtzwaqg7gbw2kvgq37sqs5cre343zcvdce",
+    tags: ["Public Good"],
+    amount: 624.48,
+    currency: "NEAR",
+    donors: 156,
+    isApproved: true,
+    followers: 89,
+    following: 24,
+    whyPublicGood: "Platform enabling public goods funding",
+    teamMembers: "PotLock Core Team",
+    githubRepos: "github.com/PotLock",
+    smartContracts: "potlock.near",
+    overview: [
+      "First public goods funding platform on NEAR",
+      "Enabling transparent and efficient distribution of funds",
+      "Building infrastructure for sustainable public goods funding"
+    ]
   }
 ];
