@@ -58,17 +58,33 @@ export default function Home() {
               <h2 className="text-base font-medium">ALL PROJECTS</h2>
               <span className="text-gray-500 text-sm">(266)</span>
             </div>
-            <div className="flex items-center gap-3">
-              <button className="px-3 py-1.5 border border-gray-300 rounded-md text-sm">
-                Filter <span className="bg-gray-100 px-1.5 py-0.5 rounded text-xs ml-1">1</span>
+            <div className="flex items-center gap-3 ml-auto">
+              <button className="flex items-center justify-between gap-2 px-4 py-2 bg-white border border-gray-200 rounded-2xl text-sm hover:bg-gray-50">
+                Filter
+                <div className="flex items-center gap-2">
+                  <span className="bg-gray-100 px-2 rounded-full text-xs">1</span>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
               </button>
-              <input
-                type="search"
-                placeholder="Filter projects"
-                className="px-3 py-1.5 border border-gray-300 rounded-md w-[240px] text-sm"
-              />
-              <button className="px-3 py-1.5 border border-gray-300 rounded-md text-sm">
+              <div className="relative flex-1">
+                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 14L10 10M11.3333 6.66667C11.3333 9.244 9.244 11.3333 6.66667 11.3333C4.08934 11.3333 2 9.244 2 6.66667C2 4.08934 4.08934 2 6.66667 2C9.244 2 11.3333 4.08934 11.3333 6.66667Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <input
+                  type="search"
+                  placeholder="Search (266) projects"
+                  className="w-full px-10 py-2 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-gray-200"
+                />
+              </div>
+              <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-2xl text-sm hover:bg-gray-50">
                 Sort
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </button>
             </div>
           </div>

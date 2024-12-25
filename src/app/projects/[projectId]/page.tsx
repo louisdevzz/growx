@@ -3,9 +3,15 @@
 import { useParams } from "next/navigation";
 import Header from "@/components/Header";
 import { featuredProjects } from "@/data/projects";
+import { useState } from 'react';
+import HomeTab from './home-tab/page';
+import SocialFeedTab from './social-feed/page';
+import PotsTab from './pots-tab/page';
+import FundingRaisedTab from './funding-raised/page';
 
 const ProjectDetail = () => {
   const { projectId } = useParams();
+  const [activeTab, setActiveTab] = useState('home');
   
   // Find the project data based on projectId (using kebab case)
   const project = featuredProjects.find(p => 
@@ -15,6 +21,20 @@ const ProjectDetail = () => {
   if (!project) {
     return <div>Project not found</div>;
   }
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'social':
+        return <SocialFeedTab />;
+      case 'pots':
+        return <PotsTab />;
+      case 'funding':
+        return <FundingRaisedTab />;
+      case 'home':
+      default:
+        return <HomeTab project={project} />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -75,55 +95,51 @@ const ProjectDetail = () => {
             {/* Navigation */}
             <div className="mt-8 border-b border-gray-200">
               <nav className="flex gap-8">
-                <a href="#" className="border-b-2 border-gray-900 pb-4 text-sm font-medium">Home</a>
-                <a href="#" className="text-gray-600 pb-4 text-sm">Social Feed</a>
-                <a href="#" className="text-gray-600 pb-4 text-sm">Pots</a>
-                <a href="#" className="text-gray-600 pb-4 text-sm">Funding Related</a>
+                <button 
+                  onClick={() => setActiveTab('home')}
+                  className={`pb-4 text-sm font-medium ${
+                    activeTab === 'home' 
+                      ? 'border-b-2 border-gray-900' 
+                      : 'text-gray-600'
+                  }`}
+                >
+                  Home
+                </button>
+                <button 
+                  onClick={() => setActiveTab('social')}
+                  className={`pb-4 text-sm font-medium ${
+                    activeTab === 'social' 
+                      ? 'border-b-2 border-gray-900' 
+                      : 'text-gray-600'
+                  }`}
+                >
+                  Social Feed
+                </button>
+                <button 
+                  onClick={() => setActiveTab('pots')}
+                  className={`pb-4 text-sm font-medium ${
+                    activeTab === 'pots' 
+                      ? 'border-b-2 border-gray-900' 
+                      : 'text-gray-600'
+                  }`}
+                >
+                  Pots
+                </button>
+                <button 
+                  onClick={() => setActiveTab('funding')}
+                  className={`pb-4 text-sm font-medium ${
+                    activeTab === 'funding' 
+                      ? 'border-b-2 border-gray-900' 
+                      : 'text-gray-600'
+                  }`}
+                >
+                  Funding Raised
+                </button>
               </nav>
             </div>
 
-            {/* About Section */}
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold mb-6">About {project.title}</h2>
-              <div className="space-y-6">
-                <div className="grid grid-cols-[200px,1fr] gap-4">
-                  <div className="font-medium">Overview</div>
-                  <div className="text-gray-600">
-                    {project.overview ? (
-                      <ul className="list-disc pl-4">
-                        {project.overview.map((point, i) => (
-                          <li key={i}>{point}</li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>{project.description}</p>
-                    )}
-                  </div>
-                </div>
-
-                {project.whyPublicGood && (
-                  <div className="grid grid-cols-[200px,1fr] gap-4">
-                    <div className="font-medium">Why we are a public good</div>
-                    <p className="text-gray-600">{project.whyPublicGood}</p>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-[200px,1fr] gap-4">
-                  <div className="font-medium">Team members</div>
-                  <p className="text-gray-600">{project.teamMembers || "No team members to display"}</p>
-                </div>
-
-                <div className="grid grid-cols-[200px,1fr] gap-4">
-                  <div className="font-medium">Github repo(s)</div>
-                  <p className="text-gray-600">{project.githubRepos || "None provided"}</p>
-                </div>
-
-                <div className="grid grid-cols-[200px,1fr] gap-4">
-                  <div className="font-medium">Smart contracts</div>
-                  <p className="text-gray-600">{project.smartContracts || "None provided"}</p>
-                </div>
-              </div>
-            </div>
+            {/* Render tab content */}
+            {renderTabContent()}
           </div>
         </div>
       </div>
