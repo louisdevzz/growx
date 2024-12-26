@@ -1,18 +1,30 @@
 "use client"
 
-interface HomeTabProps {
-  project: {
-    title: string;
-    overview?: string[];
-    description?: string;
-    whyPublicGood?: string;
-    teamMembers?: string;
-    githubRepos?: string;
-    smartContracts?: string;
-  };
+import { useParams } from 'next/navigation'
+
+interface Project {
+  title: string;
+  overview?: string[];
+  description?: string;
+  whyPublicGood?: string;
+  teamMembers?: string;
+  githubRepos?: string;
+  smartContracts?: string;
 }
 
-const HomeTab = ({ project }: HomeTabProps) => {
+// Remove the props interface since we'll get the data differently
+const HomeTab = () => {
+  const params = useParams();
+  const projectId = params.projectId as string;
+  
+  // TODO: Fetch project data using projectId
+  // For now, we'll use a placeholder project
+  const project: Project = {
+    title: "Project Title",
+    description: "Project description"
+    // ... other fields
+  };
+
   return (
     <div className="mt-8">
       <h2 className="text-xl font-semibold mb-6">About {project.title}</h2>

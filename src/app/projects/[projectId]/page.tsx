@@ -32,7 +32,7 @@ const ProjectDetail = () => {
         return <FundingRaisedTab />;
       case 'home':
       default:
-        return <HomeTab project={project} />;
+        return <HomeTab/>;
     }
   };
 

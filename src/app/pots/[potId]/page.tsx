@@ -1,13 +1,17 @@
+'use client'
+
 import Header from '@/components/Header'
 import { pots } from '@/data/pots'
-import { notFound } from 'next/navigation'
+import { notFound, useParams } from 'next/navigation'
 import { featuredProjects } from '@/data/projects'
 import ProjectsTab from './ProjectsTab'
 import ProgressBar from './ProgressBar'
 
-export default function PotDetailsPage({ params }: { params: { potId: string } }) {
-  const pot = pots.find(p => p.id === params.potId)
 
+
+export default function PotDetailsPage() {
+  const { potId } = useParams()
+  const pot = pots.find(p => p.id === potId)
   if (!pot) {
     notFound()
   }
