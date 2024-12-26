@@ -1,6 +1,7 @@
 import Header from '@/components/Header'
 import ProjectCard from '@/components/ProjectCard'
 import { featuredProjects } from '@/data/projects'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -20,9 +21,9 @@ export default function Home() {
               <button className="px-4 py-2 bg-[#E33E3F] text-white rounded-lg hover:bg-[#d63636]">
                 Donate Randomly
               </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              <Link href="/create-project" className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
                 Register Your Project
-              </button>
+              </Link>
             </div>
             <div className="flex gap-12">
               <div>
