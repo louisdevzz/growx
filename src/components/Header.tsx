@@ -3,46 +3,44 @@ import WalletButton from '@/components/WalletButton'
 
 export default function Header() {
   return (
-    <header className="w-full border-b bg-white">
+    <div className="w-full border-b bg-white relative z-10">
       <div className="max-w-full mx-auto px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center">
-          <Link 
+        <Link 
             href="/" 
-            className="flex items-center gap-2 no-underline cursor-pointer hover:opacity-80 transition-all duration-200"
+            className="flex items-center text-2xl font-bold gap-2 no-underline cursor-pointer hover:opacity-80 transition-all duration-200 relative z-10"
           >
-            <span className="text-gray-900 text-xl font-semibold tracking-wide">HOPEFUND</span>
-          </Link>
-        </div>
-        <nav className="flex gap-8 absolute left-1/2 -translate-x-1/2 md:gap-4 sm:order-3 sm:w-full sm:justify-center">
+            HOPEFUND
+        </Link>
+        <nav className="flex gap-10 absolute left-1/2 -translate-x-1/2 md:gap-4 sm:order-3 sm:w-full sm:justify-center z-0 items-center">
           <Link 
             href="/projects" 
-            className="text-sm font-medium no-underline text-gray-900 hover:text-gray-700 transition-colors"
+            className="text-base font-medium no-underline text-gray-900 hover:text-gray-700 transition-colors relative z-10"
           >
             Projects
           </Link>
-          <Link 
+          {/* <Link 
             href="/feed" 
-            className="text-sm font-medium no-underline text-gray-600 hover:text-gray-900 transition-colors"
+            className="text-sm font-medium no-underline text-gray-600 hover:text-gray-900 transition-colors relative z-10"
           >
             Feed
+          </Link> */}
+          <Link 
+            href="/funding-rounds" 
+            className="text-base font-medium no-underline text-gray-600 hover:text-gray-900 transition-colors relative z-10"
+          >
+            Funding rounds
           </Link>
           <Link 
-            href="/pots" 
-            className="text-sm font-medium no-underline text-gray-600 hover:text-gray-900 transition-colors"
+            href="/investors" 
+            className="text-base font-medium no-underline text-gray-600 hover:text-gray-900 transition-colors relative z-10"
           >
-            Pots
-          </Link>
-          <Link 
-            href="/donors" 
-            className="text-sm font-medium no-underline text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            Donors
+            Investors
           </Link>
         </nav>
-        <div className="flex gap-3 sm:gap-2">
+        <div className="flex gap-3 sm:gap-2 relative z-10">
           <WalletButton />
         </div>
       </div>
-    </header>
+    </div>
   )
 }

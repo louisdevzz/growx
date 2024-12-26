@@ -1,6 +1,7 @@
 import Header from '@/components/Header'
 import ProjectCard from '@/components/ProjectCard'
 import { featuredProjects } from '@/data/projects'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -8,30 +9,37 @@ export default function Home() {
       
       <div className="container flex flex-col items-center justify-center ">
         <Header />
-        
-        {/* Hero Section - Updated with responsive padding/margin */}
-        <div className="w-full border-b mx-auto ">
-          <div className="bg-[#FFF5F0] rounded-3xl p-8 w-full ">
-            <p className="text-[#E33E3F] text-sm">Transforming Funding for Public Goods</p>
-            <h1 className="text-3xl font-serif max-w-2xl my-4">
-              Discover impact projects, donate directly, & participate in funding rounds.
+
+        <div className="w-full mx-auto pt-10">
+          <div className="bg-[#F0F7FF] rounded-3xl p-8 w-full">
+            <p className="text-[#2563EB] text-sm font-medium">Empowering Global Impact Through Web3</p>
+            <h1 className="text-4xl max-w-2xl my-4 font-medium">
+              Support Innovative Projects Making Real-World Impact
             </h1>
-            <div className="flex gap-4 mb-8">
-              <button className="px-4 py-2 bg-[#E33E3F] text-white rounded-lg hover:bg-[#d63636]">
-                Donate Randomly
+            <p className="text-gray-600 max-w-xl mb-8">
+              Join our community of changemakers. Fund meaningful projects, track your impact, 
+              and be part of the solution.
+            </p>
+            <div className="flex gap-4 mb-12">
+              <button className="px-6 py-3 bg-[#2563EB] text-white rounded-xl hover:bg-[#1D4ED8] transition-colors">
+                Explore Projects
               </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                Register Your Project
-              </button>
+              <Link href="/projects/create" className="px-6 py-3 border border-[#2563EB] text-[#2563EB] rounded-xl hover:bg-blue-50 transition-colors">
+                Submit Project
+              </Link>
             </div>
-            <div className="flex gap-12">
+            <div className="flex gap-16">
               <div>
-                <p className="text-[#E33E3F] text-xl font-medium">-$51,011.7B</p>
-                <p className="text-gray-600 text-sm">Donated</p>
+                <p className="text-[#2563EB] text-2xl font-semibold">$12.5M+</p>
+                <p className="text-gray-600 text-sm">Total Funded</p>
               </div>
               <div>
-                <p className="text-[#E33E3F] text-xl font-medium">3041</p>
-                <p className="text-gray-600 text-sm">Donations</p>
+                <p className="text-[#2563EB] text-2xl font-semibold">1,234</p>
+                <p className="text-gray-600 text-sm">Active Projects</p>
+              </div>
+              <div>
+                <p className="text-[#2563EB] text-2xl font-semibold">8.2K</p>
+                <p className="text-gray-600 text-sm">Contributors</p>
               </div>
             </div>
           </div>
@@ -39,7 +47,7 @@ export default function Home() {
 
         {/* Featured Projects - Updated layout and spacing */}
         <section className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h2 className="flex items-center justify-between mb-6 text-base font-medium">FEATURED PROJECTS</h2>
+          <h2 className="flex items-center justify-between mb-6 text-base font-medium">RECOMMENDED PROJECTS</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProjects.map((project) => (
               <ProjectCard
