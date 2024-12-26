@@ -8,7 +8,7 @@ const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'HOPEFUND',
-  description: 'Fund meaningful projects, track your impact, and be part of the solution',
+  description: 'Empowering Global Impact Through Web3',
 }
 
 export default function RootLayout({
