@@ -10,7 +10,7 @@ export default function Home() {
         <Header />
         
         {/* Hero Section - Updated with responsive padding/margin */}
-        <div className="w-full border-b mx-auto px-4">
+        <div className="w-full border-b mx-auto ">
           <div className="bg-[#FFF5F0] rounded-3xl p-8 w-full ">
             <p className="text-[#E33E3F] text-sm">Transforming Funding for Public Goods</p>
             <h1 className="text-3xl font-serif max-w-2xl my-4">

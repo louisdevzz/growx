@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 export default function Header() {
   return (
     <header className="w-full border-b bg-white">
-      <div className="max-w-[1200px] mx-auto px-6 py-3 flex items-center justify-between">
+      <div className="max-w-full mx-auto px-6 py-3 flex items-center justify-between">
         <div className="flex items-center">
           <Link 
             href="/" 

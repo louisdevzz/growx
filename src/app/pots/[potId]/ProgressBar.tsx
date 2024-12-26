@@ -70,11 +70,20 @@ export default function ProgressBar() {
   return (
     <div className="border-b">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center gap-8 py-3">
+        <div className="flex items-center gap-8 py-3 relative">
+          <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-gray-300 -translate-y-1/2" />
+          
+          <div 
+            className="absolute top-1/2 left-0 h-[2px] bg-green-500 -translate-y-1/2" 
+            style={{ 
+              width: `${(stages.filter(s => s.isCompleted).length / (stages.length - 1)) * 100}%`
+            }} 
+          />
+
           {stages.map((stage, index) => (
             <div 
               key={stage.name}
-              className={`flex items-center gap-2 ${index === 1 ? 'flex-1' : ''}`}
+              className={`flex items-center gap-2 ${index === 1 ? 'flex-1' : 'w-auto'} relative z-10 bg-white`}
             >
               <div className={`w-5 h-5 rounded-full flex items-center justify-center
                 ${stage.isCompleted ? 'bg-green-500' : 'border-2'}

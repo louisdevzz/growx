@@ -6,6 +6,8 @@ import { notFound, useParams } from 'next/navigation'
 import { featuredProjects } from '@/data/projects'
 import ProjectsTab from './ProjectsTab'
 import ProgressBar from './ProgressBar'
+import DonationsTab from './DonationsTab'
+import { useState } from 'react'
 
 
 
@@ -15,6 +17,8 @@ export default function PotDetailsPage() {
   if (!pot) {
     notFound()
   }
+
+  const [activeTab, setActiveTab] = useState('projects')
 
   return (
     <>
@@ -31,25 +35,40 @@ export default function PotDetailsPage() {
             
             <div className="border-b">
               <div className="flex gap-8">
-                <button className="px-4 py-2 border-b-2 border-black font-medium">Projects</button>
+                <button 
+                  className={`px-4 py-2 border-b-2 ${activeTab === 'projects' ? 'border-black font-medium' : 'border-transparent text-gray-500'}`}
+                  onClick={() => setActiveTab('projects')}
+                >
+                  Projects
+                </button>
+                <button 
+                  className={`px-4 py-2 border-b-2 ${activeTab === 'donations' ? 'border-black font-medium' : 'border-transparent text-gray-500'}`}
+                  onClick={() => setActiveTab('donations')}
+                >
+                  Donations
+                </button>
                 <button className="px-4 py-2 text-gray-500">Applications</button>
-                <button className="px-4 py-2 text-gray-500">Donations</button>
                 <button className="px-4 py-2 text-gray-500">Sponsors</button>
                 <button className="px-4 py-2 text-gray-500">Payouts</button>
                 <button className="px-4 py-2 text-gray-500">Settings</button>
               </div>
             </div>
 
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search projects"
-                className="w-full px-4 py-2 border rounded-lg"
-              />
-              <span className="absolute right-3 top-2.5 text-gray-400">🔍</span>
-            </div>
+            {activeTab === 'projects' && (
+              <>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search projects"
+                    className="w-full px-4 py-2 border rounded-lg"
+                  />
+                  <span className="absolute right-3 top-2.5 text-gray-400">🔍</span>
+                </div>
+                <ProjectsTab projects={featuredProjects} />
+              </>
+            )}
 
-            <ProjectsTab projects={featuredProjects} />
+            {activeTab === 'donations' && <DonationsTab />}
           </div>
 
           {/* Right Column - Fund Info */}
