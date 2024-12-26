@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Profile } from '../../types/profile';
+import { Profile } from '../types/profile';
 
 interface ProfileTabsProps {
   profile: Profile;

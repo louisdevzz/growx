@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import { Button } from "@/components/ui/button"
+import WalletButton from '@/components/WalletButton'
 
 export default function Header() {
   return (
@@ -41,20 +40,7 @@ export default function Header() {
           </Link>
         </nav>
         <div className="flex gap-3 sm:gap-2">
-          <Button 
-            variant="secondary"
-            size="sm"
-            className="bg-gray-800 text-white hover:bg-gray-700 hover:text-gray-900 transition-colors"
-          >
-            Cart
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="text-sm font-medium border-gray-300 hover:text-gray-900 transition-colors"
-          >
-            Sign In
-          </Button>
+          <WalletButton />
         </div>
       </div>
     </header>

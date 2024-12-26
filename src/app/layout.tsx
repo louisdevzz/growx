@@ -1,5 +1,7 @@
+import { Providers } from '@/components/provider'
 import './globals.css'
 import type { Metadata } from 'next'
+import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
   title: 'POTLOCK',
@@ -14,7 +16,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
+        <Providers>{children}</Providers>
+        <Toaster position="top-center" />
       </body>
     </html>
   )

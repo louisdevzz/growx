@@ -1,5 +1,5 @@
 import React from 'react';
-import { Profile } from '../../types/profile';
+import { Profile } from '../types/profile';
 import { VerifiedBadge } from './ui/VerifiedBadge'; 
 import { FundingBox } from './FundingBox';
 import { ProfileTabs } from './ProfileTabs';
