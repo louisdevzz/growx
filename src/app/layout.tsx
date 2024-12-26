@@ -15,9 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <Providers>{children}</Providers>
-        <Toaster position="top-center" />
+      <body className="min-h-screen bg-white">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
+          <Providers>{children}</Providers>
+          <Toaster position="top-center" />
+        </div>
       </body>
     </html>
   )
