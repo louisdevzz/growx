@@ -1,43 +1,37 @@
-import Image from 'next/image'
-import { cn } from '@/lib/utils'
+import Image from "next/image";
 
 interface DonorCardProps {
-  rank: number
-  name: string
-  amount: number
-  imageUrl: string
-  description?: string
-  isHighlighted?: boolean
+  name: string;
+  amount: number;
+  imageUrl: string;
 }
 
-export default function DonorCard({ rank, name, amount, imageUrl, description, isHighlighted }: DonorCardProps) {
+export default function DonorCard({ name, amount, imageUrl }: DonorCardProps) {
   return (
-    <div className={cn(
-      "bg-white rounded-lg p-6 shadow-sm relative",
-      isHighlighted && "border-2 border-primary"
-    )}>
-      {isHighlighted && (
-        <div className="absolute top-2 right-2">
-          <span className="text-yellow-400">👑</span>
-        </div>
-      )}
-      <div className="absolute top-2 right-2 text-sm text-gray-500">#{rank}</div>
-      <div className="flex flex-col items-center gap-4">
-        <Image
-          src={imageUrl}
-          alt={name}
-          width={80}
-          height={80}
-          className="rounded-full"
-        />
-        <div className="text-center">
-          <h3 className="font-semibold text-lg">{name}</h3>
-          <p className="text-sm text-gray-500">{description}</p>
-        </div>
-        <div className="bg-gray-100 px-4 py-2 rounded-full">
-          ~${amount.toLocaleString()} Donated
-        </div>
+    <div className="group card-hover">
+      <div className="absolute top-2 left-2">
+        <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">
+          ~${amount.toLocaleString()}
+        </span>
       </div>
+      <div className="flex flex-col items-center gap-2 mt-8">
+        <div className="rounded-full p-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500">
+          <div className="bg-white rounded-full p-0.5">
+            <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
+              <Image
+                src={imageUrl}
+                alt={name}
+                width={80}
+                height={80}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+        <h3 className="font-medium text-gray-800">{name}</h3>
+      </div>
+      <div className="card-hover-shake" />
     </div>
-  )
-} 
+  );
+}
+

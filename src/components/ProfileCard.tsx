@@ -10,7 +10,7 @@ interface ProfileCardProps {
 
 export const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
   return (
-    <div className="max-w-2xl bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="max-w-2xl card-hover">
       {/* Banner */}
       <div className="h-48 relative">
         <img 

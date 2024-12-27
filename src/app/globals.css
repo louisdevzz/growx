@@ -98,3 +98,13 @@ body {
     max-width: 1280px;
   }
 }
+
+@layer components {
+  .card-hover {
+    @apply bg-white rounded-lg p-6 shadow-md relative transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl border border-gray-100;
+  }
+  
+  .card-hover-shake {
+    @apply absolute inset-0 rounded-lg group-hover:animate-shake;
+  }
+}

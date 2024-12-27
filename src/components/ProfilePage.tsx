@@ -16,7 +16,7 @@ const exampleProfile: Profile = {
     discord: 'https://...'
   },
   stats: {
-    followers: 6,
+    followers: 60,
     following: 1
   },
   funding: {

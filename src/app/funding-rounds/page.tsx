@@ -22,7 +22,7 @@ export default function PotsPage() {
         {/* Active Pots Section */}
         <div className="mb-12">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Active Pots <span className="text-gray-500">{activePots.length}</span></h2>
+            <h2 className="text-xl font-semibold">Active Funding rounds <span className="text-gray-500">{activePots.length}</span></h2>
             <div className="flex gap-4">
               <button className="border px-4 py-2 rounded-md flex items-center gap-2">
                 Filter <span>↓</span>
@@ -35,24 +35,27 @@ export default function PotsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {activePots.map(pot => (
-              <Link href={`/pots/${pot.id}`} className="block">
-                <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+              <Link href={`/funding-rounds/${pot.id}`} className="block group" key={pot.id}>
+                <div className="card-hover">
+                  {/* Gradient border effect */}
+                  <div className="card-hover-shake gradient-border"/>
+                  
                   <h3 className="text-xl font-semibold mb-3">{pot.title}</h3>
                   <p className="text-gray-600 mb-6 text-sm">{pot.description}</p>
                   <div className="space-y-4">
-                    <div className="text-2xl font-bold">
+                    <div className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-red-600 bg-clip-text text-transparent">
                       {pot.amount.toFixed(2)}Ⓝ <span className="text-gray-500 text-sm">raised</span>
                     </div>
                     {pot.daysLeft && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 ">
                         <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
                           {pot.daysLeft} days left to donate
                         </span>
                       </div>
                     )}
-                    <button className="w-full bg-green-100 text-green-800 py-2 rounded-md text-sm">
+                    {/* <button className="w-full bg-green-100 text-green-800 py-2 rounded-md text-sm hover:bg-green-200 transition-colors">
                       I want to donate
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </Link>
@@ -63,20 +66,24 @@ export default function PotsPage() {
         {/* Completed Pots Section */}
         <div>
           <h2 className="text-xl font-semibold mb-6">
-            Completed Pots <span className="text-gray-500">{completedPots.length}</span>
+            Completed Funding Rounds <span className="text-gray-500">{completedPots.length}</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {completedPots.map(pot => (
-              <div key={pot.id} className="border rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-3">{pot.title}</h3>
-                <p className="text-gray-600 mb-6 text-sm">{pot.description}</p>
-                <div className="space-y-4">
-                  <div className="text-2xl font-bold">
-                    {pot.amount.toFixed(2)}Ⓝ <span className="text-gray-500 text-sm">raised</span>
+              <div key={pot.id} className="group">
+                <div className="card-hover opacity-75">
+                  <div className="card-hover-shake gradient-border"/>
+                  
+                  <h3 className="text-xl font-semibold mb-3">{pot.title}</h3>
+                  <p className="text-gray-600 mb-6 text-sm">{pot.description}</p>
+                  <div className="space-y-4">
+                    <div className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-red-600 bg-clip-text text-transparent">
+                      {pot.amount.toFixed(2)}Ⓝ <span className="text-gray-500 text-sm">raised</span>
+                    </div>
+                    <button className="w-full bg-gray-100 text-gray-800 py-2 rounded-md text-sm">
+                      Project Completed
+                    </button>
                   </div>
-                  <button className="w-full bg-gray-100 text-gray-800 py-2 rounded-md text-sm">
-                    Project Completed
-                  </button>
                 </div>
               </div>
             ))}

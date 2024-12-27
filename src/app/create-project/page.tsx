@@ -3,18 +3,20 @@ import { useState, useRef } from 'react';
 
 export default function CreateProject() {
   const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const profileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, setImage: (url: string) => void) => {
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setCoverImage(imageUrl);
+      setImage(imageUrl);
     }
   };
 
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
+  const triggerFileInput = (inputRef: React.RefObject<HTMLInputElement | null>) => {
+    inputRef.current?.click();
   };
 
   return (
@@ -44,7 +46,7 @@ export default function CreateProject() {
                 ) : null}
                 <button 
                   type="button" 
-                  onClick={triggerFileInput}
+                  onClick={() => triggerFileInput(fileInputRef)}
                   className="absolute right-4 top-4 bg-white rounded px-3 py-1.5 text-sm flex items-center gap-2"
                 >
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -55,7 +57,7 @@ export default function CreateProject() {
                 <input
                   type="file"
                   ref={fileInputRef}
-                  onChange={handleImageUpload}
+                  onChange={(e) => handleImageUpload(e, setCoverImage)}
                   accept="image/*"
                   className="hidden"
                 />
@@ -63,11 +65,29 @@ export default function CreateProject() {
               {/* Profile Image Overlay */}
               <div className="absolute -bottom-12 left-1/2 -translate-x-1/2">
                 <div className="w-24 h-24 bg-gray-100 rounded-full border-4 border-white relative">
-                  <button type="button" className="absolute right-0 bottom-0 bg-white rounded-full p-1.5 shadow-sm">
+                  {profileImage && (
+                    <img 
+                      src={profileImage} 
+                      alt="Profile" 
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  )}
+                  <button 
+                    type="button" 
+                    onClick={() => triggerFileInput(profileInputRef)}
+                    className="absolute right-0 bottom-0 bg-white rounded-full p-1.5 shadow-sm"
+                  >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M8 12V4M4 8h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                     </svg>
                   </button>
+                  <input
+                    type="file"
+                    ref={profileInputRef}
+                    onChange={(e) => handleImageUpload(e, setProfileImage)}
+                    accept="image/*"
+                    className="hidden"
+                  />
                 </div>
               </div>
             </div>

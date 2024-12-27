@@ -73,35 +73,48 @@ export default function PotDetailsPage() {
 
           {/* Right Column - Fund Info */}
           <div className="space-y-6">
-            <div className="bg-white rounded-lg p-6 border">
+            <div className="group bg-white rounded-lg p-6 shadow-md relative transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl border border-gray-100">
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-sm"/>
+              
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <div className="text-2xl font-bold">~${pot.amount.toFixed(2)}</div>
+                  <div className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-red-600 bg-clip-text text-transparent">
+                    ~${pot.amount.toFixed(2)}
+                  </div>
                   <div className="text-gray-500">raised from {pot.donorsCount} donors</div>
                 </div>
-                <div className="text-gray-500">NEAR</div>
+                <div className="text-gray-500 font-medium">NEAR</div>
               </div>
               
               <div>
-                <h3 className="text-sm text-gray-500 uppercase mb-2">TOP MATCHING POOL ALLOCATIONS</h3>
+                <h3 className="text-sm text-gray-500 uppercase mb-2 font-semibold">TOP MATCHING POOL ALLOCATIONS</h3>
                 {pot.topAllocations?.map(allocation => (
-                  <div key={allocation.id} className="flex justify-between items-center py-2">
+                  <div 
+                    key={allocation.id} 
+                    className="flex justify-between items-center py-2 hover:bg-gray-50 rounded-md px-2 transition-colors duration-200"
+                  >
                     <div className="flex items-center gap-2">
-                      <span>#{allocation.rank}</span>
-                      <img src={allocation.icon} className="w-6 h-6 rounded-full" />
-                      <span>{allocation.name}</span>
+                      <span className="font-medium text-gray-700">#{allocation.rank}</span>
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-full blur-[1px]" />
+                        <img 
+                          src={allocation.icon} 
+                          className="w-6 h-6 rounded-full relative border-2 border-white"
+                        />
+                      </div>
+                      <span className="font-medium">{allocation.name}</span>
                     </div>
-                    <div>{allocation.amount.toFixed(2)} N</div>
+                    <div className="font-medium">{allocation.amount.toFixed(2)} N</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <button className="w-full bg-black text-white py-3 rounded-md">
+            <button className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-colors duration-200 font-medium">
               Fund matching pool
             </button>
             
-            <button className="w-full flex items-center justify-center gap-2 text-gray-600">
+            <button className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200">
               <span className="text-lg">📋</span> Earn referral fees
             </button>
           </div>
