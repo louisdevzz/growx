@@ -3,29 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { ProjectProps } from '@/types/project';
 
-interface ProjectCardProps {
-  _id?: string;
-  name: string;
-  description: string;
-  coverImage: string;
-  profileImage: string;
-  category: string;
-  chain: string;
-  fundingSources: string[];
-  socialLinks: {
-    type: string;
-    url: string;
-  }[];
-  createdAt: string;
-  amount?: number;
-  currency?: string;
-  raised?: boolean;
-  href?: string;
-  donors?: number;
-  daysLeft?: number | string;
-  index?: number;
-}
 
 const truncate = (text: string, maxLength: number) => {
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
@@ -77,7 +56,7 @@ export default function ProjectCard({
   donors = 0,
   daysLeft = "Ongoing",
   index = 0
-}: ProjectCardProps) {
+}: ProjectProps) {
   const [showDonateModal, setShowDonateModal] = useState(false);
   const [donationAmount, setDonationAmount] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -132,7 +111,7 @@ export default function ProjectCard({
               <Link href={href}>
                 <div className="relative h-48">
                   <Image 
-                    src={coverImage} 
+                    src={coverImage || '/images/placeholder.png'} 
                     alt={name}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"

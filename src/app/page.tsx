@@ -2,15 +2,14 @@
 
 import Header from '@/components/Header'
 import ProjectCard from '@/components/ProjectCard'
-import { featuredProjects } from '@/data/projects'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react';
 import ProjectCardSkeleton from '@/components/ProjectCardSkeleton'
-
+import { ProjectProps } from '@/types/project';
 export default function Home() {
 
-  const [projects, setProjects] = useState<any[]>([]);
+  const [projects, setProjects] = useState<ProjectProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchProjects = useCallback(async () => {

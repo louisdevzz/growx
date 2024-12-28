@@ -1,32 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import ProjectCard from '@/components/ProjectCard'
-import { useParams } from 'next/navigation'
-import { featuredProjects } from '@/data/projects'
-
-// Add allProjects or use featuredProjects
-const allProjects = featuredProjects; // Use featuredProjects as the source of projects
+import { ProjectProps } from '@/types/project';
 
 export default function ProjectsPage() {
-  const { projectId } = useParams();
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [searchTerm, setSearchTerm] = useState<string|null>(null)
+  const [projects, setProjects] = useState<ProjectProps[]>([]);
 
-  // Get unique tags from all projects
-  const allTags = Array.from(new Set(allProjects.flatMap(project => project.tags)))
+  const fetchProjects = useCallback(async () => {
+    const response = await fetch('/api/projects');
+    const projects = await response.json();
+    setProjects(projects);
+  }, []);
 
-  // Filter projects based on search and tags
-  const filteredProjects = allProjects.filter(project => {
-    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         project.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesTags = selectedTags.length === 0 || 
-                       selectedTags.some(tag => project.tags.includes(tag))
-    return matchesSearch && matchesTags
-  })
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
 
-  console.log(projectId);
+  console.log(projects);
+  
   return (
     <main className="min-h-screen flex items-start justify-center">
       <div className="container flex flex-col items-center justify-center">
@@ -34,30 +28,10 @@ export default function ProjectsPage() {
         
         {/* Search and Filter Section */}
         <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 w-full">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-medium">ALL PROJECTS</h2>
-              <span className="text-gray-500 text-sm">({filteredProjects.length})</span>
-            </div>
-            <div className="flex items-center gap-3 ml-auto">
-              {/* Tag filters */}
-              <div className="flex flex-wrap gap-2">
-                {allTags.map(tag => (
-                  <button
-                    key={tag}
-                    onClick={() => setSelectedTags(prev => 
-                      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-                    )}
-                    className={`px-3 py-1 rounded-full text-sm ${
-                      selectedTags.includes(tag)
-                        ? 'bg-gray-900 text-white'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}
-                  >
-                    {tag}
-                  </button>
-                ))}
-              </div>
+              <span className="text-gray-500 text-sm">({projects.length})</span>
               {/* Search input */}
               <div className="relative flex-1">
                 <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -69,7 +43,7 @@ export default function ProjectsPage() {
                   type="search"
                   placeholder="Search projects..."
                   className="w-full px-10 py-2 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-gray-200"
-                  value={searchTerm}
+                  value={searchTerm || ''}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
@@ -78,11 +52,11 @@ export default function ProjectsPage() {
 
           {/* Projects Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((project) => (
+            {projects.map((project) => (
               <ProjectCard
-                key={project.title}
+                key={project._id}
                 {...project}
-                href={`/projects/${project.title.toLowerCase().replace(/\s+/g, '-')}`}
+                href={`/projects/${project.slug}`}
               />
             ))}
           </div>

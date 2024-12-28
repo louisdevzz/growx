@@ -1,12 +1,12 @@
 "use client"
 
-import { Project } from '@/types/project';
+import { ProjectProps } from '@/types/project';
 
-const HomeTab = ({project}: {project: Project}) => {
+export const HomeTab = ({project}: {project: ProjectProps}) => {
 
   return (
     <div className="mt-8 py-8">
-      <h2 className="text-xl font-semibold mb-6">About {project.title}</h2>
+      <h2 className="text-xl font-semibold mb-6">About {project.name}</h2>
       <div className="space-y-6">
         <div className="grid grid-cols-[300px,1fr] gap-4">
           <div className="font-medium">Overview</div>
@@ -40,5 +40,3 @@ const HomeTab = ({project}: {project: Project}) => {
     </div>
   );
 }
-
-export default HomeTab; 

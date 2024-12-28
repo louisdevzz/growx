@@ -2,12 +2,10 @@
 
 import { useParams } from "next/navigation";
 import Header from "@/components/Header";
-import { featuredProjects } from "@/data/projects";
 import { useCallback, useEffect, useState } from 'react';
-import HomeTab from './home-tab/page';
-import SocialFeedTab from './social-feed/page';
-import PotsTab from './pots-tab/page';
-import FundingRaisedTab from './funding-raised/page';
+import { HomeTab } from '@/components/HomeTab';
+import { FundingRoundTab } from '@/components/FundingRound';
+import { FundingRaisedTab } from '@/components/FundingRaisedTab';
 
 const ProjectDetail = () => {
   const { slug } = useParams();
@@ -35,10 +33,8 @@ const ProjectDetail = () => {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'social':
-        return <SocialFeedTab />;
       case 'pots':
-        return <PotsTab />;
+        return <FundingRoundTab />;
       case 'funding':
         return <FundingRaisedTab project={project} />;
       case 'home':

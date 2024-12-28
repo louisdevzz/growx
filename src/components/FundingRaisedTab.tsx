@@ -2,7 +2,7 @@
 
 import { fundingStats, fundingDonations } from '@/data/funding';
 import { useState } from 'react';
-import { Project } from '@/types/project';
+import { ProjectProps } from '@/types/project';
 
 const getInitials = (name: string) => {
   return name
@@ -13,7 +13,11 @@ const getInitials = (name: string) => {
     .slice(0, 2);
 };
 
-const FundingRaisedTab = ({project}: {project: Project}) => {
+export const FundingRaisedTab = ({project}: {project: ProjectProps}) => {
+  if (!project) {
+    return <div>Project not found</div>;
+  }
+
   const [searchTerm, setSearchTerm] = useState<string|null>(null);
 
   const filteredDonations = fundingDonations.filter(donation =>
@@ -117,5 +121,3 @@ const FundingRaisedTab = ({project}: {project: Project}) => {
     </div>
   );
 }
-
-export default FundingRaisedTab; 
