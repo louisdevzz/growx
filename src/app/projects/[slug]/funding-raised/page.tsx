@@ -2,22 +2,32 @@
 
 import { fundingStats, fundingDonations } from '@/data/funding';
 import { useState } from 'react';
+import { Project } from '@/types/project';
 
-const FundingRaisedTab = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+const getInitials = (name: string) => {
+  return name
+    .split('.')
+    .map(part => part[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+};
+
+const FundingRaisedTab = ({project}: {project: Project}) => {
+  const [searchTerm, setSearchTerm] = useState<string|null>(null);
 
   const filteredDonations = fundingDonations.filter(donation =>
-    donation.donorName.toLowerCase().includes(searchTerm.toLowerCase())
+    donation.donorName.toLowerCase().includes(searchTerm?.toLowerCase() || '')
   );
 
   return (
     <div className="py-8">
       {/* Stats Section */}
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-6">Potlock Funding</h2>
+        <h2 className="text-2xl font-semibold mb-6">{project.name} Funding</h2>
         <div className="flex gap-8">
           <div>
-            <span className="text-xl font-semibold">{fundingStats.totalDonated}Ⓝ</span>
+            <span className="text-xl font-semibold">{fundingStats.totalDonated}</span>
             <span className="text-gray-600 ml-2">(~${(fundingStats.totalDonated * 191.14).toFixed(2)})</span>
             <div className="text-sm text-gray-600">Donated</div>
           </div>
@@ -25,10 +35,10 @@ const FundingRaisedTab = () => {
             <span className="text-xl font-semibold">{fundingStats.uniqueDonors}</span>
             <div className="text-sm text-gray-600">Unique donors</div>
           </div>
-          <div>
-            <span className="text-xl font-semibold">{fundingStats.totalMatched}Ⓝ</span>
+          {/* <div>
+            <span className="text-xl font-semibold">{fundingStats.totalMatched}</span>
             <div className="text-sm text-gray-600">Total Matched</div>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -37,13 +47,13 @@ const FundingRaisedTab = () => {
         {/* Table Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-4">
-            <h3 className="font-medium">Funding Source</h3>
+            <h3 className="font-medium">Donors</h3>
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search funding"
+                placeholder="Search donors"
                 className="pl-8 pr-4 py-2 border rounded-lg"
-                value={searchTerm}
+                value={searchTerm || ''}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <svg
@@ -61,9 +71,9 @@ const FundingRaisedTab = () => {
               </svg>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="font-medium">Amount</span>
-            <button className="flex items-center gap-1">
+          <div className="flex items-center gap-8">
+            <span className="font-medium w-20 text-right">Amount</span>
+            <button className="flex items-center gap-1 w-24 justify-end">
               Date <span>↓</span>
             </button>
           </div>
@@ -74,19 +84,26 @@ const FundingRaisedTab = () => {
           {filteredDonations.map(donation => (
             <div key={donation.id} className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <img
-                  src={donation.donorAvatar}
-                  alt={donation.donorName}
-                  className="w-10 h-10 rounded-full"
-                />
+                {donation.donorAvatar ? (
+                  <img
+                    src={donation.donorAvatar}
+                    alt={donation.donorName}
+                    className="w-10 h-10 rounded-full"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                    <span className="text-sm font-medium text-gray-600">
+                      {getInitials(donation.donorName)}
+                    </span>
+                  </div>
+                )}
                 <div>
                   <div className="font-medium">{donation.donorName}</div>
                   <div className="text-sm text-gray-600">{donation.type}</div>
                 </div>
               </div>
               <div className="flex items-center gap-8">
-                <div className="flex items-center gap-1">
-                  <span>Ⓝ</span>
+                <div className="w-20 text-right">
                   <span>{donation.amount}</span>
                 </div>
                 <div className="text-sm text-gray-600 w-24 text-right">

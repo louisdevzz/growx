@@ -25,6 +25,9 @@ const nextConfig: NextConfig = {
       type: 'asset/resource'
     });
     return config;
+  },
+  env: {
+    MONGODB_URI: process.env.MONGODB_URI,
   }
 };
 

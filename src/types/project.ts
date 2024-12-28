@@ -1,7 +1,8 @@
 export interface Project {
+
   // Basic Info (Required)
-  title: string;
-  handle?: string;
+  name: string;
+  slug?: string;
   description: string;
   image: string;
   bannerImage?: string; // Separate banner image if different from card image
@@ -19,14 +20,15 @@ export interface Project {
   
   // Detail Page Info
   overview?: string | string[];
-  whyPublicGood?: string;
+  why?: string;
   teamMembers?: {
     image?: string;
     name?: string;
     role?: string;
   }[];
-  githubRepos?: string;
-  smartContracts?: string;
+  fundingSources?: string[];
+  address?: string;
+  ownerAddress?: string;
   
   // Social Links
   socialLinks?: {

@@ -1,10 +1,36 @@
+'use client'
+
 import Header from '@/components/Header'
 import ProjectCard from '@/components/ProjectCard'
 import { featuredProjects } from '@/data/projects'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useCallback, useEffect, useState } from 'react';
+import ProjectCardSkeleton from '@/components/ProjectCardSkeleton'
 
 export default function Home() {
+
+  const [projects, setProjects] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchProjects = useCallback(async () => {
+    try {
+      const response = await fetch('/api/projects');
+      const data = await response.json();
+      setProjects(data.data);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
+  console.log(projects);
+
   return (
     <main className="min-h-screen bg-white">
       <div className="container mx-auto px-4">
@@ -83,7 +109,7 @@ export default function Home() {
                         </div>
                         <div className="flex justify-between items-center text-sm">
                           <div>
-                            <p className="font-bold text-gray-800">65.5 NEAR</p>
+                            <p className="font-bold text-gray-800">65.5 ETH</p>
                             <p className="text-gray-500">24 contributors</p>
                           </div>
                           <div className="text-right">
@@ -132,7 +158,7 @@ export default function Home() {
                         </div>
                         <div className="flex justify-between items-center text-sm">
                           <div>
-                            <p className="font-bold text-gray-800">120.8 NEAR</p>
+                            <p className="font-bold text-gray-800">120.8 ETH</p>
                             <p className="text-gray-500">38 contributors</p>
                           </div>
                           <div className="text-right">
@@ -181,7 +207,7 @@ export default function Home() {
                         </div>
                         <div className="flex justify-between items-center text-sm">
                           <div>
-                            <p className="font-bold text-gray-800">245.6 NEAR</p>
+                            <p className="font-bold text-gray-800">245.6 ETH</p>
                             <p className="text-gray-500">92 contributors</p>
                           </div>
                           <div className="text-right">
@@ -227,10 +253,10 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Featured Projects */}
-        <section className="py-20">
+        {/* Recently viewed projects */}
+        <section className="py-10">
           <div className="flex items-center justify-between mb-12">
-            <h2 className="text-2xl font-bold">Featured Collections</h2>
+            <h2 className="text-2xl font-bold">Recently viewed projects</h2>
             <Link 
               href="/projects"
               className="flex items-center gap-2 text-black hover:text-gray-700 transition-colors"
@@ -243,15 +269,60 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-3 gap-8">
-            {featuredProjects.map((project) => (
-              <ProjectCard
-                key={project.title}
-                {...project}
-                href={`/projects/${project.title.toLowerCase().replace(/\s+/g, '-')}`}
-              />
-            ))}
+            {isLoading ? (
+              <>
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+              </>
+            ) : (
+              projects.map((project, index) => (
+                <ProjectCard
+                  key={project._id}
+                  {...project}
+                  index={index+1}
+                  href={`/projects/${project.slug}`}
+                />
+              ))
+            )}
           </div>
         </section>
+
+        {/* Featured Projects */}
+        <section className="py-10">
+          <div className="flex items-center justify-between mb-12">
+            <h2 className="text-2xl font-bold">Featured Projects</h2>
+            <Link 
+              href="/projects"
+              className="flex items-center gap-2 text-black hover:text-gray-700 transition-colors"
+            >
+              View All
+              <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+                <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-3 gap-8">
+            {isLoading ? (
+              <>
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+              </>
+            ) : (
+              projects.map((project, index) => (
+                <ProjectCard
+                  key={project._id}
+                  {...project}
+                  index={index+1}
+                  href={`/projects/${project.slug}`}
+                />
+              ))
+            )}
+          </div>
+        </section>
+        
       </div>
     </main>
   )

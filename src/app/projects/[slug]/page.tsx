@@ -3,20 +3,31 @@
 import { useParams } from "next/navigation";
 import Header from "@/components/Header";
 import { featuredProjects } from "@/data/projects";
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import HomeTab from './home-tab/page';
 import SocialFeedTab from './social-feed/page';
 import PotsTab from './pots-tab/page';
 import FundingRaisedTab from './funding-raised/page';
 
 const ProjectDetail = () => {
-  const { projectId } = useParams();
+  const { slug } = useParams();
   const [activeTab, setActiveTab] = useState('home');
-  
-  // Find the project data based on projectId (using kebab case)
-  const project = featuredProjects.find(p => 
-    p.title.toLowerCase().replace(/\s+/g, '-') === projectId
-  );
+  const [project, setProject] = useState<any>(null);
+
+  const fetchProject = useCallback(async () => {
+    const response = await fetch(`/api/projects/findBySlug`, {
+      method: 'POST',
+      body: JSON.stringify({ slug: slug })
+    });
+    const project = await response.json();
+    //console.log(project);
+    setProject(project);
+  }, [slug]);
+
+  useEffect(() => {
+    fetchProject();
+  }, [fetchProject]);
+
 
   if (!project) {
     return <div>Project not found</div>;
@@ -29,10 +40,10 @@ const ProjectDetail = () => {
       case 'pots':
         return <PotsTab />;
       case 'funding':
-        return <FundingRaisedTab />;
+        return <FundingRaisedTab project={project} />;
       case 'home':
       default:
-        return <HomeTab/>;
+        return <HomeTab project={project}/>;
     }
   };
 
@@ -44,10 +55,10 @@ const ProjectDetail = () => {
             <Header />
             
             {/* Banner Image Container */}
-            <div className="relative w-full h-[300px] sm:h-[400px] overflow-hidden">
+            <div className="relative w-full h-[300px] sm:h-[400px] overflow-hidden mt-5">
               <img 
-                src={project.image} 
-                alt={project.title}
+                src={project.coverImage} 
+                alt={project.name}
                 className="w-full h-full object-cover object-center"
               />
             </div>
@@ -59,8 +70,8 @@ const ProjectDetail = () => {
                 <div className="flex items-start gap-4 -mt-14 relative z-10">
                   <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white bg-white shadow-md">
                     <img 
-                      src={project.image} 
-                      alt={project.title}
+                      src={project.profileImage} 
+                      alt={project.name}
                       className="w-full h-full object-cover object-center"
                     />
                   </div>
@@ -68,22 +79,22 @@ const ProjectDetail = () => {
                     <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium">
                       APPROVED
                     </span>
-                    <span className="text-sm text-gray-600">{project.followers} Followers</span>
-                    <span className="text-sm text-gray-600">{project.following} Following</span>
+                    {/* <span className="text-sm text-gray-600">{project.followers} Followers</span>
+                    <span className="text-sm text-gray-600">{project.following} Following</span> */}
                   </div>
                 </div>
 
                 {/* Project Title and Info */}
                 <div className="mt-4 flex justify-between items-start">
                   <div>
-                    <h1 className="text-2xl font-semibold mb-1">{project.title}</h1>
-                    <div className="text-gray-600 text-sm">@{project.handle}</div>
-                    <div className="text-gray-600 text-sm">Public Good</div>
+                    <h1 className="text-2xl font-semibold mb-1">{project.name}</h1>
+                    <span className="text-gray-600 text-sm">{project.ownerAddress}</span>
+                    <div className="text-gray-600 text-sm">{project.category}</div>
                   </div>
                   <div className="bg-orange-50 rounded-lg p-4">
                     <div className="flex items-baseline gap-1">
                       <span className="text-2xl font-semibold">{project.amount}</span>
-                      <span className="text-gray-600">NEAR</span>
+                      <span className="text-gray-600">ETH</span>
                     </div>
                     <p className="text-sm text-gray-600">
                       Raised from {project.donors} donors
@@ -107,7 +118,7 @@ const ProjectDetail = () => {
                     >
                       Home
                     </button>
-                    <button 
+                    {/* <button 
                       onClick={() => setActiveTab('social')}
                       className={`pb-4 text-sm font-medium ${
                         activeTab === 'social' 
@@ -116,7 +127,7 @@ const ProjectDetail = () => {
                       }`}
                     >
                       Social Feed
-                    </button>
+                    </button> */}
                     <button 
                       onClick={() => setActiveTab('pots')}
                       className={`pb-4 text-sm font-medium ${
@@ -125,7 +136,7 @@ const ProjectDetail = () => {
                           : 'text-gray-600'
                       }`}
                     >
-                      Pots
+                      Funding Rounds
                     </button>
                     <button 
                       onClick={() => setActiveTab('funding')}

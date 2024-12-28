@@ -22,7 +22,7 @@ const PotsTab = () => {
 
         {/* Empty State Text */}
         <h3 className="text-lg font-medium text-gray-900 italic mb-2">
-          This project has not participated in any pots yet.
+          This project has not participated in any funding rounds yet.
         </h3>
       </div>
     </div>

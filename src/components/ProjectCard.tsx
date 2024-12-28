@@ -5,17 +5,26 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 interface ProjectCardProps {
-  id?: string;
-  title: string;
+  _id?: string;
+  name: string;
   description: string;
-  image: string;
-  tags: string[];
-  amount: number;
-  currency: string;
+  coverImage: string;
+  profileImage: string;
+  category: string;
+  chain: string;
+  fundingSources: string[];
+  socialLinks: {
+    type: string;
+    url: string;
+  }[];
+  createdAt: string;
+  amount?: number;
+  currency?: string;
   raised?: boolean;
-  href: string;
+  href?: string;
   donors?: number;
   daysLeft?: number | string;
+  index?: number;
 }
 
 const truncate = (text: string, maxLength: number) => {
@@ -51,17 +60,23 @@ const THEME_COLORS = [
 ];
 
 export default function ProjectCard({ 
-  id,
-  title, 
+  _id,
+  name, 
   description, 
-  image, 
-  tags, 
-  amount, 
-  currency, 
+  coverImage,
+  profileImage,
+  category,
+  chain,
+  fundingSources,
+  socialLinks,
+  createdAt,
+  amount = 0, 
+  currency = 'ETH', 
   raised, 
-  href, 
+  href = '#', 
   donors = 0,
-  daysLeft = "Ongoing"
+  daysLeft = "Ongoing",
+  index = 0
 }: ProjectCardProps) {
   const [showDonateModal, setShowDonateModal] = useState(false);
   const [donationAmount, setDonationAmount] = useState<number>(0);
@@ -80,22 +95,22 @@ export default function ProjectCard({
     };
   }, [showConfirmModal, showDonateModal]);
 
-  // Lấy index từ id hoặc sử dụng hash function
-  const getColorIndex = (id?: string) => {
-    if (!id) return 0;
-    // Chuyển id thành số để lấy index
-    const numericId = parseInt(id.replace(/\D/g, '')) || 0;
+  // Lấy index từ _id hoặc sử dụng hash function
+  const getColorIndex = (_id?: string) => {
+    if (!_id) return 0;
+    // Use the first 6 characters of _id to generate a number
+    const numericId = parseInt(_id.substring(0, 6), 16);
     return numericId % THEME_COLORS.length;
   };
 
   // Lấy màu gradient
   const getGradientColors = () => {
-    return THEME_COLORS[getColorIndex(id)].gradient;
+    return THEME_COLORS[getColorIndex(_id)].gradient;
   };
 
   // Lấy màu text
   const getTextColor = () => {
-    return THEME_COLORS[getColorIndex(id)].text;
+    return THEME_COLORS[getColorIndex(_id)].text;
   };
 
   return (
@@ -109,16 +124,16 @@ export default function ProjectCard({
             <div className="relative bg-white rounded-2xl overflow-hidden">
               {/* Header with dynamic text color */}
               <div className={`absolute top-0 left-0 right-0 flex justify-between items-center p-3 text-xs ${getTextColor()} font-medium z-10 bg-white/80 backdrop-blur-sm`}>
-                <span>{tags[0]}</span>
-                <span>ID #{id || '001'}</span>
+                <span>{category}</span>
+                <span>#0{index < 10 ? `0${index}` : index}</span>
               </div>
 
               {/* Main image */}
               <Link href={href}>
                 <div className="relative h-48">
                   <Image 
-                    src={image} 
-                    alt={title}
+                    src={coverImage} 
+                    alt={name}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
@@ -128,7 +143,7 @@ export default function ProjectCard({
               {/* Content section */}
               <div className="p-4">
                 <Link href={href}>
-                  <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
+                  <h3 className="font-bold text-gray-800 mb-2">{name}</h3>
                   <p className="text-sm text-gray-600 line-clamp-2 mb-3">
                     {truncate(description, 100)}
                   </p>
@@ -215,7 +230,7 @@ export default function ProjectCard({
                     value={donationAmount}
                     onChange={(e) => setDonationAmount(Number(e.target.value))}
                   />
-                  <span className="bg-gray-50 px-3 py-2 text-gray-600 flex items-center">NEAR</span>
+                  <span className="bg-gray-50 px-3 py-2 text-gray-600 flex items-center">ETH</span>
                 </div>
               </div>
 
