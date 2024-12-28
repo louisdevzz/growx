@@ -1,5 +1,5 @@
 export interface Project {
-  id: string;
+  id?: string;
   title: string;
   handle?: string;
   description: string;
@@ -9,6 +9,8 @@ export interface Project {
   currency: string;
   raised?: boolean;
   donors?: number;
+  category?: string;
+  daysLeft?: string | number;
   isApproved?: boolean;
   followers?: number;
   following?: number;

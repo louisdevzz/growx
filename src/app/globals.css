@@ -101,10 +101,81 @@ body {
 
 @layer components {
   .card-hover {
-    @apply bg-white rounded-lg p-6 shadow-md relative transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl border border-gray-100;
+    @apply bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl border border-gray-100;
   }
   
-  .card-hover-shake {
-    @apply absolute inset-0 rounded-lg group-hover:animate-shake;
+  .nft-gradient {
+    @apply bg-gradient-to-br from-[#9EFF00] to-[#7ED321];
   }
+}
+
+@layer utilities {
+  .gradient-blur {
+    background: linear-gradient(
+      125.25deg,
+      rgba(255, 119, 225, 0.25) 15%,
+      rgba(119, 182, 255, 0.25) 45%,
+      rgba(119, 255, 211, 0.25) 75%,
+      rgba(186, 119, 255, 0.25) 100%
+    );
+    filter: blur(100px);
+  }
+  
+  .cyber-border {
+    @apply relative;
+  }
+  
+  .cyber-border::before {
+    content: '';
+    @apply absolute -inset-0.5 bg-gradient-to-r from-green-400 to-green-500 rounded-2xl blur opacity-75;
+  }
+  
+  .cyber-text {
+    @apply font-mono text-green-400;
+  }
+  
+  .cyber-glow {
+    text-shadow: 0 0 10px #4ade80, 0 0 20px #4ade80, 0 0 30px #4ade80;
+  }
+  
+  .card-glow {
+    @apply relative;
+  }
+  
+  .card-glow::before {
+    content: '';
+    @apply absolute -inset-0.5 rounded-2xl blur opacity-60;
+  }
+  
+  .card-glow-blue::before {
+    @apply bg-gradient-to-r from-blue-400 to-blue-500;
+  }
+  
+  .card-glow-purple::before {
+    @apply bg-gradient-to-r from-purple-400 to-purple-500;
+  }
+  
+  .card-glow-emerald::before {
+    @apply bg-gradient-to-r from-emerald-400 to-emerald-500;
+  }
+}
+
+/* Animation cho floating cards */
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(var(--rotate));
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.2));
+  }
+  50% {
+    transform: translateY(-20px) rotate(var(--rotate));
+    filter: drop-shadow(0 0 25px rgba(59, 130, 246, 0.3));
+  }
+  100% {
+    transform: translateY(0px) rotate(var(--rotate));
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.2));
+  }
+}
+
+.float {
+  animation: float 6s ease-in-out infinite;
 }
