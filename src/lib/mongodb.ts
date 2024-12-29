@@ -1,8 +1,8 @@
+import mongoose from 'mongoose';
+
 declare global {
   var mongoose: { conn: any; promise: any } | undefined;
 }
-
-import mongoose from 'mongoose';
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Please add your MONGODB_URI to .env.local');
@@ -10,35 +10,42 @@ if (!process.env.MONGODB_URI) {
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-let cached: { conn: any; promise: any } = global.mongoose || { conn: null, promise: null };
+let cached = global.mongoose || { conn: null, promise: null };
+
+if (!global.mongoose) {
+  global.mongoose = { conn: null, promise: null };
+  cached = global.mongoose;
+}
 
 async function dbConnect() {
   if (cached.conn) {
+    console.log('Using cached MongoDB connection');
     return cached.conn;
   }
 
   if (!cached.promise) {
     const opts = {
-      bufferCommands: false,
+      bufferCommands: true,
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 30000,
       socketTimeoutMS: 45000,
-      family: 4
+      family: 4,
+      connectTimeoutMS: 30000
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
-    });
+    console.log('Connecting to MongoDB...');
+    cached.promise = mongoose.connect(MONGODB_URI, opts);
   }
 
   try {
     cached.conn = await cached.promise;
+    console.log('Successfully connected to MongoDB.');
+    return cached.conn;
   } catch (e) {
     cached.promise = null;
+    console.error('MongoDB connection error:', e);
     throw e;
   }
-
-  return cached.conn;
 }
 
 export default dbConnect; 

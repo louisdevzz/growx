@@ -103,7 +103,7 @@ export default function ProjectCard({
             <div className="relative bg-white rounded-2xl overflow-hidden">
               {/* Header with dynamic text color */}
               <div className={`absolute top-0 left-0 right-0 flex justify-between items-center p-3 text-xs ${getTextColor()} font-medium z-10 bg-white/80 backdrop-blur-sm`}>
-                <span>{category}</span>
+                <span>{category.toUpperCase()}</span>
                 <span>#0{index < 10 ? `0${index}` : index}</span>
               </div>
 
@@ -114,6 +114,7 @@ export default function ProjectCard({
                     src={coverImage || '/images/placeholder.png'} 
                     alt={name}
                     fill
+                    priority={index < 3}
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>

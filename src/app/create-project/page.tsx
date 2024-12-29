@@ -49,8 +49,10 @@ export default function CreateProject() {
       }
 
       const data = await res.json();
+      console.log(data);
       if (!data.IpfsHash) {
-        throw new Error('No IPFS hash received');
+        toast.error('Upload failed');
+        // throw new Error('No IPFS hash received');
       }
       
       return `https://olive-rational-giraffe-695.mypinata.cloud/ipfs/${data.IpfsHash}?pinataGatewayToken=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`;

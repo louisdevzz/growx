@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         hostname: '**', // Allow any hostname for development
         port: '',
         pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'olive-rational-giraffe-695.mypinata.cloud',
+        pathname: '/ipfs/**',
       }
     ],
     domains: ['ipfs.near.social'],
