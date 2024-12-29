@@ -94,13 +94,13 @@ export default function ProjectCard({
 
   return (
     <>
-      <div className="block group">
-        <div className="relative transform transition-all duration-300 hover:-translate-y-1">
+      <div className="block group h-[440px]">
+        <div className="relative transform transition-all duration-300 hover:-translate-y-1 h-full">
           {/* Gradient border effect with dynamic colors */}
           <div className={`absolute -inset-0.5 bg-gradient-to-r ${getGradientColors()} rounded-2xl blur opacity-75 group-hover:opacity-100`}></div>
           
-          <div className="relative bg-white rounded-2xl p-1">
-            <div className="relative bg-white rounded-2xl overflow-hidden">
+          <div className="relative bg-white rounded-2xl p-1 h-full">
+            <div className="relative bg-white rounded-2xl overflow-hidden flex flex-col h-full">
               {/* Header with dynamic text color */}
               <div className={`absolute top-0 left-0 right-0 flex justify-between items-center p-3 text-xs ${getTextColor()} font-medium z-10 bg-white/80 backdrop-blur-sm`}>
                 <span>{category.toUpperCase()}</span>
@@ -108,7 +108,7 @@ export default function ProjectCard({
               </div>
 
               {/* Main image */}
-              <Link href={href}>
+              <Link href={href} className="block flex-shrink-0">
                 <div className="relative h-48">
                   <Image 
                     src={coverImage || '/images/placeholder.png'} 
@@ -121,8 +121,8 @@ export default function ProjectCard({
               </Link>
 
               {/* Content section */}
-              <div className="p-4">
-                <Link href={href}>
+              <div className="p-4 flex flex-col flex-grow">
+                <Link href={href} className="block flex-grow">
                   <h3 className="font-bold text-gray-800 mb-2">{name}</h3>
                   <p className="text-sm text-gray-600 line-clamp-2 mb-3">
                     {truncate(description, 100)}

@@ -256,7 +256,7 @@ export default function Home() {
         <section className="py-10">
           <div className="flex items-center justify-between mb-12">
             <h2 className="text-2xl font-bold">Recently viewed projects</h2>
-            <Link 
+            {/* <Link 
               href="/projects"
               className="flex items-center gap-2 text-black hover:text-gray-700 transition-colors"
             >
@@ -264,7 +264,7 @@ export default function Home() {
               <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
                 <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               </svg>
-            </Link>
+            </Link> */}
           </div>
 
           <div className="grid grid-cols-3 gap-8">
@@ -293,7 +293,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold">Featured Projects</h2>
             <Link 
               href="/projects"
-              className="flex items-center gap-2 text-black hover:text-gray-700 transition-colors"
+              className="flex items-center gap-2 text-black hover:text-gray-700 transition-colors hover:underline"
             >
               View All
               <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
