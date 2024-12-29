@@ -55,7 +55,7 @@ export default function DonationsTab() {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-1">
-                    <span className="text-sm font-medium">Ⓝ</span>
+                    <span className="text-sm font-medium">ETH</span>
                     <span className="text-sm">{donation.amount.toFixed(2)}</span>
                   </div>
                 </td>

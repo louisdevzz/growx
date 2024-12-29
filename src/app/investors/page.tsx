@@ -77,9 +77,9 @@ const allDonors: Donor[] = [
 
 export default function DonorsPage() {
   return (
-    <>
+    <div className="container min-h-screen">
       <Header />
-      <div className="container max-w-7xl mx-auto px-4 py-8">
+      <div className="px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Investors leaderboard</h1>
         
         {/* Top Donors Cards */}
@@ -117,6 +117,6 @@ export default function DonorsPage() {
           <DonorList donors={allDonors} />
         </div>
       </div>
-    </>
+    </div>
   )
 }

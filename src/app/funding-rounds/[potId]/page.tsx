@@ -4,12 +4,9 @@ import Header from '@/components/Header'
 import { pots } from '@/data/pots'
 import { notFound, useParams } from 'next/navigation'
 import { featuredProjects } from '@/data/projects'
-import ProjectsTab from './ProjectsTab'
-import ProgressBar from './ProgressBar'
-import DonationsTab from './DonationsTab'
+import ProjectsTab from '@/components/ProjectsTab'
+import DonationsTab from '@/components/DonationsTab'
 import { useState } from 'react'
-
-
 
 export default function PotDetailsPage() {
   const { potId } = useParams()
@@ -21,11 +18,9 @@ export default function PotDetailsPage() {
   const [activeTab, setActiveTab] = useState('projects')
 
   return (
-    <>
+    <div className="container min-h-screen">
       <Header />
-      <ProgressBar />
-
-
+      {/* <ProgressBar /> */}
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid md:grid-cols-[2fr,1fr] gap-8">
           {/* Left Column - Main Info */}
@@ -47,10 +42,6 @@ export default function PotDetailsPage() {
                 >
                   Donations
                 </button>
-                <button className="px-4 py-2 text-gray-500">Applications</button>
-                <button className="px-4 py-2 text-gray-500">Sponsors</button>
-                <button className="px-4 py-2 text-gray-500">Payouts</button>
-                <button className="px-4 py-2 text-gray-500">Settings</button>
               </div>
             </div>
 
@@ -74,7 +65,7 @@ export default function PotDetailsPage() {
           {/* Right Column - Fund Info */}
           <div className="space-y-6">
             <div className="group bg-white rounded-lg p-6 shadow-md relative transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl border border-gray-100">
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-sm"/>
+              
               
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -114,12 +105,9 @@ export default function PotDetailsPage() {
               Fund matching pool
             </button>
             
-            <button className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200">
-              <span className="text-lg">📋</span> Earn referral fees
-            </button>
           </div>
         </div>
       </main>
-    </>
+    </div>
   )
 } 

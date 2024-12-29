@@ -4,13 +4,16 @@ import Header from '@/components/Header';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { useAccount } from 'wagmi';
+import { useAccount, useSimulateContract, useWriteContract } from 'wagmi';
+import { FUNDING_CONTRACT_ABI } from '@/lib/ABI';
+import { FUNDING_CONTRACT_ADDRESS } from '@/lib/ABI';
 interface SocialLink {
   type: string;
   url: string;
 }
 
 export default function CreateProject() {
+  const { address } = useAccount()
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -26,8 +29,20 @@ export default function CreateProject() {
   const router = useRouter();
   const [addressReceived, setAddressReceived] = useState<string|null>(null);
 
-  const { address } = useAccount();
-  
+  useSimulateContract({
+    address: FUNDING_CONTRACT_ADDRESS,
+    abi: FUNDING_CONTRACT_ABI,
+    functionName: 'registerProject',
+    args: projectName && projectDescription && coverImage && profileImage
+      ? [projectName, projectDescription, [coverImage, profileImage]]
+      : undefined,
+    query: {
+      enabled: Boolean(projectName && projectDescription && coverImage && profileImage)
+    }
+  })
+
+  const { writeContract, isSuccess } = useWriteContract()
+
   const uploadToPinata = async (file: File): Promise<string | null> => {
     const formData = new FormData();
     formData.append('file', file);
@@ -149,7 +164,7 @@ export default function CreateProject() {
   };
 
   return (
-    <div className='min-h-screen bg-white'>
+    <div className='min-h-screen bg-white container'>
       <Header />
       <main className="flex items-start justify-center p-6">
         <div className="container max-w-3xl">

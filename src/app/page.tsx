@@ -28,11 +28,11 @@ export default function Home() {
     fetchProjects();
   }, [fetchProjects]);
 
-  console.log(projects);
+  // console.log(projects);
 
   return (
     <main className="min-h-screen bg-white">
-      <div className="container mx-auto px-4">
+      <div className="container">
         <Header />
 
         {/* Hero Section */}

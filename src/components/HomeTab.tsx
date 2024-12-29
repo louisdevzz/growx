@@ -1,6 +1,7 @@
 "use client"
 
 import { ProjectProps } from '@/types/project';
+import Link from 'next/link';
 
 export const HomeTab = ({project}: {project: ProjectProps}) => {
 
@@ -29,7 +30,15 @@ export const HomeTab = ({project}: {project: ProjectProps}) => {
 
         <div className="grid grid-cols-[300px,1fr] gap-4">
           <div className="font-medium">Funding sources</div>
-          <p className="text-gray-600">{project.fundingSources || "None provided"}</p>
+          {
+            project.fundingSources ? (
+              project.fundingSources.map((source) => (
+                <Link target="_blank" href={source} className="text-gray-600 hover:underline hover:text-gray-900">{source}</Link>
+              ))
+            ) : (
+              <p className="text-gray-600">None provided</p>
+            )
+          }
         </div>
 
         <div className="grid grid-cols-[300px,1fr] gap-4">
