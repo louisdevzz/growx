@@ -2,15 +2,19 @@
 
 import { useParams } from "next/navigation";
 import Header from "@/components/Header";
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { HomeTab } from '@/components/HomeTab';
 import { FundingRoundTab } from '@/components/FundingRound';
 import { FundingRaisedTab } from '@/components/FundingRaisedTab';
+import { useAccount } from "wagmi";
 
 const ProjectDetail = () => {
   const { slug } = useParams();
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTab] = useState<string>('home');
   const [project, setProject] = useState<any>(null);
+  const startTime = useRef<number>(Date.now());
+  const {address} = useAccount();
+  const lastActivityTime = useRef<number>(Date.now());
 
   const fetchProject = useCallback(async () => {
     const response = await fetch(`/api/projects/findBySlug`, {
@@ -26,6 +30,59 @@ const ProjectDetail = () => {
     fetchProject();
   }, [fetchProject]);
 
+  useEffect(() => {
+    const updateLastActivity = () => {
+      lastActivityTime.current = Date.now();
+    };
+
+    const sendAnalyticsData = () => {
+      if (project && address) {
+        const timeSpent = Math.floor((lastActivityTime.current - startTime.current) / 1000);
+        
+        const analyticsData = {
+          projectId: project._id,
+          projectName: project.name,
+          projectSlug: slug,
+          timeSpent,
+          address: address,
+          startTime: startTime.current,
+          endTime: lastActivityTime.current,
+          timestamp: Date.now()
+        };
+
+        // Sử dụng sendBeacon để đảm bảo dữ liệu được gửi trước khi trang đóng
+        if (timeSpent > 1) {
+          navigator.sendBeacon('/api/analytics', JSON.stringify(analyticsData));
+        }
+      }
+    };
+
+    window.addEventListener('mousemove', updateLastActivity);
+    window.addEventListener('keydown', updateLastActivity);
+    window.addEventListener('scroll', updateLastActivity);
+    window.addEventListener('click', updateLastActivity);
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (project && address) {
+        sendAnalyticsData();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      // Gửi analytics khi component unmount
+      if (project && address) {
+        sendAnalyticsData();
+      }
+      
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('mousemove', updateLastActivity);
+      window.removeEventListener('keydown', updateLastActivity);
+      window.removeEventListener('scroll', updateLastActivity);
+      window.removeEventListener('click', updateLastActivity);
+    };
+  }, [project, address, slug]);
 
   if (!project) {
     return <div>Project not found</div>;
