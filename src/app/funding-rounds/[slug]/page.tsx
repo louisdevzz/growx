@@ -1,21 +1,39 @@
 'use client'
 
 import Header from '@/components/Header'
-import { pots } from '@/data/pots'
-import { notFound, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { featuredProjects } from '@/data/projects'
 import ProjectsTab from '@/components/ProjectsTab'
 import DonationsTab from '@/components/DonationsTab'
-import { useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
-export default function PotDetailsPage() {
-  const { potId } = useParams()
-  const pot = pots.find(p => p.id === potId)
-  if (!pot) {
-    notFound()
-  }
-
+export default function FundingRoundDetail() {
+  const { slug } = useParams()
+  const [round, setRound] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('projects')
+  const [isLoading, setIsLoading] = useState(true);
+
+  // console.log('slug',slug);
+
+  const fetchRound = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/rounds/findBySlug`, {
+        method: 'POST',
+        body: JSON.stringify({ slug: slug })
+      });
+      const round = await response.json();
+      setRound(round);
+    } catch (error) {
+      console.error('Error fetching round:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [slug]);
+
+  useEffect(() => {
+    fetchRound();
+  }, [fetchRound]);
 
   return (
     <div className="container min-h-screen">
@@ -25,8 +43,14 @@ export default function PotDetailsPage() {
         <div className="grid md:grid-cols-[2fr,1fr] gap-8">
           {/* Left Column - Main Info */}
           <div className="space-y-6">
-            <h1 className="text-4xl font-bold">{pot.title}</h1>
-            <p className="text-gray-600">{pot.description}</p>
+            {isLoading ? (
+              <div>Loading...</div>
+            ) : (
+              <>
+                <h1 className="text-4xl font-bold">{round?.name}</h1>
+                <p className="text-gray-600">{round?.description}</p>
+              </>
+            )}
             
             <div className="border-b">
               <div className="flex gap-8">
@@ -70,35 +94,13 @@ export default function PotDetailsPage() {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <div className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-red-600 bg-clip-text text-transparent">
-                    ~${pot.amount.toFixed(2)}
+                    ~${round?.amountRaised || 0}
                   </div>
-                  <div className="text-gray-500">raised from {pot.donorsCount} donors</div>
+                  <div className="text-gray-500">raised from {round?.donors || 0} donors</div>
                 </div>
-                <div className="text-gray-500 font-medium">NEAR</div>
+                <div className="text-gray-500 font-medium">ETH</div>
               </div>
               
-              <div>
-                <h3 className="text-sm text-gray-500 uppercase mb-2 font-semibold">TOP MATCHING POOL ALLOCATIONS</h3>
-                {pot.topAllocations?.map(allocation => (
-                  <div 
-                    key={allocation.id} 
-                    className="flex justify-between items-center py-2 hover:bg-gray-50 rounded-md px-2 transition-colors duration-200"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-gray-700">#{allocation.rank}</span>
-                      <div className="relative">
-                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-full blur-[1px]" />
-                        <img 
-                          src={allocation.icon} 
-                          className="w-6 h-6 rounded-full relative border-2 border-white"
-                        />
-                      </div>
-                      <span className="font-medium">{allocation.name}</span>
-                    </div>
-                    <div className="font-medium">{allocation.amount.toFixed(2)} N</div>
-                  </div>
-                ))}
-              </div>
             </div>
 
             <button className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-colors duration-200 font-medium">
