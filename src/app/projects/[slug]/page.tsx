@@ -42,12 +42,13 @@ const ProjectDetail = () => {
         const analyticsData = {
           projectId: project._id,
           projectName: project.name,
-          projectSlug: slug,
           timeSpent,
           address: address,
           startTime: startTime.current,
           endTime: lastActivityTime.current,
-          timestamp: Date.now()
+          timestamp: Date.now(),
+          amount: project.amount || 0,
+          category: project.category || 'Unknown',
         };
 
         // Sử dụng sendBeacon để đảm bảo dữ liệu được gửi trước khi trang đóng

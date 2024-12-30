@@ -15,7 +15,9 @@ export async function POST(request: Request) {
             timeSpent,
             startTime,
             endTime,
-            timestamp 
+            timestamp,
+            amount,
+            category
         } = data;
         
         const analytics = await Analytics.create({
@@ -27,6 +29,8 @@ export async function POST(request: Request) {
             startTime,
             endTime,
             timestamp,
+            amountDonated: amount,
+            category
         });
 
         return NextResponse.json(

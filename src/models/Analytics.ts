@@ -5,16 +5,7 @@ const analyticsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    projectId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Project',
-        required: true
-    },
     projectName: {
-        type: String,
-        required: true
-    },
-    projectSlug: {
         type: String,
         required: true
     },
@@ -28,6 +19,14 @@ const analyticsSchema = new mongoose.Schema({
     },
     endTime: {
         type: Number,
+        required: true
+    },
+    amountDonated: {
+        type: Number,
+        required: true
+    },
+    category: {
+        type: String,
         required: true
     },
     timestamp: {
