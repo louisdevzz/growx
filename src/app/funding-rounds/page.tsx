@@ -2,11 +2,26 @@
 import Header from '@/components/Header'
 import { pots } from '@/data/pots'
 import Link from 'next/link'
+import { useCallback, useEffect, useState } from 'react'
 
 
 export default function PotsPage() {
   const activePots = pots.filter(pot => pot.status === 'active')
   const completedPots = pots.filter(pot => pot.status === 'completed')
+
+  const [rounds, setRounds] = useState<any[]>([]);
+
+  const fetchRounds = useCallback(async () => {
+    const response = await fetch('/api/rounds');
+    const data = await response.json();
+    setRounds(data.data);
+  }, []);
+
+  useEffect(() => {
+    fetchRounds();
+  }, [fetchRounds]);
+
+  console.log(rounds);
 
   return (
     <div className="container min-h-screen">
@@ -38,8 +53,8 @@ export default function PotsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {activePots.map((pot, index) => (
-              <div className="block group" key={pot.id}>
+            {rounds.map((round, index) => (
+              <div className="block group" key={round._id}>
                 <div className="relative transform transition-all duration-300 hover:-translate-y-1">
                   {/* Gradient border effect */}
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-400 to-red-500 rounded-2xl blur opacity-75 group-hover:opacity-100"></div>
@@ -54,10 +69,10 @@ export default function PotsPage() {
 
                       {/* Content section */}
                       <div className="p-4 pt-12">
-                        <Link href={`/funding-rounds/${pot.id}`}>
-                          <h3 className="font-bold text-gray-800 mb-2">{pot.title}</h3>
+                        <Link href={`/funding-rounds/${round.slug}`}>
+                          <h3 className="font-bold text-gray-800 mb-2">{round.name}</h3>
                           <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-                            {pot.description}
+                            {round.description}
                           </p>
                         </Link>
 
@@ -66,16 +81,16 @@ export default function PotsPage() {
                           <div 
                             className="h-full rounded-full bg-gradient-to-r from-yellow-400 to-red-500"
                             // @ts-ignore
-                            style={{ width: `${Math.min((pot.amount / pot.target) * 100, 100)}%` }}
+                            style={{ width: `0%` }}
                           />
                         </div>
 
                         {/* Stats */}
                         <div className="flex justify-between items-center text-sm">
                           <div>
-                            <p className="font-bold text-gray-800">{pot.amount.toFixed(2)} ETH</p>
+                            <p className="font-bold text-gray-800">{round.amountRaised||0} ETH</p>
                             {/* @ts-ignore */}
-                            <p className="text-gray-500">{pot.donors || 0} contributors</p>
+                            <p className="text-gray-500">{round.donors || 0} contributors</p>
                           </div>
                         </div>
 
@@ -86,7 +101,7 @@ export default function PotsPage() {
                             <span className="text-sm text-gray-600">Active</span>
                           </div>
                           <p className="text-sm text-gray-500">
-                            {pot.daysLeft ? `${pot.daysLeft} days left` : 'Ongoing'}
+                            {round.daysLeft ? `${round.daysLeft} days left` : 'Ongoing'}
                           </p>
                         </div>
                       </div>

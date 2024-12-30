@@ -6,19 +6,13 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
 
-interface SocialLink {
-  type: string;
-  url: string;
-}
 
 export default function CreateFundingRound() {
   const { address } = useAccount()
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [roundName, setRoundName] = useState<string|null>(null);
   const [roundDescription, setRoundDescription] = useState<string|null>(null);
   const [roundCategory, setRoundCategory] = useState<string|null>(null);
   const [roundChain, setRoundChain] = useState<string|null>(null);
-  const [matchingPool, setMatchingPool] = useState<string|null>(null);
   const [startDate, setStartDate] = useState<string|null>(null);
   const [endDate, setEndDate] = useState<string|null>(null);
   const [addressReceived, setAddressReceived] = useState<string|null>(null);
@@ -27,7 +21,7 @@ export default function CreateFundingRound() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!roundName || !roundCategory || !roundDescription || !matchingPool || !startDate || !endDate) {
+    if (!roundName || !roundCategory || !roundDescription  || !startDate || !endDate) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -35,7 +29,7 @@ export default function CreateFundingRound() {
     const loadingToast = toast.loading('Creating funding round...');
 
     try {
-      const response = await fetch('/api/funding-rounds', {
+      const response = await fetch('/api/rounds', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,11 +40,11 @@ export default function CreateFundingRound() {
           category: roundCategory,
           description: roundDescription,
           chain: roundChain,
-          matchingPool,
-          startDate,
-          endDate,
+          startDate: new Date(startDate).getTime(),
+          endDate: new Date(endDate).getTime(),
           ownerAddress: address,
           address: addressReceived,
+          amountRaised: 0,
         }),
       });
 
