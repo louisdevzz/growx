@@ -1,81 +1,12 @@
 import Header from '@/components/Header'
 import DonorCard from '@/components/DonorCard'
-import DonorList from '@/components/DonorList'
-import type { Donor } from '@/components/DonorList'
-
-const topDonors = [
-  {
-    rank: 2,
-    name: "Rhyme Taylor",
-    amount: 2033.79,
-    imageUrl: "/assets/investors/avt.jpg",
-    description: "Helping creatives build...",
-    tokenAmount: 397.23
-  },
-  {
-    rank: 1,
-    name: "nearbigbrain",
-    amount: 3744.00,
-    imageUrl: "/assets/investors/avt.jpg",
-    description: "",
-    tokenAmount: 731.25
-  },
-  {
-    rank: 3,
-    name: "Illia",
-    amount: 1747.20,
-    imageUrl: "/assets/investors/avt.jpg",
-    description: "Bringing 1B users to...",
-    tokenAmount: 341.25
-  }
-]
-
-const allDonors: Donor[] = [
-  {
-    rank: 1,
-    name: "nearbigbrain",
-    amount: 3744.00,
-    imageUrl: "/assets/investors/avt.jpg",
-    tokenAmount: 731.25
-  },
-  {
-    rank: 2,
-    name: "Rhyme Taylor",
-    amount: 2033.79,
-    imageUrl: "/assets/investors/avt.jpg",
-    tokenAmount: 397.23
-  },
-  {
-    rank: 3,
-    name: "Illia",
-    amount: 1747.20,
-    imageUrl: "/assets/investors/avt.jpg",
-    tokenAmount: 341.25
-  },
-  {
-    rank: 4,
-    name: "Alice Web3",
-    amount: 1500.50,
-    imageUrl: "/assets/investors/avt.jpg",
-    tokenAmount: 293.45
-  },
-  {
-    rank: 5,
-    name: "CryptoBuilder",
-    amount: 1250.75,
-    imageUrl: "/assets/investors/avt.jpg",
-    tokenAmount: 244.68
-  },
-  {
-    rank: 6,
-    name: "DevDAO",
-    amount: 1100.25,
-    imageUrl: "/assets/investors/avt.jpg",
-    tokenAmount: 215.34
-  }
-]
+import Link from 'next/link'
+import { getTopDonors, getAllDonors } from '@/data/users'
 
 export default function DonorsPage() {
+  const topDonors = getTopDonors(3) // Lấy top 3 donors
+  const allDonors = getAllDonors() // Lấy tất cả donors đã sắp xếp
+
   return (
     <div className="container min-h-screen">
       <Header />
@@ -85,12 +16,16 @@ export default function DonorsPage() {
         {/* Top Donors Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {topDonors.map((donor) => (
-            <DonorCard
+            <Link 
+              href={`/users/${encodeURIComponent(donor.name)}`} 
               key={donor.rank}
-              name={donor.name}
-              amount={donor.amount}
-              imageUrl={donor.imageUrl}
-            />
+            >
+              <DonorCard
+                name={donor.name}
+                amount={donor.donations.amount}
+                imageUrl={donor.profileImage}
+              />
+            </Link>
           ))}
         </div>
 
@@ -98,7 +33,7 @@ export default function DonorsPage() {
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-2">
             <span className="font-semibold">LEADERBOARD</span>
-            <span className="text-primary">1129</span>
+            <span className="text-primary">{allDonors.length}</span>
           </div>
           <div className="flex gap-2">
             {['All Time', '1Y', '1M', '1W', '24H'].map((period) => (
@@ -114,7 +49,34 @@ export default function DonorsPage() {
 
         {/* Donors List */}
         <div className="bg-white rounded-lg shadow-sm">
-          <DonorList donors={allDonors} />
+          <div className="divide-y">
+            {allDonors.map((donor) => (
+              <Link 
+                href={`/users/${encodeURIComponent(donor.name)}`}
+                key={donor.rank}
+                className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-gray-500 w-8">#{donor.rank}</span>
+                  <div className="w-10 h-10 rounded-full overflow-hidden">
+                    <img 
+                      src={donor.profileImage} 
+                      alt={donor.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">{donor.name}</h3>
+                    <p className="text-sm text-gray-500">{donor.bio.substring(0, 60)}...</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-medium">${donor.donations.amount.toLocaleString()}</p>
+                  <p className="text-sm text-gray-500">{donor.donations.tokenAmount} tokens</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>
