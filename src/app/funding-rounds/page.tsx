@@ -16,9 +16,11 @@ export default function PotsPage() {
         <div className="bg-[#FDF6F0] rounded-lg p-8 mb-12">
           <h1 className="text-3xl font-bold mb-2">Donate to Matching Rounds</h1>
           <p className="text-xl mb-4">to Get Your Contributions Amplified.</p>
-          <button className="bg-red-500 text-white px-6 py-2 rounded-md">
-            Learn More
-          </button>
+          <Link href="/create-funding-rounds">
+            <button className="px-8 py-4 bg-white text-black font-semibold rounded-xl border-2 border-black hover:bg-black hover:text-white transition-all">
+              Create Funding Round
+            </button>
+          </Link>
         </div>
 
         {/* Active Pots Section */}

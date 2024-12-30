@@ -8,9 +8,9 @@ interface DonorCardProps {
 
 export default function DonorCard({ name, amount, imageUrl }: DonorCardProps) {
   return (
-    <div className="group card-hover">
-      <div className="absolute top-2 left-2">
-        <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">
+    <div className="group card-hover relative">
+      <div className="absolute top-2 left-2 z-10">
+        <span className="bg-gray-100 px-3 py-1 rounded-full text-sm font-medium">
           ~${amount.toLocaleString()}
         </span>
       </div>

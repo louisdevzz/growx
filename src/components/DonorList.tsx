@@ -38,8 +38,12 @@ export default function DonorList({ donors, className }: DonorListProps) {
             />
             <span className="font-medium hover:text-blue-600 transition-colors duration-200">{donor.name}</span>
           </div>
-          <div className="text-sm font-medium text-gray-700">{donor.tokenAmount.toFixed(2)}</div>
-          <div className="text-sm font-medium text-emerald-600">~${donor.amount.toLocaleString()}</div>
+          <div className="text-sm font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
+            {donor.tokenAmount.toFixed(2)}
+          </div>
+          <div className="text-sm font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+            ~${donor.amount.toLocaleString()}
+          </div>
         </div>
       ))}
     </div>
