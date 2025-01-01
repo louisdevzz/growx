@@ -20,7 +20,15 @@ export async function POST(req: Request) {
   try {
     await dbConnect();
     const body = await req.json();
+    
+    // Add logging to debug the incoming data
+    console.log('Received project data:', body);
+    
     const project = await Project.create(body);
+    
+    // Log the created project
+    console.log('Created project:', project);
+    
     return NextResponse.json({ success: true, data: project }, { status: 201 });
   } catch (error) {
     console.error('Project creation error:', error);

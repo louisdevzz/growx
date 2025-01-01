@@ -1,12 +1,11 @@
 'use client'
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
-import { useAccount, useSimulateContract, useWriteContract } from 'wagmi';
-import { FUNDING_CONTRACT_ABI } from '@/lib/ABI';
-import { FUNDING_CONTRACT_ADDRESS } from '@/lib/ABI';
+import { useAccount, useSimulateContract, useReadContract, useWriteContract, useWatchContractEvent } from 'wagmi';
+import {PROJECT_CONTRACT_ADDRESS,PROJECT_CONTRACT_ABI } from '@/lib/ABI';
+
 interface SocialLink {
   type: string;
   url: string;
@@ -26,12 +25,23 @@ export default function CreateProject() {
   const [projectChain, setProjectChain] = useState<string|null>(null);
   const [fundingSources, setFundingSources] = useState<string[]>([]);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
-  const router = useRouter();
   const [addressReceived, setAddressReceived] = useState<string|null>(null);
+  const { writeContractAsync, isSuccess,data:txData,isPending } = useWriteContract()
+  const [submitLoading, setSubmitLoading] = useState<boolean>(true);
+  
+  const { data, refetch: refetchProjectId } = useReadContract({
+    address: PROJECT_CONTRACT_ADDRESS,
+    abi: PROJECT_CONTRACT_ABI,
+    functionName: 'getProjectIdNow',
+    args: [],
+    query: {
+      enabled: Boolean(projectName && projectDescription && coverImage && profileImage)
+    }
+  })
 
   useSimulateContract({
-    address: FUNDING_CONTRACT_ADDRESS,
-    abi: FUNDING_CONTRACT_ABI,
+    address: PROJECT_CONTRACT_ADDRESS,
+    abi: PROJECT_CONTRACT_ABI,
     functionName: 'registerProject',
     args: projectName && projectDescription && coverImage && profileImage
       ? [projectName, projectDescription, [coverImage, profileImage]]
@@ -41,7 +51,40 @@ export default function CreateProject() {
     }
   })
 
-  const { writeContract, isSuccess } = useWriteContract()
+  const uploadProject = async (projectId: string) => {
+    if (!projectName || !projectCategory || !projectDescription || !coverImage || !profileImage) {
+      // toast.error('Please fill in all required fields');
+      return;
+    }
+    // console.log("Address",address)
+    // console.log("AddressReceived",addressReceived)
+    const response = await fetch('/api/projects', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ownerAddress: address,
+        address: addressReceived,
+        projectId: projectId,
+        slug: projectName.toLowerCase().replace(/\s+/g, '-'),
+        name: projectName,
+        category: projectCategory,
+        description: projectDescription,
+        why: projectWhy,
+        coverImage,
+        profileImage,
+        chain: projectChain,
+        fundingSources,
+        socialLinks
+      }),
+    });
+    if (response.ok) {
+      toast.success('Project created successfully');
+    } else {
+      toast.error('Failed to create project');
+    }
+  }
 
   const uploadToPinata = async (file: File): Promise<string | null> => {
     const formData = new FormData();
@@ -119,7 +162,6 @@ export default function CreateProject() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!projectName || !projectCategory || !projectDescription || !coverImage || !profileImage) {
       toast.error('Please fill in all required fields');
       return;
@@ -128,40 +170,42 @@ export default function CreateProject() {
     const loadingToast = toast.loading('Creating project...');
 
     try {
-      const response = await fetch('/api/projects', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          slug: projectName.toLowerCase().replace(/\s+/g, '-'),
-          name: projectName,
-          category: projectCategory,
-          description: projectDescription,
-          why: projectWhy,
-          coverImage,
-          profileImage,
-          chain: projectChain,
-          fundingSources,
-          socialLinks,
-          ownerAddress: address,
-          address: addressReceived,
-        }),
+      await writeContractAsync({
+        address: PROJECT_CONTRACT_ADDRESS,
+        abi: PROJECT_CONTRACT_ABI,
+        functionName: 'registerProject',
+        args: [projectName, projectDescription, [coverImage, profileImage]]
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        toast.success('Project created successfully', { id: loadingToast });
-        router.push('/');
-      } else {
-        throw new Error(data.error || 'Failed to create project');
-      }
+      toast.success('Please wait for the project to be created', { id: loadingToast });
+      
     } catch (error) {
       console.error('Project creation error:', error);
       toast.error('Failed to create project', { id: loadingToast });
     }
   };
+
+  useWatchContractEvent({
+    address: PROJECT_CONTRACT_ADDRESS,
+    abi: PROJECT_CONTRACT_ABI,
+    eventName: 'ProjectRegistered',
+    args: projectName && address ? [projectName, address] : undefined,
+    onLogs(logs) {
+      setSubmitLoading(false)
+      //console.log('logs',logs)
+      
+      refetchProjectId().then((result) => {
+        //console.log("result",result)
+        if (result.data) {
+          uploadProject(result.data)
+        }
+      })
+    },
+    onError(error) {  
+      toast.error(`${error.message}`)
+    }
+  });
+
 
   return (
     <div className='min-h-screen bg-white container'>
@@ -350,7 +394,7 @@ export default function CreateProject() {
             <div className="mb-8">
               <div className="flex justify-between items-center mb-4">
                 <label className="font-medium text-lg">Address receiving funds</label>
-                <span className="text-gray-500 text-sm">Optional</span>
+                {/* <span className="text-gray-500 text-sm">Optional</span> */}
               </div>
               <div className="flex gap-4 mb-2">
                 <div className="relative w-1/3">
@@ -360,6 +404,7 @@ export default function CreateProject() {
                     value={projectChain || ''}
                   >
                     <option value="">Add chain</option>
+                    <option value="ancient8">Ancient8</option>
                     <option value="solana">Solana</option>
                     <option value="ethereum">Ethereum</option>
                     <option value="polygon">Polygon</option>

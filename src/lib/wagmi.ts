@@ -1,13 +1,13 @@
-import { http, createConfig } from '@wagmi/core'
-import { ancient8Testnet } from "@/lib/chain";
+import { http } from '@wagmi/core'
+import { ancient8Sepolia } from 'wagmi/chains';
 import { getDefaultConfig } from '@rainbow-me/rainbowkit'
 
 export const config = getDefaultConfig({
   appName: 'HopeFund',
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "",
-  chains: [ancient8Testnet],
+  chains: [ancient8Sepolia],
   ssr: true,
   transports: {
-    [ancient8Testnet.id]: http(),
+    [ancient8Sepolia.id]: http(),
   }
 }) 

@@ -1,8 +1,24 @@
-export const FUNDING_CONTRACT_ADDRESS = '0xb42c27C8687d662b650e683C94071c0Ea3Bee8aA'
+export const PROJECT_CONTRACT_ADDRESS = '0xe23D28d34EfFbE05875547B87387111491269D42'
 
-export const FUNDING_CONTRACT_ABI = [
+export const PROJECT_CONTRACT_ABI = [
     {
-        "inputs": [],
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_manager",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_roundManagementContract",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_investorManagementContract",
+                "type": "address"
+            }
+        ],
         "stateMutability": "nonpayable",
         "type": "constructor"
     },
@@ -111,25 +127,6 @@ export const FUNDING_CONTRACT_ABI = [
                 "internalType": "string",
                 "name": "projectId",
                 "type": "string"
-            }
-        ],
-        "name": "ProjectAddedToRound",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "roundId",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "projectId",
-                "type": "string"
             },
             {
                 "indexed": false,
@@ -172,7 +169,7 @@ export const FUNDING_CONTRACT_ABI = [
             {
                 "indexed": false,
                 "internalType": "string",
-                "name": "projectId",
+                "name": "name",
                 "type": "string"
             },
             {
@@ -205,153 +202,24 @@ export const FUNDING_CONTRACT_ABI = [
         "type": "event"
     },
     {
-        "anonymous": false,
         "inputs": [
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "roundId",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "metadata",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "duration",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "enum FundingPlatform.RoundState",
-                "name": "state",
-                "type": "uint8"
-            }
-        ],
-        "name": "RoundCreated",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "roundId",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "enum FundingPlatform.RoundState",
-                "name": "state",
-                "type": "uint8"
-            }
-        ],
-        "name": "RoundStateUpdated",
-        "type": "event"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_roundId",
-                "type": "string"
-            },
             {
                 "internalType": "string",
                 "name": "_projectId",
                 "type": "string"
-            }
-        ],
-        "name": "addProjectToRound",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
+            },
             {
                 "internalType": "string",
-                "name": "_roundId",
+                "name": "roundId",
                 "type": "string"
             }
         ],
-        "name": "awardTopProjects",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_name",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_description",
-                "type": "string"
-            },
-            {
-                "internalType": "string[]",
-                "name": "_images",
-                "type": "string[]"
-            },
+        "name": "getFundsInRound",
+        "outputs": [
             {
                 "internalType": "uint256",
-                "name": "_duration",
+                "name": "",
                 "type": "uint256"
-            }
-        ],
-        "name": "createRound",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_roundId",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_projectId",
-                "type": "string"
-            }
-        ],
-        "name": "fundProject",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getActiveRoundIds",
-        "outputs": [
-            {
-                "internalType": "string[]",
-                "name": "",
-                "type": "string[]"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getAllRoundIds",
-        "outputs": [
-            {
-                "internalType": "string[]",
-                "name": "",
-                "type": "string[]"
             }
         ],
         "stateMutability": "view",
@@ -365,7 +233,26 @@ export const FUNDING_CONTRACT_ABI = [
                 "type": "string"
             }
         ],
-        "name": "getInvestors",
+        "name": "getFundsRaisedOutRound",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_projectId",
+                "type": "string"
+            }
+        ],
+        "name": "getInvestorsInOutRound",
         "outputs": [
             {
                 "internalType": "address[]",
@@ -380,7 +267,12 @@ export const FUNDING_CONTRACT_ABI = [
         "inputs": [
             {
                 "internalType": "string",
-                "name": "_roundId",
+                "name": "_projectId",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "roundId",
                 "type": "string"
             }
         ],
@@ -390,30 +282,6 @@ export const FUNDING_CONTRACT_ABI = [
                 "internalType": "address[]",
                 "name": "",
                 "type": "address[]"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_type",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_id",
-                "type": "string"
-            }
-        ],
-        "name": "getMeta",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
             }
         ],
         "stateMutability": "view",
@@ -433,27 +301,70 @@ export const FUNDING_CONTRACT_ABI = [
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "getProjectsIds",
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_projectId",
+                "type": "string"
+            }
+        ],
+        "name": "getProject",
         "outputs": [
             {
-                "internalType": "string[]",
-                "name": "",
-                "type": "string[]"
+                "internalType": "address payable",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "fundsOutRound",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address[]",
+                "name": "investorsOutRound",
+                "type": "address[]"
+            },
+            {
+                "internalType": "enum ProjectManagement.ProjectStatus",
+                "name": "status",
+                "type": "uint8"
+            },
+            {
+                "internalType": "uint256",
+                "name": "roundDeadline",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address[]",
+                "name": "investors",
+                "type": "address[]"
+            },
+            {
+                "internalType": "string",
+                "name": "metadata",
+                "type": "string"
             }
         ],
         "stateMutability": "view",
         "type": "function"
     },
     {
-        "inputs": [
+        "inputs": [],
+        "name": "getProjectIdNow",
+        "outputs": [
             {
                 "internalType": "string",
-                "name": "_roundId",
+                "name": "",
                 "type": "string"
             }
         ],
-        "name": "getProjectsInRound",
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getProjectsIds",
         "outputs": [
             {
                 "internalType": "string[]",
@@ -478,38 +389,13 @@ export const FUNDING_CONTRACT_ABI = [
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "investors",
+        "inputs": [],
+        "name": "investorManagement",
         "outputs": [
             {
-                "internalType": "address",
-                "name": "investorAddress",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_roundId",
-                "type": "string"
-            }
-        ],
-        "name": "isRoundActive",
-        "outputs": [
-            {
-                "internalType": "bool",
+                "internalType": "contract InvestorManagement",
                 "name": "",
-                "type": "bool"
+                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -543,12 +429,12 @@ export const FUNDING_CONTRACT_ABI = [
     },
     {
         "inputs": [],
-        "name": "projectFee",
+        "name": "projectId",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "string",
                 "name": "",
-                "type": "uint256"
+                "type": "string"
             }
         ],
         "stateMutability": "view",
@@ -590,11 +476,11 @@ export const FUNDING_CONTRACT_ABI = [
             },
             {
                 "internalType": "uint256",
-                "name": "fundsRaised",
+                "name": "fundsOutRound",
                 "type": "uint256"
             },
             {
-                "internalType": "enum FundingPlatform.ProjectStatus",
+                "internalType": "enum ProjectManagement.ProjectStatus",
                 "name": "status",
                 "type": "uint8"
             },
@@ -650,44 +536,12 @@ export const FUNDING_CONTRACT_ABI = [
     },
     {
         "inputs": [],
-        "name": "rewardAmount",
+        "name": "roundManagement",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "contract RoundManagement",
                 "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "roundCount",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "roundIds",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
+                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -697,34 +551,82 @@ export const FUNDING_CONTRACT_ABI = [
         "inputs": [
             {
                 "internalType": "string",
-                "name": "",
+                "name": "_roundId",
                 "type": "string"
-            }
-        ],
-        "name": "rounds",
-        "outputs": [
-            {
-                "internalType": "enum FundingPlatform.RoundState",
-                "name": "state",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "duration",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "deadline",
-                "type": "uint256"
             },
             {
                 "internalType": "string",
-                "name": "metadata",
+                "name": "_projectId",
                 "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_value",
+                "type": "uint256"
             }
         ],
-        "stateMutability": "view",
+        "name": "updateFundRaisedInRound",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_projectId",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+            }
+        ],
+        "name": "updateFundRaisedOutRound",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_roundId",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_projectId",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "_investor",
+                "type": "address"
+            }
+        ],
+        "name": "updateInvestorInRound",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_projectId",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "investor",
+                "type": "address"
+            }
+        ],
+        "name": "updateInvestorOutRound",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -775,6 +677,29 @@ export const FUNDING_CONTRACT_ABI = [
             {
                 "internalType": "string",
                 "name": "_projectId",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "newDeadline",
+                "type": "uint256"
+            }
+        ],
+        "name": "updateRoundDeadline",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_projectId",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_roundId",
                 "type": "string"
             }
         ],

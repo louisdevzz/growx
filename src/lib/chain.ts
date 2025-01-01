@@ -1,3 +1,5 @@
+import { http } from "viem";
+import { createPublicClient } from "viem";
 
 export const ancient8Testnet = {
   id: 28122024,
@@ -17,3 +19,8 @@ export const ancient8Testnet = {
   },
   testnet: true,
 } as const; 
+
+export const publicClient = createPublicClient({
+  chain: ancient8Testnet,
+  transport: http()
+})

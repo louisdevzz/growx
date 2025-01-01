@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const projectSchema = new mongoose.Schema({
+  projectId: String,
   slug: String,
   coverImage: String,
   profileImage: String,
@@ -29,6 +30,16 @@ const projectSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  address: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  ownerAddress: {
+    type: String,
+    required: true,
+    trim: true
   }
 });
 
