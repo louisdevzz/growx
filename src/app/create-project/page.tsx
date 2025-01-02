@@ -28,7 +28,8 @@ export default function CreateProject() {
   const [addressReceived, setAddressReceived] = useState<string|null>(null);
   const { writeContractAsync, isSuccess,data:txData,isPending } = useWriteContract()
   const [submitLoading, setSubmitLoading] = useState<boolean>(true);
-  
+
+
   const { data, refetch: refetchProjectId } = useReadContract({
     address: PROJECT_CONTRACT_ADDRESS,
     abi: PROJECT_CONTRACT_ABI,
@@ -38,18 +39,6 @@ export default function CreateProject() {
       enabled: Boolean(projectName && projectDescription && coverImage && profileImage)
     }
   })
-
-  // useSimulateContract({
-  //   address: PROJECT_CONTRACT_ADDRESS,
-  //   abi: PROJECT_CONTRACT_ABI,
-  //   functionName: 'registerProject',
-  //   args: projectName && projectDescription && coverImage && profileImage
-  //     ? [projectName, projectDescription, [coverImage, profileImage]]
-  //     : undefined,
-  //   query: {
-  //     enabled: Boolean(projectName && projectDescription && coverImage && profileImage)
-  //   }
-  // })
 
   const uploadProject = async (projectId: string) => {
     if (!projectName || !projectCategory || !projectDescription || !coverImage || !profileImage) {
@@ -74,13 +63,15 @@ export default function CreateProject() {
         why: projectWhy,
         coverImage,
         profileImage,
-        chain: projectChain,
+        chain: projectChain,  
         fundingSources,
         socialLinks
       }),
     });
     if (response.ok) {
-      toast.success('Project created successfully');
+      toast.loading('Please wait for the project to be published', {
+        duration: 10000 // 10 seconds in milliseconds
+      });
     } else {
       toast.error('Failed to create project');
     }
@@ -171,7 +162,9 @@ export default function CreateProject() {
       return;
     }
 
-    const loadingToast = toast.loading('Creating project...');
+    const loadingToast = toast.loading('Creating project...', {
+      duration: 10000
+    });
 
     try {
       await writeContractAsync({
@@ -181,7 +174,7 @@ export default function CreateProject() {
         args: [projectName, projectDescription, [coverImage, profileImage]]
       });
 
-      toast.success('Please wait for the project to be created', { id: loadingToast });
+      toast.loading('Please wait for the project to be created', { id: loadingToast, duration: 10000 });
       
     } catch (error) {
       console.error('Project creation error:', error);
@@ -196,6 +189,7 @@ export default function CreateProject() {
       functionName: 'publishProject',
       args: [projectId]
     });
+    toast.success('Project published successfully');
   }
 
   useWatchContractEvent({
