@@ -36,12 +36,12 @@ export default function Home() {
         <Header />
 
         {/* Hero Section */}
-        <div className="relative py-20">
+        <div className="relative py-10 md:py-20">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-50 via-pink-50 to-blue-50 opacity-40 rounded-3xl blur-xl"/>
           
-          <div className="relative flex items-center justify-between">
+          <div className="relative flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="max-w-2xl">
-              <h1 className="text-6xl font-bold mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 Support Projects
                 <br />
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
@@ -79,8 +79,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Floating Cards */}
-            <div className="relative w-[600px] h-[400px]">
+            {/* Floating Cards - Hide on mobile */}
+            <div className="relative w-full md:w-[600px] h-[400px] hidden md:block">
               {/* Card 1 */}
               <div className="absolute top-0 right-0 w-72 transform rotate-6 hover:rotate-0 transition-transform float">
                 <div className="relative">
@@ -230,7 +230,7 @@ export default function Home() {
           </div>
 
           {/* Stats Section */}
-          <div className="flex gap-16 mt-16">
+          <div className="grid grid-cols-2 md:flex gap-8 md:gap-16 mt-8 md:mt-16">
             <div>
               <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
                 12.5K+
@@ -253,34 +253,37 @@ export default function Home() {
         </div>
 
         {/* Recently viewed projects */}
-        {/* <section className="py-10">
-          <div className="flex items-center justify-between mb-12">
+        <section className="py-6 md:py-10">
+          <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold">Recently viewed projects</h2>
           </div>
 
-          <div className="grid grid-cols-3 gap-8">
-            {isLoading ? (
-              <>
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-              </>
-            ) : (
-              projects.map((project, index) => (
-                <ProjectCard
-                  key={project._id}
-                  {...project}
-                  index={index+1}
-                  href={`/projects/${project.slug}`}
-                />
-              ))
-            )}
+          <div className="relative ">
+            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 snap-x snap-mandatory p-4">
+              {isLoading ? (
+                <>
+                  <ProjectCardSkeleton />
+                  <ProjectCardSkeleton />
+                  <ProjectCardSkeleton />
+                </>
+              ) : (
+                projects.map((project, index) => (
+                  <div className="w-[280px] sm:w-auto flex-shrink-0 sm:flex-shrink" key={project._id}>
+                    <ProjectCard
+                      {...project}
+                      index={index+1}
+                      href={`/projects/${project.slug}`}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        </section> */}
+        </section>
 
         {/* Featured Projects */}
-        <section className="py-10">
-          <div className="flex items-center justify-between mb-12">
+        <section className="py-6 md:py-10">
+          <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold">Featured Projects</h2>
             <Link 
               href="/projects"
@@ -293,23 +296,26 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-3 gap-8">
-            {isLoading ? (
-              <>
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-              </>
-            ) : (
-              projects.map((project, index) => (
-                <ProjectCard
-                  key={project._id}
-                  {...project}
-                  index={index+1}
-                  href={`/projects/${project.slug}`}
-                />
-              ))
-            )}
+          <div className="relative">
+            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 snap-x snap-mandatory p-4">
+              {isLoading ? (
+                <>
+                  <ProjectCardSkeleton />
+                  <ProjectCardSkeleton />
+                  <ProjectCardSkeleton />
+                </>
+              ) : (
+                projects.map((project, index) => (
+                  <div className="w-[280px] sm:w-auto flex-shrink-0 sm:flex-shrink" key={project._id}>
+                    <ProjectCard
+                      {...project}
+                      index={index+1}
+                      href={`/projects/${project.slug}`}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </section>
         
