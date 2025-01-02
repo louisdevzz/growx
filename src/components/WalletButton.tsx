@@ -63,7 +63,7 @@ const WalletButton = () => {
 
                   <button
                     onClick={openAccountModal}
-                    className="flex w-[180px] text-center justify-center items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50 hover:shadow-md"
+                    className="flex w-[22 0px] text-center justify-center items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50 hover:shadow-md"
                   >
                     {account.displayName}
                     <span className="px-2.5 py-1 text-xs font-medium text-green-700 bg-green-50 rounded-full border border-green-100">

@@ -12,7 +12,7 @@ interface SocialLink {
 }
 
 export default function CreateProject() {
-  const { address } = useAccount()
+  const { address,isConnected } = useAccount()
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,17 +39,17 @@ export default function CreateProject() {
     }
   })
 
-  useSimulateContract({
-    address: PROJECT_CONTRACT_ADDRESS,
-    abi: PROJECT_CONTRACT_ABI,
-    functionName: 'registerProject',
-    args: projectName && projectDescription && coverImage && profileImage
-      ? [projectName, projectDescription, [coverImage, profileImage]]
-      : undefined,
-    query: {
-      enabled: Boolean(projectName && projectDescription && coverImage && profileImage)
-    }
-  })
+  // useSimulateContract({
+  //   address: PROJECT_CONTRACT_ADDRESS,
+  //   abi: PROJECT_CONTRACT_ABI,
+  //   functionName: 'registerProject',
+  //   args: projectName && projectDescription && coverImage && profileImage
+  //     ? [projectName, projectDescription, [coverImage, profileImage]]
+  //     : undefined,
+  //   query: {
+  //     enabled: Boolean(projectName && projectDescription && coverImage && profileImage)
+  //   }
+  // })
 
   const uploadProject = async (projectId: string) => {
     if (!projectName || !projectCategory || !projectDescription || !coverImage || !profileImage) {
@@ -162,6 +162,10 @@ export default function CreateProject() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isConnected) {
+      toast.error('Please connect your wallet');
+      return;
+    }
     if (!projectName || !projectCategory || !projectDescription || !coverImage || !profileImage) {
       toast.error('Please fill in all required fields');
       return;
@@ -185,6 +189,15 @@ export default function CreateProject() {
     }
   };
 
+  const publishProject = async (projectId: string) => {
+    await writeContractAsync({
+      address: PROJECT_CONTRACT_ADDRESS,
+      abi: PROJECT_CONTRACT_ABI,
+      functionName: 'publishProject',
+      args: [projectId]
+    });
+  }
+
   useWatchContractEvent({
     address: PROJECT_CONTRACT_ADDRESS,
     abi: PROJECT_CONTRACT_ABI,
@@ -197,12 +210,10 @@ export default function CreateProject() {
       refetchProjectId().then((result) => {
         //console.log("result",result)
         if (result.data) {
+          publishProject(result.data)
           uploadProject(result.data)
         }
       })
-    },
-    onError(error) {  
-      toast.error(`${error.message}`)
     }
   });
 

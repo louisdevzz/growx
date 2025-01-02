@@ -43,9 +43,10 @@ export const HomeTab = ({project}: {project: ProjectProps}) => {
 
         <div className="grid grid-cols-[300px,1fr] gap-4">
           <div className="font-medium">Address receiving funds</div>
-          <p className="text-gray-600">{project.address || "None provided"}</p>
+          <Link target="_blank" href={`https://scanv2-testnet.ancient8.gg/address/${project.address}`} className="text-gray-600 hover:underline hover:text-gray-900">{project.address || "None provided"}</Link>
         </div>
       </div>
+      
     </div>
   );
 }

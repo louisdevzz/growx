@@ -2,8 +2,14 @@
 
 import Image from 'next/image'
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ProjectProps } from '@/types/project';
+import { PROJECT_CONTRACT_ADDRESS } from '@/lib/ABI';
+import { PROJECT_CONTRACT_ABI } from '@/lib/ABI'; 
+import { formatEther } from 'viem';
+import toast from 'react-hot-toast';
+import { useAccount, useReadContract,useWriteContract } from "wagmi";
+import { INVESTOR_MANAGEMENT_CONTRACT, INVESTOR_MANAGEMENT_CONTRACT_ABI } from '@/lib/ABI';
 
 
 const truncate = (text: string, maxLength: number) => {
@@ -40,6 +46,7 @@ const THEME_COLORS = [
 
 export default function ProjectCard({ 
   _id,
+  projectId,
   name, 
   description, 
   coverImage,
@@ -60,8 +67,41 @@ export default function ProjectCard({
   const [showDonateModal, setShowDonateModal] = useState(false);
   const [donationAmount, setDonationAmount] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const { writeContractAsync } = useWriteContract()
+  const [ethPrice, setEthPrice] = useState<number>(0);
 
-  // Add effect to handle body scroll lock
+  const {data: fundsRaisedOutRound, refetch: refetchFundsRaisedOutRound} = useReadContract({
+    address: PROJECT_CONTRACT_ADDRESS,
+    abi: PROJECT_CONTRACT_ABI,
+    functionName: 'getFundsRaisedOutRound',
+    args: [projectId||""],
+    query: {
+      enabled: !!projectId
+    }
+  })
+
+  const fetchEthPrice = useCallback(async () => {
+    try {
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      const data = await response.json();
+      setEthPrice(data.ethereum.usd);
+    } catch (error) {
+      console.error('Error fetching ETH price:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Fetch initial price
+    fetchEthPrice();
+    
+    // Update price every 60 seconds
+    const interval = setInterval(fetchEthPrice, 60000);
+    
+    return () => clearInterval(interval);
+  }, [fetchEthPrice]);
+  
+  // console.log(projectId,fundsRaisedOutRound);
+
   useEffect(() => {
     if (showConfirmModal || showDonateModal) {
       document.body.style.overflow = 'hidden';
@@ -74,23 +114,44 @@ export default function ProjectCard({
     };
   }, [showConfirmModal, showDonateModal]);
 
-  // Lấy index từ _id hoặc sử dụng hash function
   const getColorIndex = (_id?: string) => {
     if (!_id) return 0;
-    // Use the first 6 characters of _id to generate a number
     const numericId = parseInt(_id.substring(0, 6), 16);
     return numericId % THEME_COLORS.length;
   };
 
-  // Lấy màu gradient
   const getGradientColors = () => {
     return THEME_COLORS[getColorIndex(_id)].gradient;
   };
 
-  // Lấy màu text
   const getTextColor = () => {
     return THEME_COLORS[getColorIndex(_id)].text;
   };
+
+  const handleConfirmDonation = () => {
+    if(donationAmount && Number(donationAmount) > 0) {
+      setShowConfirmModal(true);
+      setShowDonateModal(false);
+    }else{
+      toast.error("Please enter a valid donation amount");
+    }
+  }
+
+  const handleDonate = async () => {
+    if(donationAmount && Number(donationAmount) > 0) {
+      const amount = Number(donationAmount) * 10**18;
+      await writeContractAsync({
+        address: INVESTOR_MANAGEMENT_CONTRACT,
+        abi: INVESTOR_MANAGEMENT_CONTRACT_ABI,
+        functionName: 'fundProjectOutRound',
+        args: [projectId||""],
+        value: BigInt(amount)
+      });
+      toast.success("Donation successful");
+      setShowConfirmModal(false);
+      refetchFundsRaisedOutRound();
+    }
+  }
 
   return (
     <>
@@ -140,7 +201,7 @@ export default function ProjectCard({
                 {/* Stats and Donate Button */}
                 <div className="flex justify-between items-center text-sm">
                   <div>
-                    <p className="font-bold text-gray-800">{amount} {currency}</p>
+                    <p className="font-bold text-gray-800">{formatEther(fundsRaisedOutRound||BigInt(0))} {currency}</p>
                     <p className="text-gray-500">{donors} contributors</p>
                   </div>
                   <button 
@@ -261,7 +322,8 @@ export default function ProjectCard({
             <div className="space-y-4">
               <div>
                 <p className="text-gray-600">Total amount</p>
-                <p className="text-lg font-semibold">{donationAmount} NEAR</p>
+                <p className="text-lg font-semibold">{donationAmount} ETH</p>
+                <p className="text-gray-600">≈ ${(donationAmount ? (Number(donationAmount) * ethPrice) : 0).toFixed(5)} USD</p>
               </div>
 
               <div>
@@ -269,32 +331,17 @@ export default function ProjectCard({
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Protocol fee (2.5%)</span>
-                    <span>{(donationAmount * 0.025).toFixed(3)} Ⓝ</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>On-Chain Storage</span>
-                    <span>&lt;0.01 Ⓝ</span>
+                    <span>${((donationAmount ? (Number(donationAmount) * ethPrice) : 0) * 0.025).toFixed(5)} USD</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Project allocation (97.5%)</span>
-                    <span>{(donationAmount * 0.975).toFixed(3)} Ⓝ</span>
+                    <span>${((donationAmount ? (Number(donationAmount) * ethPrice) : 0) * 0.975).toFixed(5)} USD</span>
                   </div>
                 </div>
               </div>
-
-              <div className="flex items-center gap-2">
-                <input type="checkbox" id="remove-fee" />
-                <label htmlFor="remove-fee" className="text-sm text-gray-600">
-                  Remove 2.5% protocol fee
-                </label>
-                <span className="text-sm text-gray-400">impact.sputnik-dao.near</span>
-              </div>
-
               <button 
                 className="w-full px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
-                onClick={() => {
-                  setShowConfirmModal(false);
-                }}
+                onClick={handleDonate}
               >
                 Confirm donation
               </button>

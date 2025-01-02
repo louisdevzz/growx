@@ -4,6 +4,8 @@ import type { Metadata } from 'next'
 import { Toaster } from 'react-hot-toast'
 import { Space_Grotesk } from 'next/font/google'
 import { Analytics } from "@vercel/analytics/react"
+import { Suspense } from 'react'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] })
 
@@ -66,7 +68,11 @@ export default function RootLayout({
       </head>
       <body className={`min-h-screen bg-white ${spaceGrotesk.className}`}>
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
-          <Providers>{children}</Providers>
+          <Providers>
+            <Suspense fallback={<LoadingSpinner />}>
+              {children}
+            </Suspense>
+          </Providers>
           <Toaster position="top-center" />
           <Analytics />
         </div>
