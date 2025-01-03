@@ -175,11 +175,11 @@ const ProjectDetail = () => {
     <div className="min-h-screen bg-white">
       <div className="flex flex-col">
         <div className="">
-          <div className="w-full">
+          <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
             <Header />
             
-            {/* Banner Image Container */}
-            <div className="relative w-full h-[300px] sm:h-[400px] overflow-hidden mt-5">
+            {/* Banner Image Container - Updated height and padding */}
+            <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px] overflow-hidden mt-4 sm:mt-5">
               <img 
                 src={project.coverImage} 
                 alt={project.name}
@@ -187,51 +187,60 @@ const ProjectDetail = () => {
               />
             </div>
 
-            {/* Profile Section */}
-            <div className="max-w-[1440px] mx-auto">
+            {/* Profile Section - Added container and responsive padding */}
+            <div className="container mx-auto max-w-[1440px]">
               <div className="px-4 sm:px-8">
-                {/* Avatar and Stats */}
-                <div className="flex items-start gap-4 -mt-14 relative z-10">
-                  <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white bg-white shadow-md">
+                {/* Avatar and Stats - Updated sizes */}
+                <div className="flex items-start gap-3 sm:gap-4 -mt-12 sm:-mt-14 relative z-10">
+                  <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-white bg-white shadow-md">
                     <img 
                       src={project.profileImage} 
                       alt={project.name}
                       className="w-full h-full object-cover object-center"
                     />
                   </div>
-                  <div className="mt-16 flex items-center gap-2">
+                  <div className="mt-12 sm:mt-16 flex items-center gap-2">
                     <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium">
                       APPROVED
                     </span>
-                    {/* <span className="text-sm text-gray-600">{project.followers} Followers</span>
-                    <span className="text-sm text-gray-600">{project.following} Following</span> */}
                   </div>
                 </div>
 
-                {/* Project Title and Info */}
-                <div className="mt-4 flex justify-between items-start">
+                {/* Project Title and Info - Made responsive */}
+                <div className="mt-4 flex flex-col sm:flex-row justify-between items-start gap-4">
                   <div>
-                    <h1 className="text-2xl font-semibold mb-1">{project.name}</h1>
-                    <Link target="_blank" href={`https://scanv2-testnet.ancient8.gg/address/${project.ownerAddress}`} className="text-gray-600 text-sm hover:underline hover:text-gray-900">@{project.ownerAddress}</Link>
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-1">{project.name}</h1>
+                    <Link 
+                      target="_blank" 
+                      href={`https://scanv2-testnet.ancient8.gg/address/${project.ownerAddress}`} 
+                      className="text-gray-600 text-sm hover:underline hover:text-gray-900 break-all"
+                    >
+                      @{project.ownerAddress}
+                    </Link>
                     <div className="text-gray-600 text-sm">{project.category}</div>
                   </div>
-                  <div className="bg-orange-50 rounded-lg p-4">
+                  <div className="bg-orange-50 rounded-lg p-4 w-full sm:w-auto">
                     <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-semibold">{formatEther(BigInt(fundsRaisedOutRound||0))}</span>
+                      <span className="text-xl sm:text-2xl font-semibold">
+                        {formatEther(BigInt(fundsRaisedOutRound||0))}
+                      </span>
                       <span className="text-gray-600">ETH</span>
                     </div>
                     <p className="text-sm text-gray-600">
                       Raised from {project.donors} donors
                     </p>
-                    <button className="mt-2 w-full bg-red-500 text-white rounded-md px-4 py-2 text-sm font-semibold" onClick={() => setShowDonateModal(true)}>
+                    <button 
+                      className="mt-2 w-full bg-red-500 text-white rounded-md px-4 py-2 text-sm font-semibold"
+                      onClick={() => setShowDonateModal(true)}
+                    >
                       Donate
                     </button>
                   </div>
                 </div>
 
-                {/* Navigation */}
-                <div className="mt-8 border-b border-gray-200">
-                  <nav className="flex gap-8">
+                {/* Navigation - Made scrollable on mobile */}
+                <div className="mt-6 sm:mt-8 border-b border-gray-200 overflow-x-auto">
+                  <nav className="flex gap-6 sm:gap-8 min-w-max pb-1">
                     <button 
                       onClick={() => setActiveTab('home')}
                       className={`pb-4 text-sm font-medium ${
@@ -275,22 +284,18 @@ const ProjectDetail = () => {
                   </nav>
                 </div>
 
-                {/* Render tab content */}
-                {renderTabContent()}
+                {/* Tab content */}
+                <div className="mt-4 sm:mt-6">
+                  {renderTabContent()}
+                </div>
               </div>
             </div>
           </div>
-          {/* Donate Modal */}
+
+          {/* Modals - Updated for better mobile experience */}
           {showDonateModal && (
-            <div 
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
-              onClick={(e) => {
-                if (e.target === e.currentTarget) {
-                  setShowDonateModal(false);
-                }
-              }}
-            >
-              <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 animate-fadeIn">
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md animate-fadeIn">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-semibold">Donate</h2>
                   <button 
@@ -340,17 +345,9 @@ const ProjectDetail = () => {
             </div>
           )}
 
-          {/* Confirm Modal */}
           {showConfirmModal && (
-            <div 
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
-              onClick={(e) => {
-                if (e.target === e.currentTarget) {
-                  setShowConfirmModal(false);
-                }
-              }}
-            >
-              <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 animate-fadeIn">
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md animate-fadeIn">
                 <div className="flex items-center justify-between mb-4">
                   <button 
                     className="text-gray-500 hover:text-gray-700"

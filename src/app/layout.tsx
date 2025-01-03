@@ -67,7 +67,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className={`min-h-screen bg-white ${spaceGrotesk.className}`}>
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1440px] px-1 sm:px-6 lg:px-8">
           <Providers>
             <Suspense fallback={<LoadingSpinner />}>
               {children}

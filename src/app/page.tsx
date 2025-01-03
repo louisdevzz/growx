@@ -36,36 +36,36 @@ export default function Home() {
         <Header />
 
         {/* Hero Section */}
-        <div className="relative py-10 md:py-20">
+        <div className="relative py-6 md:py-20">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-50 via-pink-50 to-blue-50 opacity-40 rounded-3xl blur-xl"/>
           
-          <div className="relative flex flex-col md:flex-row items-center justify-center custom:justify-between gap-8">
-            <div className=" w-full">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          <div className="relative flex flex-col md:flex-row items-center justify-center custom:justify-between gap-4 md:gap-8">
+            <div className="w-full">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 md:mb-6">
                 Support Projects
                 <br />
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
                   Making Impact
                 </span>
               </h1>
-              <p className="text-gray-600 text-lg mb-8 max-w-xl">
+              <p className="text-gray-600 text-base md:text-lg mb-6 md:mb-8 max-w-xl">
                 Join our community of changemakers. Fund innovative projects, track your impact, and be part of positive change.
               </p>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 md:gap-4">
                 <Link href="/projects">
-                  <button className="px-8 py-4 bg-black text-white font-semibold rounded-xl hover:bg-gray-900 transition-all">
+                  <button className="px-4 sm:px-8 py-3 sm:py-4 bg-black text-white font-semibold rounded-xl hover:bg-gray-900 transition-all text-sm sm:text-base">
                     Explore Projects
                   </button>
                 </Link>
                 <Link href="/create-project">
-                  <button className="px-8 py-4 bg-white text-black font-semibold rounded-xl border-2 border-black hover:bg-black hover:text-white transition-all">
+                  <button className="px-4 sm:px-8 py-3 sm:py-4 bg-white text-black font-semibold rounded-xl border-2 border-black hover:bg-black hover:text-white transition-all text-sm sm:text-base">
                     Create Project
                   </button>
                 </Link>
               </div>
 
               {/* Supported By Logos */}
-              <div className="mt-16">
+              <div className="mt-6">
                 <p className="text-sm text-gray-500 mb-4">Powered by</p>
                 <div className="flex items-center gap-8">
                   <Image 
@@ -82,7 +82,7 @@ export default function Home() {
             {/* Floating Cards - Hide on mobile and smaller screens */}
             <div className="relative w-full lg:w-[600px] h-[400px] hidden custom:block">
               {/* Card 1 */}
-              <div className="absolute top-0 right-0 w-72 transform rotate-6 hover:rotate-0 transition-transform float">
+              <div className="absolute top-0 right-0 w-64 md:w-72 transform rotate-6 hover:rotate-0 transition-transform float">
                 <div className="relative">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400 to-blue-500 rounded-2xl blur opacity-75"></div>
                   <div className="relative bg-white rounded-2xl p-1">
@@ -130,7 +130,7 @@ export default function Home() {
               </div>
 
               {/* Card 2 */}
-              <div className="absolute top-20 right-32 w-72 transform -rotate-3 hover:rotate-0 transition-transform float" 
+              <div className="absolute top-20 right-20 md:right-32 w-64 md:w-72 transform -rotate-3 hover:rotate-0 transition-transform float" 
                    style={{animationDelay: "0.2s"}}>
                 <div className="relative">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-400 to-purple-500 rounded-2xl blur opacity-75"></div>
@@ -179,7 +179,7 @@ export default function Home() {
               </div>
 
               {/* Card 3 */}
-              <div className="absolute top-40 right-64 w-72 transform rotate-12 hover:rotate-0 transition-transform float"
+              <div className="absolute top-40 right-40 md:right-64 w-64 md:w-72 transform rotate-12 hover:rotate-0 transition-transform float"
                    style={{animationDelay: "0.4s"}}>
                 <div className="relative">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-2xl blur opacity-75"></div>
@@ -230,36 +230,38 @@ export default function Home() {
           </div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-2 md:flex gap-8 md:gap-16 mt-8 md:mt-16">
-            <div>
-              <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
-                12.5K+
-              </p>
-              <p className="text-gray-500">Active Users</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
-                150+
-              </p>
-              <p className="text-gray-500">Projects</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">
-                8.2K+
-              </p>
-              <p className="text-gray-500">Contributors</p>
+          <div className="relative w-full sm:w-2/3 lg:w-1/2">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 md:flex gap-8 md:gap-16 mt-6 md:mt-16">
+              <div>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
+                  12.5K+
+                </p>
+                <p className="text-gray-500 text-xs sm:text-sm">Active Users</p>
+              </div>
+              <div>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
+                  150+
+                </p>
+                <p className="text-gray-500 text-xs sm:text-sm">Projects</p>
+              </div>
+              <div>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">
+                  8.2K+
+                </p>
+                <p className="text-gray-500 text-xs sm:text-sm">Contributors</p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Recently viewed projects */}
-        <section className="py-6 md:py-10">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold">Recently viewed projects</h2>
+        {/* <section className="py-4 md:py-10">
+          <div className="flex items-center justify-between mb-4 md:mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold">Recently viewed projects</h2>
           </div>
 
           <div className="relative ">
-            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 snap-x snap-mandatory p-4">
+            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-8 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 snap-x snap-mandatory px-2 md:px-4">
               {isLoading ? (
                 <>
                   <ProjectCardSkeleton />
@@ -279,7 +281,7 @@ export default function Home() {
               )}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Featured Projects */}
         <section className="py-6 md:py-10">
@@ -297,7 +299,11 @@ export default function Home() {
           </div>
 
           <div className="relative">
-            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 snap-x snap-mandatory p-4">
+            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 
+                            overflow-x-auto sm:overflow-x-visible 
+                            py-10 sm:py-10
+                            snap-x snap-mandatory 
+                            -mx-4 sm:mx-0">
               {isLoading ? (
                 <>
                   <ProjectCardSkeleton />
@@ -306,7 +312,7 @@ export default function Home() {
                 </>
               ) : (
                 projects.map((project, index) => (
-                  <div className="w-[280px] sm:w-auto flex-shrink-0 sm:flex-shrink" key={project._id}>
+                  <div className="flex-shrink-0 w-[360px] sm:w-auto" key={project._id}>
                     <ProjectCard
                       {...project}
                       index={index+1}

@@ -155,9 +155,9 @@ export default function ProjectCard({
 
   return (
     <>
-      <div className="block group h-[440px]">
+      <div className="block group h-[440px] w-[360px] sm:w-full mx-auto">
         <div className="relative transform transition-all duration-300 hover:-translate-y-1 h-full">
-          {/* Gradient border effect with dynamic colors */}
+          {/* Gradient border effect */}
           <div className={`absolute -inset-0.5 bg-gradient-to-r ${getGradientColors()} rounded-2xl blur opacity-75 group-hover:opacity-100`}></div>
           
           <div className="relative bg-white rounded-2xl p-1 h-full">
