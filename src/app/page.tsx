@@ -7,6 +7,8 @@ import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react';
 import ProjectCardSkeleton from '@/components/ProjectCardSkeleton'
 import { ProjectProps } from '@/types/project';
+
+
 export default function Home() {
 
   const [projects, setProjects] = useState<ProjectProps[]>([]);

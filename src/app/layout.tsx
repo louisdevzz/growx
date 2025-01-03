@@ -10,22 +10,22 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'HOPEFUND - Web3 Crowdfunding Platform',
+  title: 'GrowX - Web3 Crowdfunding Platform',
   description: 'Empowering Global Impact Through Web3 | Secure, transparent, and decentralized crowdfunding platform for meaningful projects worldwide',
   keywords: 'Web3, Crowdfunding, Blockchain, Cryptocurrency, Decentralized Finance, DeFi, Social Impact, Fundraising',
-  authors: [{ name: 'HOPEFUND Team' }],
+  authors: [{ name: 'GrowX Team' }],
   manifest: '/manifest.json',
   openGraph: {
-    title: 'HOPEFUND - Web3 Crowdfunding Platform',
+    title: 'GrowX - Web3 Crowdfunding Platform',
     description: 'Empowering Global Impact Through Web3 | Secure, transparent, and decentralized crowdfunding platform',
-    url: 'https://hopefund-gg.vercel.app',
-    siteName: 'HOPEFUND',
+    url: 'https://growx-gg.vercel.app',
+    siteName: 'GrowX',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'HOPEFUND Platform Preview',
+        alt: 'GrowX Platform Preview',
       },
     ],
     locale: 'en_US',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'HOPEFUND - Web3 Crowdfunding Platform',
+    title: 'GrowX - Web3 Crowdfunding Platform',
     description: 'Empowering Global Impact Through Web3 | Secure, transparent, and decentralized crowdfunding platform',
     images: ['/og-image.jpg'],
   },
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://hopefund-gg.vercel.app'
+    canonical: 'https://growx-gg.vercel.app'
   },
-  metadataBase: new URL('https://hopefund-gg.vercel.app')
+  metadataBase: new URL('https://growx-gg.vercel.app')
 }
 
 export default function RootLayout({
@@ -62,7 +62,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href="https://hopefund-gg.vercel.app" />
+        <link rel="canonical" href="https://growx-gg.vercel.app" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </head>

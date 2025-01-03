@@ -13,6 +13,43 @@ import { PROJECT_CONTRACT_ADDRESS } from "@/lib/ABI";
 import { formatEther } from "viem";
 import toast from "react-hot-toast";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { FaTwitter, FaGithub, FaDiscord, FaTelegram, FaMedium, FaGlobe } from "react-icons/fa";
+
+const getSocialIcon = (type: string) => {
+  switch (type.toLowerCase()) {
+    case 'twitter':
+      return <FaTwitter className="w-8 h-8" />;
+    case 'github':
+      return <FaGithub className="w-8 h-8" />;
+    case 'discord':
+      return <FaDiscord className="w-8 h-8" />;
+    case 'telegram':
+      return <FaTelegram className="w-8 h-8" />;
+    case 'medium':
+      return <FaMedium className="w-8 h-8" />;
+    default:
+      return <FaGlobe className="w-8 h-8" />;
+  }
+};
+
+const getCategoryColor = (category: string) => {
+  switch (category.toLowerCase()) {
+    case 'defi':
+      return 'bg-blue-50 text-blue-600 border border-blue-200';
+    case 'nft':
+      return 'bg-purple-50 text-purple-600 border border-purple-200';
+    case 'gaming':
+      return 'bg-green-50 text-green-600 border border-green-200';
+    case 'infrastructure':
+      return 'bg-orange-50 text-orange-600 border border-orange-200';
+    case 'dao':
+      return 'bg-yellow-50 text-yellow-600 border border-yellow-200';
+    case 'web3':
+      return 'bg-indigo-50 text-indigo-600 border border-indigo-200';
+    default:
+      return 'bg-gray-50 text-gray-600 border border-gray-200';
+  }
+};
 
 const ProjectDetail = () => {
   const { slug } = useParams();
@@ -38,13 +75,23 @@ const ProjectDetail = () => {
     }
   })
 
+  const {data: investorsInOutRound} = useReadContract({
+    address: PROJECT_CONTRACT_ADDRESS,
+    abi: PROJECT_CONTRACT_ABI,
+    functionName: 'getInvestorsInOutRound',
+    args: [projectId||""],
+    query: {
+      enabled: !!projectId
+    }
+  })
+
   const fetchProject = useCallback(async () => {
     const response = await fetch(`/api/projects/findBySlug`, {
       method: 'POST',
       body: JSON.stringify({ slug: slug })
     });
     const project = await response.json();
-    //console.log(project);
+    // console.log(project);
     setProject(project);
     setProjectId(project.projectId);
   }, [slug]);
@@ -210,10 +257,25 @@ const ProjectDetail = () => {
 
                 {/* Project Title and Info */}
                 <div className="mt-4 flex justify-between items-start">
-                  <div>
+                  <div className="flex flex-col gap-2">
                     <h1 className="text-2xl font-semibold mb-1">{project.name}</h1>
                     <Link target="_blank" href={`https://scanv2-testnet.ancient8.gg/address/${project.ownerAddress}`} className="text-gray-600 text-sm hover:underline hover:text-gray-900">@{project.ownerAddress}</Link>
-                    <div className="text-gray-600 text-sm">{project.category}</div>
+                    <div className={`inline-flex items-center w-fit px-3 py-1 rounded-lg text-base font-medium uppercase ${getCategoryColor(project.category)}`}>
+                      {project.category}
+                    </div>
+                    <div className="flex items-center gap-4 mt-10">
+                      {project.socialLinks.map((link: any, index: number) => (
+                        <Link 
+                          key={index} 
+                          href={link.url} 
+                          target="_blank" 
+                          className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                          title={link.type}
+                        >
+                          {getSocialIcon(link.type)}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                   <div className="bg-orange-50 rounded-lg p-4">
                     <div className="flex items-baseline gap-1">
@@ -221,7 +283,7 @@ const ProjectDetail = () => {
                       <span className="text-gray-600">ETH</span>
                     </div>
                     <p className="text-sm text-gray-600">
-                      Raised from {project.donors} donors
+                      Raised from {investorsInOutRound?.length||0} donors
                     </p>
                     <button className="mt-2 w-full bg-red-500 text-white rounded-md px-4 py-2 text-sm font-semibold" onClick={() => setShowDonateModal(true)}>
                       Donate

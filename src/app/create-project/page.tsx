@@ -69,9 +69,7 @@ export default function CreateProject() {
       }),
     });
     if (response.ok) {
-      toast.loading('Please wait for the project to be published', {
-        duration: 10000 // 10 seconds in milliseconds
-      });
+      toast.success('Project created successfully');
     } else {
       toast.error('Failed to create project');
     }
@@ -174,7 +172,7 @@ export default function CreateProject() {
         args: [projectName, projectDescription, [coverImage, profileImage]]
       });
 
-      toast.loading('Please wait for the project to be created', { id: loadingToast, duration: 10000 });
+      toast.loading('Please wait for the project to be created', { id: loadingToast, duration: 1000 });
       
     } catch (error) {
       console.error('Project creation error:', error);

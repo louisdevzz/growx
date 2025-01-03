@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const roundSchema = new mongoose.Schema({
+  roundId: String,
   slug: String,
   name: {
     type: String,
@@ -20,6 +21,7 @@ const roundSchema = new mongoose.Schema({
   amountRaised: Number,
   address: String,
   ownerAddress: String,
+  duration: Number,
   createdAt: {
     type: Date,
     default: Date.now

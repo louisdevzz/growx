@@ -8,7 +8,6 @@ import { useCallback, useEffect, useState } from 'react'
 export default function PotsPage() {
   const activePots = pots.filter(pot => pot.status === 'active')
   const completedPots = pots.filter(pot => pot.status === 'completed')
-
   const [rounds, setRounds] = useState<any[]>([]);
 
   const fetchRounds = useCallback(async () => {
@@ -22,6 +21,15 @@ export default function PotsPage() {
   }, [fetchRounds]);
 
   console.log(rounds);
+
+  const convertSecondsToDays = (seconds: number) => {
+    const secondsInADay = 86400; // 24 * 60 * 60
+    const days = Math.floor(seconds / secondsInADay); // Full days
+    // const leftoverSeconds = seconds % secondsInADay; // Remaining seconds
+
+    return days;
+  }
+
 
   return (
     <div className="container min-h-screen">
@@ -101,7 +109,9 @@ export default function PotsPage() {
                             <span className="text-sm text-gray-600">Active</span>
                           </div>
                           <p className="text-sm text-gray-500">
-                            {round.daysLeft ? `${round.daysLeft} days left` : 'Ongoing'}
+                            {round.duration 
+                              ? `${convertSecondsToDays(round.duration)} days left` 
+                              : 'Ongoing'}
                           </p>
                         </div>
                       </div>

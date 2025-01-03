@@ -10,7 +10,7 @@ export default function Header() {
             className="flex items-center text-3xl font-bold gap-2 no-underline cursor-pointer transition-all duration-200 relative z-10"
           >
             <span className="text-[#4169E1]">
-                HOPEFUND
+                GROWX
             </span>
         </Link>
         <nav className="flex gap-10 absolute left-1/2 -translate-x-1/2 md:gap-4 sm:order-3 sm:w-full sm:justify-center z-0 items-center">

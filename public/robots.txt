@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://hopefund-gg.vercel.app/sitemap.xml
+Sitemap: https://growx-gg.vercel.app/sitemap.xml

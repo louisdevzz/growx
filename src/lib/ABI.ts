@@ -905,7 +905,7 @@ export const INVESTOR_MANAGEMENT_CONTRACT_ABI = [
     }
 ] as const
 
-export const ROUND_MANAGEMENT_CONTRACT = "0x9c9dED808f6Bc48Aa38a7a46F9F140BD15c898a5"
+export const ROUND_MANAGEMENT_CONTRACT = "0x0e47d67b088E1d3da80f85Bac5A8f3d22bcb9970"
 
 export const ROUND_MANAGEMENT_CONTRACT_ABI = [
     {
@@ -965,13 +965,7 @@ export const ROUND_MANAGEMENT_CONTRACT_ABI = [
             {
                 "indexed": false,
                 "internalType": "string",
-                "name": "roundId",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "metadata",
+                "name": "name",
                 "type": "string"
             },
             {
@@ -979,12 +973,6 @@ export const ROUND_MANAGEMENT_CONTRACT_ABI = [
                 "internalType": "uint256",
                 "name": "duration",
                 "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "enum RoundManagement.RoundState",
-                "name": "state",
-                "type": "uint8"
             }
         ],
         "name": "RoundCreated",
@@ -1064,6 +1052,13 @@ export const ROUND_MANAGEMENT_CONTRACT_ABI = [
             }
         ],
         "name": "createRound",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "currentRoundId",
         "outputs": [
             {
                 "internalType": "string",
@@ -1071,7 +1066,7 @@ export const ROUND_MANAGEMENT_CONTRACT_ABI = [
                 "type": "string"
             }
         ],
-        "stateMutability": "nonpayable",
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -1108,6 +1103,19 @@ export const ROUND_MANAGEMENT_CONTRACT_ABI = [
                 "internalType": "string[]",
                 "name": "",
                 "type": "string[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getCurrentRoundId",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
             }
         ],
         "stateMutability": "view",

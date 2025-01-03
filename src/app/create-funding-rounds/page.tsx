@@ -4,10 +4,13 @@ import Header from '@/components/Header';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { useAccount } from 'wagmi';
+import { useAccount, useReadContract, useWatchContractEvent, useWriteContract } from 'wagmi';
+import { ROUND_MANAGEMENT_CONTRACT, ROUND_MANAGEMENT_CONTRACT_ABI } from '@/lib/ABI';
+import { config } from '@/lib/wagmi';
+import { NextPage } from 'next';
 
+const CreateFundingRound: NextPage = () => {
 
-export default function CreateFundingRound() {
   const { address } = useAccount()
   const [roundName, setRoundName] = useState<string|null>(null);
   const [roundDescription, setRoundDescription] = useState<string|null>(null);
@@ -17,16 +20,26 @@ export default function CreateFundingRound() {
   const [endDate, setEndDate] = useState<string|null>(null);
   const [addressReceived, setAddressReceived] = useState<string|null>(null);
   const router = useRouter();
+  const { writeContractAsync } = useWriteContract()
+  const [duration, setDuration] = useState<number|null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const { data, refetch: refetchRoundId } = useReadContract({
+    address: ROUND_MANAGEMENT_CONTRACT,
+    abi: ROUND_MANAGEMENT_CONTRACT_ABI,
+    functionName: 'getCurrentRoundId',
+    args: [],
+  })
+
+
+  const uploadRound = async (roundId: string) => {
+    // console.log(roundId)
     if (!roundName || !roundCategory || !roundDescription  || !startDate || !endDate) {
-      toast.error('Please fill in all required fields');
+      // toast.error('Please fill in all required fields');
       return;
     }
 
-    const loadingToast = toast.loading('Creating funding round...');
+    const startDateFormat = new Date(startDate).getTime()/1000;
+    const endDateFormat = new Date(endDate).getTime()/1000;
 
     try {
       const response = await fetch('/api/rounds', {
@@ -35,13 +48,15 @@ export default function CreateFundingRound() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          roundId: roundId,
           slug: roundName.toLowerCase().replace(/\s+/g, '-'),
           name: roundName,
           category: roundCategory,
           description: roundDescription,
           chain: roundChain,
-          startDate: new Date(startDate).getTime(),
-          endDate: new Date(endDate).getTime(),
+          startDate: startDateFormat,
+          endDate: endDateFormat,
+          duration: endDateFormat - startDateFormat,
           ownerAddress: address,
           address: addressReceived,
           amountRaised: 0,
@@ -51,16 +66,60 @@ export default function CreateFundingRound() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success('Funding round created successfully', { id: loadingToast });
+        toast.success('Funding round created successfully');
         router.push('/funding-rounds');
       } else {
         throw new Error(data.error || 'Failed to create funding round');
       }
     } catch (error) {
       console.error('Funding round creation error:', error);
+      toast.error('Failed to create funding round');
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!roundName || !roundCategory || !roundDescription  || !startDate || !endDate) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    const startDateFormat = new Date(startDate).getTime()/1000;
+    const endDateFormat = new Date(endDate).getTime()/1000;
+    const duration = endDateFormat - startDateFormat;
+    setDuration(duration)
+
+    const loadingToast = toast.loading('Creating funding round...');
+    try {
+      await writeContractAsync({
+        address: ROUND_MANAGEMENT_CONTRACT,
+        abi: ROUND_MANAGEMENT_CONTRACT_ABI,
+        functionName: 'createRound',
+        args: [roundName,roundDescription, [], BigInt(duration)]
+      });
+      toast.loading('Please wait creating funding round...', { duration: 2000,id: loadingToast });
+    } catch (error) {
       toast.error('Failed to create funding round', { id: loadingToast });
     }
+    
   };
+
+  useWatchContractEvent({
+    address: ROUND_MANAGEMENT_CONTRACT,
+    abi: ROUND_MANAGEMENT_CONTRACT_ABI,
+    eventName: 'RoundCreated',
+    args: roundName && duration ? [roundName, BigInt(duration)] : undefined,
+    onLogs(logs) {
+      console.log("logs",logs)
+      refetchRoundId().then((result) => {
+        //console.log("result",result)
+        if (result.data) {
+          uploadRound(result.data)
+        }
+      })
+    }
+  });
 
   return (
     <div className='min-h-screen bg-white container'>
@@ -204,3 +263,5 @@ export default function CreateFundingRound() {
     </div>
   )
 }
+
+export default CreateFundingRound;

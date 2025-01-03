@@ -80,6 +80,18 @@ export default function ProjectCard({
     }
   })
 
+  const {data: investorsInOutRound} = useReadContract({
+    address: PROJECT_CONTRACT_ADDRESS,
+    abi: PROJECT_CONTRACT_ABI,
+    functionName: 'getInvestorsInOutRound',
+    args: [projectId||""],
+    query: {
+      enabled: !!projectId
+    }
+  })
+
+  // console.log(investorsInOutRound)
+
   const fetchEthPrice = useCallback(async () => {
     try {
       const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
@@ -202,7 +214,7 @@ export default function ProjectCard({
                 <div className="flex justify-between items-center text-sm">
                   <div>
                     <p className="font-bold text-gray-800">{formatEther(fundsRaisedOutRound||BigInt(0))} {currency}</p>
-                    <p className="text-gray-500">{donors} contributors</p>
+                    <p className="text-gray-500">{investorsInOutRound?.length} contributors</p>
                   </div>
                   <button 
                     className="px-6 py-2.5 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors"
