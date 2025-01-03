@@ -20,7 +20,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-10">
+          <nav className="hidden custom:flex gap-10">
             <Link 
               href="/projects" 
               className="text-base font-medium no-underline text-gray-900 hover:text-gray-700 transition-colors"
@@ -42,13 +42,13 @@ export default function Header() {
           </nav>
 
           {/* Desktop Wallet Button */}
-          <div className="hidden md:flex">
+          <div className="hidden custom:flex">
             <WalletButton />
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2"
+            className="custom:hidden p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <svg
@@ -78,7 +78,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b shadow-lg">
+          <div className="custom:hidden absolute top-full left-0 right-0 bg-white border-b shadow-lg">
             <div className="px-4 py-3 space-y-4">
               <Link 
                 href="/projects" 

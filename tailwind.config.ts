@@ -71,6 +71,9 @@ export default {
         shake: "shake 0.5s ease-in-out",
 		fadeIn: "fadeIn 0.2s ease-in-out",
       },
+      screens: {
+        'custom': '1330px',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
