@@ -21,7 +21,7 @@ const LoadingSpinner = () => {
                         }}
                     >
                         <Image
-                            src="/assets/logo/growx.png" // Đảm bảo thêm logo vào thư mục public/assets
+                            src="/assets/logo/logo_growx.png" // Đảm bảo thêm logo vào thư mục public/assets
                             alt="GrowX Logo"
                             width={80}
                             height={80}

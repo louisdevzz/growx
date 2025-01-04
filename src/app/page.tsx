@@ -255,7 +255,7 @@ export default function Home() {
         </div>
 
         {/* Recently viewed projects */}
-        <section className="py-6 md:py-10">
+        {/* <section className="py-6 md:py-10">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold">Recently viewed projects</h2>
           </div>
@@ -281,7 +281,7 @@ export default function Home() {
               )}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Featured Projects */}
         <section className="py-6 md:py-10">

@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'GrowX - Web3 Crowdfunding Platform',
     description: 'Empowering Global Impact Through Web3 | Secure, transparent, and decentralized crowdfunding platform',
-    url: 'https://growx-gg.vercel.app',
+    url: 'https://growx.top',
     siteName: 'GrowX',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'GrowX Platform Preview',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'GrowX - Web3 Crowdfunding Platform',
     description: 'Empowering Global Impact Through Web3 | Secure, transparent, and decentralized crowdfunding platform',
-    images: ['/og-image.jpg'],
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://growx-gg.vercel.app'
+    canonical: 'https://growx.top'
   },
-  metadataBase: new URL('https://growx-gg.vercel.app')
+  metadataBase: new URL('https://growx.top')
 }
 
 export default function RootLayout({
@@ -62,7 +62,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href="https://growx-gg.vercel.app" />
+        <link rel="canonical" href="https://growx.top" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </head>
