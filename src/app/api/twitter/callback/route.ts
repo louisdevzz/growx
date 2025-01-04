@@ -22,6 +22,11 @@ export async function GET(request: NextRequest) {
     const code = searchParams.get('code');
     const state = searchParams.get('state');
     
+    console.log('Received callback with:', { 
+      code: code ? 'present' : 'missing',
+      state: state ? 'present' : 'missing'
+    });
+
     if (!code) {
       throw new Error('Authorization code is required');
     }
@@ -29,6 +34,11 @@ export async function GET(request: NextRequest) {
     // Get the code verifier and stored state from cookie
     const codeVerifier = request.cookies.get('code_verifier')?.value;
     const storedState = request.cookies.get('oauth_state')?.value;
+
+    console.log('Cookie values:', {
+      codeVerifier: codeVerifier ? 'present' : 'missing',
+      storedState: storedState ? 'present' : 'missing'
+    });
 
     if (!codeVerifier) {
       throw new Error('Code verifier not found in cookies');
@@ -39,33 +49,48 @@ export async function GET(request: NextRequest) {
       throw new Error('Invalid state parameter');
     }
 
-    // Exchange the code for an access token with PKCE
-    await authClient.requestAccessToken(code);
-    const { token } = authClient;
+    try {
+      // Exchange the code for an access token with PKCE
+      console.log('Attempting to exchange code for token...');
+      await authClient.requestAccessToken(code);
+      const tokenResponse = authClient.token;
+      console.log('Token exchange successful');
 
-    if (!token) {
-      throw new Error('Failed to obtain access token');
+      if (!tokenResponse) {
+        throw new Error('No token received from Twitter');
+      }
+
+      // Create response with redirect
+      const response = NextResponse.redirect(new URL('/tweets', request.url));
+
+      // Store the token securely
+      response.cookies.set('twitter_token', JSON.stringify(tokenResponse), {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7, // 1 week
+      });
+
+      // Clean up the temporary cookies
+      response.cookies.delete('code_verifier');
+      response.cookies.delete('oauth_state');
+
+      return response;
+    } catch (tokenError: any) {
+      console.error('Token exchange error:', {
+        message: tokenError.message,
+        stack: tokenError.stack,
+        details: tokenError
+      });
+      throw new Error(`Token exchange failed: ${tokenError.message}`);
     }
-
-    // Create response with redirect
-    const response = NextResponse.redirect(new URL('/tweets', request.url));
-
-    // Store the token securely
-    response.cookies.set('twitter_token', JSON.stringify(token), {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-    });
-
-    // Clean up the temporary cookies
-    response.cookies.delete('code_verifier');
-    response.cookies.delete('oauth_state');
-
-    return response;
   } catch (error: any) {
-    console.error('Error in callback:', error);
+    console.error('Error in callback:', {
+      message: error.message,
+      stack: error.stack,
+      details: error
+    });
     return NextResponse.json(
       {
         error: 'An error occurred during authentication.',
