@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useAccount, useReadContract, useWatchContractEvent, useWriteContract } from 'wagmi';
 import { ROUND_MANAGEMENT_CONTRACT, ROUND_MANAGEMENT_CONTRACT_ABI } from '@/lib/ABI';
-import { config } from '@/lib/wagmi';
 import { NextPage } from 'next';
 
 const CreateFundingRound: NextPage = () => {
@@ -23,7 +22,8 @@ const CreateFundingRound: NextPage = () => {
   const { writeContractAsync } = useWriteContract()
   const [duration, setDuration] = useState<number|null>(null);
 
-  const { data, refetch: refetchRoundId } = useReadContract({
+
+  const { refetch: refetchRoundId } = useReadContract({
     address: ROUND_MANAGEMENT_CONTRACT,
     abi: ROUND_MANAGEMENT_CONTRACT_ABI,
     functionName: 'getCurrentRoundId',

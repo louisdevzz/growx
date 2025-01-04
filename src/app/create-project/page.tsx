@@ -3,15 +3,16 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { useAccount, useSimulateContract, useReadContract, useWriteContract, useWatchContractEvent } from 'wagmi';
+import { useAccount, useReadContract, useWriteContract, useWatchContractEvent } from 'wagmi';
 import {PROJECT_CONTRACT_ADDRESS,PROJECT_CONTRACT_ABI } from '@/lib/ABI';
-
+import { useRouter } from 'next/navigation';
 interface SocialLink {
   type: string;
   url: string;
 }
 
 export default function CreateProject() {
+  const router = useRouter()
   const { address,isConnected } = useAccount()
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -33,7 +34,7 @@ export default function CreateProject() {
   const { data, refetch: refetchProjectId } = useReadContract({
     address: PROJECT_CONTRACT_ADDRESS,
     abi: PROJECT_CONTRACT_ABI,
-    functionName: 'getProjectIdNow',
+    functionName: 'getCurrentProjectId',
     args: [],
     query: {
       enabled: Boolean(projectName && projectDescription && coverImage && profileImage)
@@ -54,7 +55,7 @@ export default function CreateProject() {
       },
       body: JSON.stringify({
         ownerAddress: address,
-        address: addressReceived,
+        address: address,
         projectId: projectId,
         slug: projectName.toLowerCase().replace(/\s+/g, '-'),
         name: projectName,
@@ -69,7 +70,8 @@ export default function CreateProject() {
       }),
     });
     if (response.ok) {
-      toast.success('Project created successfully');
+      const loadingToast = toast.success('Project created successfully');
+      toast.loading('Please wait for the project to be published', { id: loadingToast, duration: 4000 });
     } else {
       toast.error('Failed to create project');
     }
@@ -169,10 +171,10 @@ export default function CreateProject() {
         address: PROJECT_CONTRACT_ADDRESS,
         abi: PROJECT_CONTRACT_ABI,
         functionName: 'registerProject',
-        args: [projectName, projectDescription, [coverImage, profileImage]]
+        args: [projectName, projectDescription, [coverImage, profileImage], address as `0x${string}`]
       });
 
-      toast.loading('Please wait for the project to be created', { id: loadingToast, duration: 1000 });
+      toast.loading('Please wait for the project to be created', { id: loadingToast, duration: 4000 });
       
     } catch (error) {
       console.error('Project creation error:', error);
@@ -188,6 +190,7 @@ export default function CreateProject() {
       args: [projectId]
     });
     toast.success('Project published successfully');
+    router.push('/')
   }
 
   useWatchContractEvent({
@@ -394,10 +397,10 @@ export default function CreateProject() {
               </div>
             </div>
 
-            <div className="mb-8">
+            {/* <div className="mb-8">
               <div className="flex justify-between items-center mb-4">
                 <label className="font-medium text-lg">Address receiving funds</label>
-                {/* <span className="text-gray-500 text-sm">Optional</span> */}
+                
               </div>
               <div className="flex gap-4 mb-2">
                 <div className="relative w-1/3">
@@ -431,7 +434,7 @@ export default function CreateProject() {
                   className="w-2/3 p-3 border rounded-xl bg-gray-50"
                 />
               </div>
-            </div>
+            </div> */}
 
             <div className="mb-8">
               <div className="flex justify-between items-center mb-4">

@@ -1,28 +1,74 @@
 "use client"
 
-import { fundingStats, fundingDonations } from '@/data/funding';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ProjectProps } from '@/types/project';
+import { PROJECT_CONTRACT_ABI,PROJECT_CONTRACT_ADDRESS } from '@/lib/ABI';
 
-const getInitials = (name: string) => {
-  return name
-    .split('.')
-    .map(part => part[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-};
+interface DonorInfo {
+  donor: string;
+  amount: string;
+}
 
-export const FundingRaisedTab = ({project}: {project: ProjectProps}) => {
+export const FundingRaisedTab = (
+  {project, investorsInOutRounds, fundsRaisedOutRound, ethPrice, address}: 
+  {project: ProjectProps, investorsInOutRounds: string[], fundsRaisedOutRound: string, ethPrice: number, address: `0x${string}`}
+) => {
   if (!project) {
     return <div>Project not found</div>;
   }
-
+  const [donorInfos, setDonorInfos] = useState<DonorInfo[]>([]);
   const [searchTerm, setSearchTerm] = useState<string|null>(null);
 
-  const filteredDonations = fundingDonations.filter(donation =>
-    donation.donorName.toLowerCase().includes(searchTerm?.toLowerCase() || '')
+  const uniqueInvestors = Array.from(new Set(investorsInOutRounds));
+  
+  const filteredDonors = donorInfos.filter(info =>
+    info.donor.toLowerCase().includes(searchTerm?.toLowerCase() || '')
   );
+
+  const fetchFundsInRoundOfInvestor = async (address: `0x${string}`, projectId: string) => {
+    try {
+      const response = await fetch(`https://scanv2-testnet.ancient8.gg/api/v2/smart-contracts/${PROJECT_CONTRACT_ADDRESS}/query-read-method`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "args": [
+            address,
+            projectId
+          ],
+          "method_id": "29b897eb",
+          "contract_type": "regular"
+        }),
+      })
+
+      const data = await response.json();
+      // console.log("data",data)
+      return data.result.output[0].value;
+    } catch (error) {
+      console.error("Error fetching funds:", error);
+      return "0";
+    }
+  }
+
+  const getDonorInfos = useCallback(async () => {
+    const infos: DonorInfo[] = [];
+    for (const investor of uniqueInvestors) {
+      const amount = await fetchFundsInRoundOfInvestor(investor as `0x${string}`, project.projectId || "");
+      infos.push({
+        donor: investor,
+        amount: amount
+      });
+    }
+    setDonorInfos(infos);
+  },[])
+
+  useEffect(() => { 
+    getDonorInfos()
+  },[getDonorInfos])
+
+
+
 
   return (
     <div className="py-8">
@@ -31,18 +77,14 @@ export const FundingRaisedTab = ({project}: {project: ProjectProps}) => {
         <h2 className="text-2xl font-semibold mb-6">{project.name} Funding</h2>
         <div className="flex gap-8">
           <div>
-            <span className="text-xl font-semibold">{fundingStats.totalDonated}</span>
-            <span className="text-gray-600 ml-2">(~${(fundingStats.totalDonated * 191.14).toFixed(2)})</span>
+            <span className="text-xl font-semibold">{Number(fundsRaisedOutRound)/10**18}</span>
+            <span className="text-gray-600 ml-2">(~${((Number(fundsRaisedOutRound)/10**18) * ethPrice).toFixed(4)})</span>
             <div className="text-sm text-gray-600">Donated</div>
           </div>
           <div>
-            <span className="text-xl font-semibold">{fundingStats.uniqueDonors}</span>
+            <span className="text-xl font-semibold">{uniqueInvestors.length}</span>
             <div className="text-sm text-gray-600">Unique donors</div>
           </div>
-          {/* <div>
-            <span className="text-xl font-semibold">{fundingStats.totalMatched}</span>
-            <div className="text-sm text-gray-600">Total Matched</div>
-          </div> */}
         </div>
       </div>
 
@@ -77,42 +119,25 @@ export const FundingRaisedTab = ({project}: {project: ProjectProps}) => {
           </div>
           <div className="flex items-center gap-8">
             <span className="font-medium w-20 text-right">Amount</span>
-            <button className="flex items-center gap-1 w-24 justify-end">
+            {/* <button className="flex items-center gap-1 w-24 justify-end">
               Date <span>↓</span>
-            </button>
+            </button> */}
           </div>
         </div>
 
         {/* Table Body */}
         <div className="divide-y">
-          {filteredDonations.map(donation => (
-            <div key={donation.id} className="flex items-center justify-between p-4">
+          {filteredDonors.map((donorInfo, index) => (
+            <div key={index} className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                {donation.donorAvatar ? (
-                  <img
-                    src={donation.donorAvatar}
-                    alt={donation.donorName}
-                    className="w-10 h-10 rounded-full"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                    <span className="text-sm font-medium text-gray-600">
-                      {getInitials(donation.donorName)}
-                    </span>
-                  </div>
-                )}
-                <div>
-                  <div className="font-medium">{donation.donorName}</div>
-                  <div className="text-sm text-gray-600">{donation.type}</div>
-                </div>
+                <div className="font-medium">{donorInfo.donor}</div>
               </div>
               <div className="flex items-center gap-8">
-                <div className="w-20 text-right">
-                  <span>{donation.amount}</span>
+                <div className="w-30 text-right">
+                  <span>{Number(donorInfo.amount) / 10**18} ETH</span>
                 </div>
-                <div className="text-sm text-gray-600 w-24 text-right">
-                  {donation.timestamp}
-                </div>
+                {/* <div className="text-sm text-gray-600 w-24 text-right">
+                </div> */}
               </div>
             </div>
           ))}

@@ -24,4 +24,6 @@ export interface ProjectProps {
   why?: string;
   address?: string;
   ownerAddress?: string;
+  inRound?: boolean;
+  roundId?: string;
 }

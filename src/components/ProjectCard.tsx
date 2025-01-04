@@ -4,12 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import { ProjectProps } from '@/types/project';
-import { PROJECT_CONTRACT_ADDRESS } from '@/lib/ABI';
-import { PROJECT_CONTRACT_ABI } from '@/lib/ABI'; 
 import { formatEther } from 'viem';
 import toast from 'react-hot-toast';
-import { useAccount, useReadContract,useWriteContract } from "wagmi";
-import { INVESTOR_MANAGEMENT_CONTRACT, INVESTOR_MANAGEMENT_CONTRACT_ABI } from '@/lib/ABI';
+import { useAccount, useReadContract,useWatchContractEvent,useWriteContract } from "wagmi";
+import { PROJECT_CONTRACT_ADDRESS,PROJECT_CONTRACT_ABI } from '@/lib/ABI';
 
 
 const truncate = (text: string, maxLength: number) => {
@@ -62,35 +60,49 @@ export default function ProjectCard({
   href = '#', 
   donors = 0,
   daysLeft = "Ongoing",
-  index = 0
+  index = 0,
+  inRound = false,
+  roundId = ""
 }: ProjectProps) {
   const [showDonateModal, setShowDonateModal] = useState(false);
   const [donationAmount, setDonationAmount] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { writeContractAsync } = useWriteContract()
   const [ethPrice, setEthPrice] = useState<number>(0);
+  const { address } = useAccount();
 
   const {data: fundsRaisedOutRound, refetch: refetchFundsRaisedOutRound} = useReadContract({
     address: PROJECT_CONTRACT_ADDRESS,
     abi: PROJECT_CONTRACT_ABI,
-    functionName: 'getFundsRaisedOutRound',
-    args: [projectId||""],
+    functionName: inRound ? 'getFundsInRound' : 'getFundsOutRound',
+    args: inRound ? [roundId||"",projectId||""] : [projectId||""],
     query: {
       enabled: !!projectId
     }
   })
 
-  const {data: investorsInOutRound} = useReadContract({
+  const {data: investorsInOutRound, refetch: refetchInvestorsInOutRound} = useReadContract({
     address: PROJECT_CONTRACT_ADDRESS,
     abi: PROJECT_CONTRACT_ABI,
-    functionName: 'getInvestorsInOutRound',
-    args: [projectId||""],
+    functionName: inRound ? 'getInvestorsInRound' : 'getInvestorsOutRound',
+    args: inRound ? [roundId||"",projectId||""] : [projectId||""],
     query: {
       enabled: !!projectId
     }
   })
 
-  // console.log(investorsInOutRound)
+  useWatchContractEvent({
+    address: PROJECT_CONTRACT_ADDRESS,
+    abi: PROJECT_CONTRACT_ABI,
+    eventName: 'Funded',
+    args: projectId && address && donationAmount ? [projectId, address, BigInt(Number(donationAmount)*10**18)] : undefined,
+    onLogs() {
+      // console.log("logs",logs)
+      clearDonation()
+      refetchFundsRaisedOutRound()
+      refetchInvestorsInOutRound()
+    }
+  });
 
   const fetchEthPrice = useCallback(async () => {
     try {
@@ -140,28 +152,24 @@ export default function ProjectCard({
     return THEME_COLORS[getColorIndex(_id)].text;
   };
 
-  const handleConfirmDonation = () => {
-    if(donationAmount && Number(donationAmount) > 0) {
-      setShowConfirmModal(true);
-      setShowDonateModal(false);
-    }else{
-      toast.error("Please enter a valid donation amount");
-    }
+
+  const clearDonation = () => {
+    setDonationAmount(0);
+    setShowConfirmModal(false)
   }
 
   const handleDonate = async () => {
     if(donationAmount && Number(donationAmount) > 0) {
       const amount = Number(donationAmount) * 10**18;
       await writeContractAsync({
-        address: INVESTOR_MANAGEMENT_CONTRACT,
-        abi: INVESTOR_MANAGEMENT_CONTRACT_ABI,
-        functionName: 'fundProjectOutRound',
-        args: [projectId||""],
+        address: PROJECT_CONTRACT_ADDRESS,
+        abi: PROJECT_CONTRACT_ABI,
+        functionName: inRound ? 'fundProjectInRound' : 'fundProjectOutRound',
+        args: inRound ? [roundId||"",projectId||""] : [projectId||""],
         value: BigInt(amount)
       });
-      toast.success("Donation successful");
       setShowConfirmModal(false);
-      refetchFundsRaisedOutRound();
+      toast.success("Donation successful")
     }
   }
 
@@ -214,6 +222,8 @@ export default function ProjectCard({
                 <div className="flex justify-between items-center text-sm">
                   <div>
                     <p className="font-bold text-gray-800">{formatEther(fundsRaisedOutRound||BigInt(0))} {currency}</p>
+                    {/* TODO: change to investorsInOutRound?.length */}
+                    {/* @ts-ignore */}
                     <p className="text-gray-500">{investorsInOutRound?.length} contributors</p>
                   </div>
                   <button 

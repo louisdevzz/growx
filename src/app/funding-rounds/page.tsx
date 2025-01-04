@@ -1,14 +1,17 @@
 'use client'
 import Header from '@/components/Header'
 import { pots } from '@/data/pots'
+import { ROUND_MANAGEMENT_CONTRACT_ABI } from '@/lib/ABI'
+import { ROUND_MANAGEMENT_CONTRACT } from '@/lib/ABI'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
+import { useAccount, useReadContract } from 'wagmi'
 
 
-export default function PotsPage() {
-  const activePots = pots.filter(pot => pot.status === 'active')
+export default function FundingRoundsPage() {
   const completedPots = pots.filter(pot => pot.status === 'completed')
   const [rounds, setRounds] = useState<any[]>([]);
+  const { address } = useAccount()
 
   const fetchRounds = useCallback(async () => {
     const response = await fetch('/api/rounds');
@@ -20,13 +23,25 @@ export default function PotsPage() {
     fetchRounds();
   }, [fetchRounds]);
 
-  console.log(rounds);
+  // console.log(rounds);
+
+  const {data: managerAddress,isLoading: isLoadingManagerAddress} = useReadContract({
+    address: ROUND_MANAGEMENT_CONTRACT,
+    abi: ROUND_MANAGEMENT_CONTRACT_ABI,
+    functionName: 'manager',
+    args: [],
+  })
+
+  const {data: activeRoundIds} = useReadContract({
+    address: ROUND_MANAGEMENT_CONTRACT,
+    abi: ROUND_MANAGEMENT_CONTRACT_ABI,
+    functionName: 'getActiveRoundIds',
+    args: [],
+  })
 
   const convertSecondsToDays = (seconds: number) => {
-    const secondsInADay = 86400; // 24 * 60 * 60
-    const days = Math.floor(seconds / secondsInADay); // Full days
-    // const leftoverSeconds = seconds % secondsInADay; // Remaining seconds
-
+    const secondsInADay = 86400;
+    const days = Math.floor(seconds / secondsInADay); 
     return days;
   }
 
@@ -39,17 +54,21 @@ export default function PotsPage() {
         <div className="bg-[#FDF6F0] rounded-lg p-8 mb-12">
           <h1 className="text-3xl font-bold mb-2">Donate to Matching Rounds</h1>
           <p className="text-xl mb-4">to Get Your Contributions Amplified.</p>
-          <Link href="/create-funding-rounds">
-            <button className="px-8 py-4 bg-white text-black font-semibold rounded-xl border-2 border-black hover:bg-black hover:text-white transition-all">
-              Create Funding Round
-            </button>
-          </Link>
+          {
+            managerAddress === address && !isLoadingManagerAddress ? (
+              <Link href="/create-funding-rounds">
+                <button className="px-8 py-4 bg-white text-black font-semibold rounded-xl border-2 border-black hover:bg-black hover:text-white transition-all">
+                  Create Funding Round
+                </button>
+              </Link>
+            ) : null
+          }
         </div>
 
         {/* Active Pots Section */}
         <div className="mb-12">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Active Funding Rounds <span className="text-gray-500">{activePots.length}</span></h2>
+            <h2 className="text-xl font-semibold">Active Funding Rounds <span className="text-gray-500">{activeRoundIds?.length??0}</span></h2>
             <div className="flex gap-4">
               <button className="border px-4 py-2 rounded-md flex items-center gap-2">
                 Filter <span>↓</span>

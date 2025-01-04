@@ -6,10 +6,9 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import { HomeTab } from '@/components/HomeTab';
 import { FundingRoundTab } from '@/components/FundingRound';
 import { FundingRaisedTab } from '@/components/FundingRaisedTab';
-import { useAccount, useReadContract,useWriteContract } from "wagmi";
+import { useAccount, useReadContract,useWatchContractEvent,useWriteContract } from "wagmi";
 import Link from "next/link";
-import { INVESTOR_MANAGEMENT_CONTRACT, INVESTOR_MANAGEMENT_CONTRACT_ABI, PROJECT_CONTRACT_ABI } from "@/lib/ABI";
-import { PROJECT_CONTRACT_ADDRESS } from "@/lib/ABI";
+import { PROJECT_CONTRACT_ADDRESS,PROJECT_CONTRACT_ABI } from "@/lib/ABI";
 import { formatEther } from "viem";
 import toast from "react-hot-toast";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -18,17 +17,17 @@ import { FaTwitter, FaGithub, FaDiscord, FaTelegram, FaMedium, FaGlobe } from "r
 const getSocialIcon = (type: string) => {
   switch (type.toLowerCase()) {
     case 'twitter':
-      return <FaTwitter className="w-8 h-8" />;
+      return <FaTwitter className="w-6 h-6" />;
     case 'github':
-      return <FaGithub className="w-8 h-8" />;
+      return <FaGithub className="w-6 h-6" />;
     case 'discord':
-      return <FaDiscord className="w-8 h-8" />;
+      return <FaDiscord className="w-6 h-6" />;
     case 'telegram':
-      return <FaTelegram className="w-8 h-8" />;
+      return <FaTelegram className="w-6 h-6" />;
     case 'medium':
-      return <FaMedium className="w-8 h-8" />;
+      return <FaMedium className="w-6 h-6" />;
     default:
-      return <FaGlobe className="w-8 h-8" />;
+      return <FaGlobe className="w-6 h-6" />;
   }
 };
 
@@ -63,12 +62,12 @@ const ProjectDetail = () => {
   const [donationAmount, setDonationAmount] = useState<string|null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [ethPrice, setEthPrice] = useState<number>(0);
-  const { writeContractAsync, isSuccess,data:txData,isPending } = useWriteContract()
+  const { writeContractAsync } = useWriteContract()
 
   const {data: fundsRaisedOutRound, refetch: refetchFundsRaisedOutRound} = useReadContract({
     address: PROJECT_CONTRACT_ADDRESS,
     abi: PROJECT_CONTRACT_ABI,
-    functionName: 'getFundsRaisedOutRound',
+    functionName: 'getFundsOutRound',
     args: [projectId||""],
     query: {
       enabled: !!projectId
@@ -78,12 +77,24 @@ const ProjectDetail = () => {
   const {data: investorsInOutRound} = useReadContract({
     address: PROJECT_CONTRACT_ADDRESS,
     abi: PROJECT_CONTRACT_ABI,
-    functionName: 'getInvestorsInOutRound',
+    functionName: 'getInvestorsOutRound',
     args: [projectId||""],
     query: {
       enabled: !!projectId
     }
   })
+
+  useWatchContractEvent({
+    address: PROJECT_CONTRACT_ADDRESS,
+    abi: PROJECT_CONTRACT_ABI,
+    eventName: 'Funded',
+    args: projectId && address && donationAmount ? [projectId, address, BigInt(Number(donationAmount)*10**18)] : undefined,
+    onLogs(logs) {
+      console.log("logs",logs)
+      clearDonation()
+      refetchFundsRaisedOutRound()
+    }
+  });
 
   const fetchProject = useCallback(async () => {
     const response = await fetch(`/api/projects/findBySlug`, {
@@ -184,7 +195,13 @@ const ProjectDetail = () => {
       case 'pots':
         return <FundingRoundTab />;
       case 'funding':
-        return <FundingRaisedTab project={project} />;
+        return <FundingRaisedTab 
+          project={project} 
+          investorsInOutRounds={investorsInOutRound as string[] || []} 
+          fundsRaisedOutRound={fundsRaisedOutRound?.toString() || "0"} 
+          ethPrice={ethPrice}
+          address={address as `0x${string}`}
+        />;
       case 'home':
       default:
         return <HomeTab project={project}/>;
@@ -200,23 +217,27 @@ const ProjectDetail = () => {
     }
   }
 
+  const clearDonation = () => {
+    setDonationAmount(null);
+    setShowConfirmModal(false);
+    toast.success("Donation successful");
+  }
+
   const handleDonate = async () => {
     if(donationAmount && Number(donationAmount) > 0) {
       const amount = Number(donationAmount) * 10**18;
       await writeContractAsync({
-        address: INVESTOR_MANAGEMENT_CONTRACT,
-        abi: INVESTOR_MANAGEMENT_CONTRACT_ABI,
+        address: PROJECT_CONTRACT_ADDRESS,
+        abi: PROJECT_CONTRACT_ABI,
         functionName: 'fundProjectOutRound',
         args: [projectId||""],
         value: BigInt(amount)
       });
-      toast.success("Donation successful");
       setShowConfirmModal(false);
-      refetchFundsRaisedOutRound();
+      toast.loading("Please wait for the donation to be successful", { duration: 2000 });
     }
-  }
+  };
 
-  // console.log("donationAmount",donationAmount*10**18)
 
   return (
     <div className="min-h-screen bg-white">
@@ -248,7 +269,7 @@ const ProjectDetail = () => {
                   </div>
                   <div className="mt-16 flex items-center gap-2">
                     <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium">
-                      APPROVED
+                      ACTIVE
                     </span>
                     {/* <span className="text-sm text-gray-600">{project.followers} Followers</span>
                     <span className="text-sm text-gray-600">{project.following} Following</span> */}
