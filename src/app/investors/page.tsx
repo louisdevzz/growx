@@ -1,11 +1,37 @@
+"use client"
 import Header from '@/components/Header'
 import DonorCard from '@/components/DonorCard'
 import Link from 'next/link'
 import { getTopDonors, getAllDonors } from '@/data/users'
+import { useEffect, useCallback, useState, useMemo } from 'react'
 
 export default function DonorsPage() {
+  const [investors,setInvestors] = useState<any[]>([])
+
   const topDonors = getTopDonors(3) // Lấy top 3 donors
   const allDonors = getAllDonors() // Lấy tất cả donors đã sắp xếp
+
+  const fetchInvestors = useCallback(async () => {
+    try{
+      const response = await fetch('/api/investors');
+      const data = await response.json();
+      setInvestors(data.data)
+    }catch(error){
+      console.log("error",error)
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchInvestors();
+  }, [fetchInvestors]);
+
+  const topInvestors = useMemo(() => {
+    return investors.sort((a, b) => b.donations.amount - a.donations.amount).slice(0, 3);
+  }, [investors]);
+
+  const getInitials = (name: string) => {
+    return name.slice(2, 5).toUpperCase();
+  }
 
   return (
     <div className="container min-h-screen">
@@ -15,15 +41,15 @@ export default function DonorsPage() {
         
         {/* Top Donors Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {topDonors.map((donor) => (
+          {topInvestors.map((investor,index) => (
             <Link 
-              href={`/users/${encodeURIComponent(donor.name)}`} 
-              key={donor.rank}
+              href={`/users/${investor.address}`} 
+              key={index}
             >
               <DonorCard
-                name={donor.name}
-                amount={donor.donations.amount}
-                imageUrl={donor.profileImage}
+                name={investor.address}
+                amount={investor.amountDonated}
+                imageUrl={investor.profileImage}
               />
             </Link>
           ))}
@@ -33,7 +59,7 @@ export default function DonorsPage() {
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-2">
             <span className="font-semibold">LEADERBOARD</span>
-            <span className="text-primary">{allDonors.length}</span>
+            <span className="text-primary">{investors.length}</span>
           </div>
           <div className="flex gap-2">
             {['All Time', '1Y', '1M', '1W', '24H'].map((period) => (
@@ -50,29 +76,37 @@ export default function DonorsPage() {
         {/* Donors List */}
         <div className="bg-white rounded-lg shadow-sm">
           <div className="divide-y">
-            {allDonors.map((donor) => (
+            {investors.map((donor,index) => (
               <Link 
-                href={`/users/${encodeURIComponent(donor.name)}`}
-                key={donor.rank}
+                href={`/users/${donor.address}`}
+                key={index}
                 className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
               >
                 <div className="flex items-center gap-4">
-                  <span className="text-sm text-gray-500 w-8">#{donor.rank}</span>
-                  <div className="w-10 h-10 rounded-full overflow-hidden">
-                    <img 
-                      src={donor.profileImage} 
-                      alt={donor.name}
-                      className="w-full h-full object-cover"
-                    />
+                  <span className="text-sm text-gray-500 w-8">#{index + 1}</span>
+                  <div className="w-10 h-10 border-2 border-gray-200 p-2 rounded-full overflow-hidden">
+                    {donor.profileImage ? (
+                      <img
+                        src={donor.profileImage}
+                        alt={donor.address}
+                        width={80}
+                        height={80}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-white text-gray-600 text-sm font-medium">
+                        {getInitials(donor.address)}
+                      </div>
+                    )}
                   </div>
                   <div>
-                    <h3 className="font-medium">{donor.name}</h3>
-                    <p className="text-sm text-gray-500">{donor.bio.substring(0, 60)}...</p>
+                    <h3 className="font-medium">{donor.address}</h3>
+                    {/* <p className="text-sm text-gray-500">{donor.bio.substring(0, 60)}...</p> */}
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">${donor.donations.amount.toLocaleString()}</p>
-                  <p className="text-sm text-gray-500">{donor.donations.tokenAmount} tokens</p>
+                  <p className="font-medium">${donor.amountDonated.toFixed(2)}</p>
+                  {/* <p className="text-sm text-gray-500">{donor.donations.tokenAmount} tokens</p> */}
                 </div>
               </Link>
             ))}

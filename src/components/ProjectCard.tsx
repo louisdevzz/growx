@@ -158,18 +158,30 @@ export default function ProjectCard({
     setShowConfirmModal(false)
   }
 
+  const saveInvestor = async () => {
+    await fetch('/api/investors', {
+      method: 'POST',
+      body: JSON.stringify({ address, amountDonated: Number(donationAmount)*ethPrice })
+    });
+  }
+
   const handleDonate = async () => {
     if(donationAmount && Number(donationAmount) > 0) {
-      const amount = Number(donationAmount) * 10**18;
-      await writeContractAsync({
-        address: PROJECT_CONTRACT_ADDRESS,
-        abi: PROJECT_CONTRACT_ABI,
-        functionName: inRound ? 'fundProjectInRound' : 'fundProjectOutRound',
-        args: inRound ? [roundId||"",projectId||""] : [projectId||""],
-        value: BigInt(amount)
-      });
-      setShowConfirmModal(false);
-      toast.success("Donation successful")
+      try {
+        const amount = Number(donationAmount) * 10**18;
+        await writeContractAsync({
+          address: PROJECT_CONTRACT_ADDRESS,
+          abi: PROJECT_CONTRACT_ABI,
+          functionName: inRound ? 'fundProjectInRound' : 'fundProjectOutRound',
+          args: inRound ? [roundId||"",projectId||""] : [projectId||""],
+          value: BigInt(amount)
+        });
+        await saveInvestor();
+        setShowConfirmModal(false);
+        toast.success("Donation successful")
+      } catch (error) {
+        toast.error("Donation failed")
+      } 
     }
   }
 

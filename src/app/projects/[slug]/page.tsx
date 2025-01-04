@@ -223,6 +223,13 @@ const ProjectDetail = () => {
     toast.success("Donation successful");
   }
 
+  const saveInvestor = async () => {
+    await fetch('/api/investors', {
+      method: 'POST',
+      body: JSON.stringify({ address, amountDonated: Number(donationAmount)*ethPrice })
+    });
+  }
+
   const handleDonate = async () => {
     if(donationAmount && Number(donationAmount) > 0) {
       const amount = Number(donationAmount) * 10**18;
@@ -233,6 +240,7 @@ const ProjectDetail = () => {
         args: [projectId||""],
         value: BigInt(amount)
       });
+      await saveInvestor();
       setShowConfirmModal(false);
       toast.loading("Please wait for the donation to be successful", { duration: 2000 });
     }
