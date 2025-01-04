@@ -179,7 +179,7 @@ const ProjectDetail = () => {
             <Header />
             
             {/* Banner Image Container - Updated height and padding */}
-            <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px] overflow-hidden mt-4 sm:mt-5">
+            <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px] overflow-hidden mt-4 sm:mt-5 rounded-lg shadow-lg">
               <img 
                 src={project.coverImage} 
                 alt={project.name}
@@ -188,11 +188,11 @@ const ProjectDetail = () => {
             </div>
 
             {/* Profile Section - Added container and responsive padding */}
-            <div className="container mx-auto max-w-[1440px]">
-              <div className="px-4 sm:px-8">
+            <div className="container md:mx-auto max-w-[1440px] ">
+              <div className="sm:px-8">
                 {/* Avatar and Stats - Updated sizes */}
                 <div className="flex items-start gap-3 sm:gap-4 -mt-12 sm:-mt-14 relative z-10">
-                  <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-white bg-white shadow-md">
+                  <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-white bg-white shadow-xl">
                     <img 
                       src={project.profileImage} 
                       alt={project.name}
@@ -200,7 +200,7 @@ const ProjectDetail = () => {
                     />
                   </div>
                   <div className="mt-12 sm:mt-16 flex items-center gap-2">
-                    <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium">
+                    <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium shadow">
                       APPROVED
                     </span>
                   </div>

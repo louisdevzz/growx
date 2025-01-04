@@ -13,8 +13,6 @@ export default function FundingRoundDetail() {
   const [activeTab, setActiveTab] = useState('projects')
   const [isLoading, setIsLoading] = useState(true);
 
-  // console.log('slug',slug);
-
   const fetchRound = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -36,32 +34,35 @@ export default function FundingRoundDetail() {
   }, [fetchRound]);
 
   return (
-    <div className="container min-h-screen">
+    <div className="min-h-screen">
       <Header />
-      {/* <ProgressBar /> */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-[2fr,1fr] gap-8">
-          {/* Left Column - Main Info */}
-          <div className="space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        {/* Main Content Grid */}
+        <div className=" gap-6 lg:gap-8 px-4">
+          {/* Left Column - Main Info (spans 2 columns on large screens) */}
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {isLoading ? (
-              <div>Loading...</div>
+              <div className="animate-pulse h-8 bg-gray-200 rounded w-3/4"></div>
             ) : (
               <>
-                <h1 className="text-4xl font-bold">{round?.name}</h1>
-                <p className="text-gray-600">{round?.description}</p>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold break-words">{round?.name}</h1>
+                <p className="text-gray-600 text-sm sm:text-base">{round?.description}</p>
               </>
             )}
             
-            <div className="border-b">
-              <div className="flex gap-8">
+            {/* Tabs */}
+            <div className="border-b mt-6">
+              <div className="flex gap-4 sm:gap-8 overflow-x-auto">
                 <button 
-                  className={`px-4 py-2 border-b-2 ${activeTab === 'projects' ? 'border-black font-medium' : 'border-transparent text-gray-500'}`}
+                  className={`px-3 sm:px-4 py-2 border-b-2 whitespace-nowrap text-sm sm:text-base
+                    ${activeTab === 'projects' ? 'border-black font-medium' : 'border-transparent text-gray-500'}`}
                   onClick={() => setActiveTab('projects')}
                 >
                   Projects
                 </button>
                 <button 
-                  className={`px-4 py-2 border-b-2 ${activeTab === 'donations' ? 'border-black font-medium' : 'border-transparent text-gray-500'}`}
+                  className={`px-3 sm:px-4 py-2 border-b-2 whitespace-nowrap text-sm sm:text-base
+                    ${activeTab === 'donations' ? 'border-black font-medium' : 'border-transparent text-gray-500'}`}
                   onClick={() => setActiveTab('donations')}
                 >
                   Donations
@@ -69,47 +70,46 @@ export default function FundingRoundDetail() {
               </div>
             </div>
 
+            {/* Tab Content */}
             {activeTab === 'projects' && (
-              <>
+              <div className="space-y-4">
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Search projects"
-                    className="w-full px-4 py-2 border rounded-lg"
+                    className="w-full px-4 py-2 border rounded-lg text-sm sm:text-base"
                   />
-                  <span className="absolute right-3 top-2.5 text-gray-400">🔍</span>
+                  <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
                 </div>
                 <ProjectsTab projects={featuredProjects} />
-              </>
+              </div>
             )}
 
             {activeTab === 'donations' && <DonationsTab />}
           </div>
 
           {/* Right Column - Fund Info */}
-          <div className="space-y-6">
-            <div className="group bg-white rounded-lg p-6 shadow-md relative transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl border border-gray-100">
-              
-              
+          <div className=" py-4 space-y-4 sm:space-y-6">
+            {/* Fund Stats Card */}
+            <div className="group bg-white rounded-lg p-4 sm:p-6 shadow-md relative transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl border border-gray-100">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <div className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-red-600 bg-clip-text text-transparent">
+                  <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-600 to-red-600 bg-clip-text text-transparent">
                     ~${round?.amountRaised || 0}
                   </div>
-                  <div className="text-gray-500">raised from {round?.donors || 0} donors</div>
+                  <div className="text-gray-500 text-sm sm:text-base">raised from {round?.donors || 0} donors</div>
                 </div>
-                <div className="text-gray-500 font-medium">ETH</div>
+                <div className="text-gray-500 font-medium text-sm sm:text-base">ETH</div>
               </div>
-              
             </div>
 
-            <button className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-colors duration-200 font-medium">
+            {/* Fund Button */}
+            <button className="w-full bg-black text-white py-2 sm:py-3 rounded-md hover:bg-gray-800 transition-colors duration-200 font-medium text-sm sm:text-base">
               Fund matching pool
             </button>
-            
           </div>
         </div>
-      </main>
+      </div>
     </div>
   )
-} 
+}

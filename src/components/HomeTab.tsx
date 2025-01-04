@@ -9,7 +9,7 @@ export const HomeTab = ({project}: {project: ProjectProps}) => {
     <div className="mt-4 sm:mt-8 py-4 sm:py-8">
       <h2 className="text-xl font-semibold mb-6">About {project.name}</h2>
       <div className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="font-medium">Overview</div>
           <div className="text-gray-600">
             <p>{project.description}</p>
@@ -17,7 +17,7 @@ export const HomeTab = ({project}: {project: ProjectProps}) => {
         </div>
 
         {project.why && (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="font-medium">Why do you want to raise capital?</div>
             <p className="text-gray-600">{project.why}</p>
           </div>
@@ -28,7 +28,7 @@ export const HomeTab = ({project}: {project: ProjectProps}) => {
           <p className="text-gray-600">{project.teamMembers || "No team members to display"}</p>
         </div> */}
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="font-medium">Funding sources</div>
           {
             project.fundingSources ? (

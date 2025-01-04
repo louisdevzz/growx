@@ -25,38 +25,35 @@ export const FundingRaisedTab = ({project}: {project: ProjectProps}) => {
   );
 
   return (
-    <div className="py-8">
+    <div className="py-8 sm:py-8">
       {/* Stats Section */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-6">{project.name} Funding</h2>
-        <div className="flex gap-8">
+      <div className="mb-4 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">{project.name} Funding</h2>
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
           <div>
-            <span className="text-xl font-semibold">{fundingStats.totalDonated}</span>
-            <span className="text-gray-600 ml-2">(~${(fundingStats.totalDonated * 191.14).toFixed(2)})</span>
-            <div className="text-sm text-gray-600">Donated</div>
+            <span className="text-lg sm:text-xl font-semibold">{fundingStats.totalDonated}</span>
+            <span className="text-gray-600 ml-2 text-sm sm:text-base">(~${(fundingStats.totalDonated * 191.14).toFixed(2)})</span>
+            <div className="text-xs sm:text-sm text-gray-600">Donated</div>
           </div>
           <div>
-            <span className="text-xl font-semibold">{fundingStats.uniqueDonors}</span>
-            <div className="text-sm text-gray-600">Unique donors</div>
+            <span className="text-lg sm:text-xl font-semibold">{fundingStats.uniqueDonors}</span>
+            <div className="text-xs sm:text-sm text-gray-600">Unique donors</div>
           </div>
-          {/* <div>
-            <span className="text-xl font-semibold">{fundingStats.totalMatched}</span>
-            <div className="text-sm text-gray-600">Total Matched</div>
-          </div> */}
         </div>
       </div>
 
       {/* Donations Table */}
       <div className="border rounded-lg">
         {/* Table Header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <div className="flex items-center gap-4">
-            <h3 className="font-medium">Donors</h3>
+        <div className="grid grid-cols-2 items-center p-3 sm:p-4 border-b gap-4">
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium whitespace-nowrap">Donors</h3>
+          
             <div className="relative">
               <input
                 type="text"
                 placeholder="Search donors"
-                className="pl-8 pr-4 py-2 border rounded-lg"
+                className="w-full pl-8 pr-2 py-1 sm:py-2 border rounded-lg text-sm"
                 value={searchTerm || ''}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -75,45 +72,26 @@ export const FundingRaisedTab = ({project}: {project: ProjectProps}) => {
               </svg>
             </div>
           </div>
-          <div className="flex items-center gap-8">
-            <span className="font-medium w-20 text-right">Amount</span>
-            <button className="flex items-center gap-1 w-24 justify-end">
-              Date <span>↓</span>
-            </button>
-          </div>
+          <div className="text-right font-medium">Amount</div>
+
         </div>
 
         {/* Table Body */}
         <div className="divide-y">
           {filteredDonations.map(donation => (
-            <div key={donation.id} className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-3">
-                {donation.donorAvatar ? (
-                  <img
-                    src={donation.donorAvatar}
-                    alt={donation.donorName}
-                    className="w-10 h-10 rounded-full"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                    <span className="text-sm font-medium text-gray-600">
-                      {getInitials(donation.donorName)}
-                    </span>
-                  </div>
-                )}
+            <div key={donation.id} className="grid grid-cols-2 items-center p-3 sm:p-4 gap-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+
                 <div>
-                  <div className="font-medium">{donation.donorName}</div>
-                  <div className="text-sm text-gray-600">{donation.type}</div>
+                  <div className="font-medium text-sm sm:text-base">{donation.donorName}</div>
+                  
                 </div>
               </div>
-              <div className="flex items-center gap-8">
-                <div className="w-20 text-right">
-                  <span>{donation.amount}</span>
-                </div>
-                <div className="text-sm text-gray-600 w-24 text-right">
-                  {donation.timestamp}
-                </div>
+              
+              <div className="text-right">
+                <span className="text-xs sm:text-sm">{donation.amount}</span>
               </div>
+
             </div>
           ))}
         </div>
