@@ -34,11 +34,11 @@ export default function FundingRoundDetail() {
   }, [fetchRound]);
 
   return (
-    <div className="min-h-screen">
+    <div className="container ">
       <Header />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+      <div className="py-4 sm:py-6 lg:py-8">
         {/* Main Content Grid */}
-        <div className=" gap-6 lg:gap-8 px-4">
+        <div className=" gap-6 lg:gap-8 px-1">
           {/* Left Column - Main Info (spans 2 columns on large screens) */}
           <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {isLoading ? (

@@ -89,13 +89,14 @@ body {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
 }
 
-@media (min-width: 1280px) {
+@media (max-width:768px ) {
   .container {
-    max-width: 1280px;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 

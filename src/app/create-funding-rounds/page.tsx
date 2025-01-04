@@ -63,16 +63,16 @@ export default function CreateFundingRound() {
   };
 
   return (
-    <div className='min-h-screen bg-white container'>
+    <div className='min-h-screen bg-white '>
       <Header />
-      <main className="flex items-start justify-center p-6">
-        <div className="container max-w-3xl">
-          <div className="text-center mb-12 bg-[#FDF7F3] rounded-2xl p-8">
-            <h1 className="text-2xl font-bold mb-4">Create New Funding Round</h1>
+      <main className="flex items-start justify-center ">
+        <div className="container">
+          <div className="text-center mt-3 mb-8 shadow bg-[#FDF7F3] rounded-2xl p-8 ">
+            <h1 className="text-2xl font-bold mb-2">Create New Funding Round</h1>
             <p className="text-gray-600 text-lg">Set up a new funding round to match donations for qualified projects.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="border border-gray-100 rounded-2xl p-8 shadow-sm">
+          <form onSubmit={handleSubmit} className="border border-gray-100 rounded-2xl p-6 shadow-lg">
             <div className="mb-8">
               <div className="flex items-center gap-2 mb-6">
                 <label className="font-medium text-lg">Round details</label>

@@ -19,7 +19,7 @@ export default function DonorsPage() {
         </div>
 
         {/* Donors List */}
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="divide-y divide-gray-200">
             {allDonors.map((donor) => (
               <Link

@@ -221,14 +221,14 @@ export default function CreateProject() {
   return (
     <div className='min-h-screen bg-white container'>
       <Header />
-      <main className="flex items-start justify-center p-6">
-        <div className="container max-w-3xl">
-          <div className="text-center mb-12 bg-[#FDF7F3] rounded-2xl p-8">
+      <main className="flex items-start justify-center">
+        <div className="container max-w-3xl p-4">
+          <div className="text-center mb-12 bg-[#FDF7F3] rounded-2xl p-4">
             <h1 className="text-2xl font-bold mb-4">Register New Project</h1>
             <p className="text-gray-600 text-lg">Create a profile for your project to receive donations and qualify for funding rounds.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="border border-gray-100 rounded-2xl p-8 shadow-sm">
+          <form onSubmit={handleSubmit} className="border border-gray-100 rounded-2xl p-4 sm:p-6 md:p-8 lg:p-10 shadow-sm">
             <div className="mb-8">
               <div className="flex items-center gap-2 mb-2">
                 <label className="font-medium text-lg">Upload banner and profile image</label>
@@ -246,7 +246,7 @@ export default function CreateProject() {
                   <button 
                     type="button" 
                     onClick={() => triggerFileInput(fileInputRef)}
-                    className="absolute right-4 top-4 bg-white rounded px-3 py-1.5 text-sm flex items-center gap-2"
+                    className="absolute right-1 top-4 bg-white rounded px-3 py-1.5 text-sm flex items-center gap-2"
                     disabled={isUploading}
                   >
                     {isUploading ? (
@@ -315,7 +315,7 @@ export default function CreateProject() {
               </div> */}
             </div>
 
-            <div className="mb-8">
+            <div className="mb-8 mt-16">
               <div className="flex items-center gap-2 mb-6">
                 <label className="font-medium text-lg">Project details</label>
                 <span className="text-red-500 text-xs">Required</span>

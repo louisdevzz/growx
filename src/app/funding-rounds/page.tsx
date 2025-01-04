@@ -24,7 +24,7 @@ export default function PotsPage() {
   console.log(rounds);
 
   return (
-    <div className="container min-h-screen">
+    <div className="container w-full">
       <Header />
       <main className="px-4 py-8">
         {/* Hero Section */}
