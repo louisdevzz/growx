@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Using case-insensitive regex search for the slug
-        const round = await Round.findOne({slug: "test"});
+        const round = await Round.findOne({slug: slug});
         
         if (!round) {
             return NextResponse.json(

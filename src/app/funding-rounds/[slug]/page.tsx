@@ -163,6 +163,7 @@ export default function FundingRoundDetail() {
         body: JSON.stringify({ slug: slug })
       });
       const round = await response.json();
+      // console.log("round",round)
       setRoundId(round.roundId)
       setRound(round);
     } catch (error) {

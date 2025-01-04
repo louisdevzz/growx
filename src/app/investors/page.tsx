@@ -2,12 +2,11 @@
 import Header from '@/components/Header'
 import DonorCard from '@/components/DonorCard'
 import Link from 'next/link'
-import { getTopDonors, getAllDonors } from '@/data/users'
 import { useEffect, useCallback, useState, useMemo } from 'react'
 
 export default function DonorsPage() {
   const [investors,setInvestors] = useState<any[]>([])
-  
+
   const fetchInvestors = useCallback(async () => {
     try {
       const response = await fetch('/api/investors');
