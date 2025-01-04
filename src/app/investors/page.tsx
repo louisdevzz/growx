@@ -7,17 +7,28 @@ import { useEffect, useCallback, useState, useMemo } from 'react'
 
 export default function DonorsPage() {
   const [investors,setInvestors] = useState<any[]>([])
-
-  const topDonors = getTopDonors(3) // Lấy top 3 donors
-  const allDonors = getAllDonors() // Lấy tất cả donors đã sắp xếp
-
+  
   const fetchInvestors = useCallback(async () => {
-    try{
+    try {
       const response = await fetch('/api/investors');
       const data = await response.json();
-      setInvestors(data.data)
-    }catch(error){
-      console.log("error",error)
+      
+      // Filter unique investors by address, combine donations, and only include those with donations > 0
+      const uniqueInvestors = Object.values(
+        data.data.reduce((acc: any, investor: any) => {
+          if (!acc[investor.address]) {
+            acc[investor.address] = { ...investor };
+          } else {
+            // Add up the donations for the same address
+            acc[investor.address].amountDonated += investor.amountDonated;
+          }
+          return acc;
+        }, {})
+      ).filter((investor: any) => investor.amountDonated > 0); // Filter out investors with 0 donations
+
+      setInvestors(uniqueInvestors);
+    } catch(error) {
+      console.log("error", error)
     }
   }, []);
 
@@ -25,8 +36,10 @@ export default function DonorsPage() {
     fetchInvestors();
   }, [fetchInvestors]);
 
+  console.log("investors",investors)
+
   const topInvestors = useMemo(() => {
-    return investors.sort((a, b) => b.donations.amount - a.donations.amount).slice(0, 3);
+    return investors.sort((a, b) => b.amountDonated - a.amountDonated).slice(0, 3);
   }, [investors]);
 
   const getInitials = (name: string) => {
