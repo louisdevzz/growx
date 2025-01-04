@@ -3,34 +3,65 @@ import { auth } from "twitter-api-sdk";
 
 const TWITTER_CLIENT_ID = process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID;
 const TWITTER_CLIENT_SECRET = process.env.NEXT_PUBLIC_TWITTER_CLIENT_SECRET;
+const CALLBACK_URL = 'https://www.growx.top/api/twitter/callback';
 
 const authClient = new auth.OAuth2User({
   client_id: TWITTER_CLIENT_ID!,
   client_secret: TWITTER_CLIENT_SECRET!,
-  callback: 'https://growx.top/api/twitter/callback',
-  scopes: ["tweet.read", "tweet.write", "users.read"],
+  callback: CALLBACK_URL,
+  scopes: ["tweet.read", "tweet.write", "users.read", "offline.access"],
 });
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const code = searchParams.get('code');
-    
-    if (!code) {
-      return NextResponse.json({ error: 'Authorization code is required.' }, { status: 400 });
+    if (!TWITTER_CLIENT_ID || !TWITTER_CLIENT_SECRET) {
+      throw new Error('Twitter credentials are not configured');
     }
 
-    // Exchange the code for an access token
-    const token = await authClient.requestAccessToken(code);
+    const { searchParams } = new URL(request.url);
+    const code = searchParams.get('code');
+    const state = searchParams.get('state');
+    
+    if (!code) {
+      throw new Error('Authorization code is required');
+    }
 
-    // Store the token in a secure way
+    // Get the code verifier and stored state from cookie
+    const codeVerifier = request.cookies.get('code_verifier')?.value;
+    const storedState = request.cookies.get('oauth_state')?.value;
+
+    if (!codeVerifier) {
+      throw new Error('Code verifier not found in cookies');
+    }
+
+    // Verify state to prevent CSRF
+    if (!state || !storedState || state !== storedState) {
+      throw new Error('Invalid state parameter');
+    }
+
+    // Exchange the code for an access token with PKCE
+    await authClient.requestAccessToken(code);
+    const { token } = authClient;
+
+    if (!token) {
+      throw new Error('Failed to obtain access token');
+    }
+
+    // Create response with redirect
     const response = NextResponse.redirect(new URL('/tweets', request.url));
+
+    // Store the token securely
     response.cookies.set('twitter_token', JSON.stringify(token), {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
       path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 1 week
     });
+
+    // Clean up the temporary cookies
+    response.cookies.delete('code_verifier');
+    response.cookies.delete('oauth_state');
 
     return response;
   } catch (error: any) {
@@ -38,7 +69,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         error: 'An error occurred during authentication.',
-        details: error.message,
+        details: error.message || 'Unknown error',
       },
       { status: 500 }
     );
