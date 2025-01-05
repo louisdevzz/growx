@@ -11,6 +11,7 @@ import { useAccount, useReadContract } from 'wagmi'
 export default function FundingRoundsPage() {
   const completedPots = pots.filter(pot => pot.status === 'completed')
   const [rounds, setRounds] = useState<any[]>([]);
+  const [roundStats, setRoundStats] = useState<{[key: string]: {funds: string, investors: string}}>({});
   const { address } = useAccount()
 
   const fetchRounds = useCallback(async () => {
@@ -23,7 +24,79 @@ export default function FundingRoundsPage() {
     fetchRounds();
   }, [fetchRounds]);
 
+  useEffect(() => {
+    const fetchRoundStats = async () => {
+      const stats: {[key: string]: {funds: string, investors: string}} = {};
+      
+      for (const round of rounds) {
+        const [funds, investors] = await Promise.all([
+          getTotalFundsInRound(round.roundId),
+          getInvestorsInRound(round.roundId)
+        ]);
+        stats[round.roundId] = {
+          funds,
+          investors
+        };
+      }
+      
+      setRoundStats(stats);
+    };
+
+    if (rounds.length > 0) {
+      fetchRoundStats();
+    }
+  }, [rounds]);
+
   // console.log(rounds);
+  const getTotalFundsInRound = async (roundId: string) => {
+    try {
+      const response = await fetch(`https://scanv2-testnet.ancient8.gg/api/v2/smart-contracts/${ROUND_MANAGEMENT_CONTRACT}/query-read-method`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "args": [
+            roundId
+          ],
+          "method_id": "6d6e4c17",
+          "contract_type": "regular"
+        }),
+      })
+
+      const data = await response.json();
+      // console.log(data.result.output[0].value);
+      return data.result.output[0].value;
+    } catch (error) {
+      console.error("Error fetching funds:", error);
+      return "0";
+    }
+  }
+
+  const getInvestorsInRound = async (roundId: string) => {
+    try {
+      const response = await fetch(`https://scanv2-testnet.ancient8.gg/api/v2/smart-contracts/${ROUND_MANAGEMENT_CONTRACT}/query-read-method`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "args": [
+            roundId
+          ],
+          "method_id": "1d40c173",
+          "contract_type": "regular"
+        }),
+      })
+
+      const data = await response.json();
+      // console.log(data.result.output[0].value);
+      return data.result.output[0].value;
+    } catch (error) {
+      console.error("Error fetching funds:", error);
+      return "0";
+    }
+  }
 
   const {data: managerAddress,isLoading: isLoadingManagerAddress} = useReadContract({
     address: ROUND_MANAGEMENT_CONTRACT,
@@ -115,9 +188,12 @@ export default function FundingRoundsPage() {
                         {/* Stats */}
                         <div className="flex justify-between items-center text-sm">
                           <div>
-                            <p className="font-bold text-gray-800">{round.amountRaised||0} ETH</p>
-                            {/* @ts-ignore */}
-                            <p className="text-gray-500">{round.donors || 0} contributors</p>
+                            <p className="font-bold text-gray-800">
+                              {Number(roundStats[round.roundId]?.funds) / 10**18 || 0} ETH
+                            </p>
+                            <p className="text-gray-500">
+                              {roundStats[round.roundId]?.investors?.length || 0} contributors
+                            </p>
                           </div>
                         </div>
 

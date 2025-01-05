@@ -132,7 +132,6 @@ const ProjectDetail = () => {
           category: project.category || 'Unknown',
         };
 
-        // Sử dụng sendBeacon để đảm bảo dữ liệu được gửi trước khi trang đóng
         if (timeSpent > 1) {
           navigator.sendBeacon('/api/analytics', JSON.stringify(analyticsData));
         }
@@ -250,16 +249,16 @@ const ProjectDetail = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="flex flex-col">
-        <div className="">
+        <div className="container">
           <div className="w-full">
             <Header />
             
             {/* Banner Image Container */}
-            <div className="relative w-full h-[300px] sm:h-[400px] overflow-hidden mt-5">
+            <div className="relative w-full h-[300px] sm:h-[400px] overflow-hidden mt-5 container rounded-lg">
               <img 
                 src={project.coverImage} 
                 alt={project.name}
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-cover object-center rounded-lg"
               />
             </div>
 
@@ -285,14 +284,20 @@ const ProjectDetail = () => {
                 </div>
 
                 {/* Project Title and Info */}
-                <div className="mt-4 flex justify-between items-start">
+                <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                   <div className="flex flex-col gap-2">
                     <h1 className="text-2xl font-semibold mb-1">{project.name}</h1>
-                    <Link target="_blank" href={`https://scanv2-testnet.ancient8.gg/address/${project.ownerAddress}`} className="text-gray-600 text-sm hover:underline hover:text-gray-900">@{project.ownerAddress}</Link>
+                    <Link 
+                      target="_blank" 
+                      href={`https://scanv2-testnet.ancient8.gg/address/${project.ownerAddress}`} 
+                      className="text-gray-600 text-sm hover:underline hover:text-gray-900 break-all"
+                    >
+                      @{project.ownerAddress}
+                    </Link>
                     <div className={`inline-flex items-center w-fit px-3 py-1 rounded-lg text-base font-medium uppercase ${getCategoryColor(project.category)}`}>
                       {project.category}
                     </div>
-                    <div className="flex items-center gap-4 mt-10">
+                    <div className="flex items-center gap-4 mt-6">
                       {project.socialLinks.map((link: any, index: number) => (
                         <Link 
                           key={index} 
@@ -306,7 +311,9 @@ const ProjectDetail = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="bg-orange-50 rounded-lg p-4">
+
+                  {/* Donation Box */}
+                  <div className="bg-orange-50 rounded-lg p-4 w-full md:w-auto md:min-w-[240px]">
                     <div className="flex items-baseline gap-1">
                       <span className="text-2xl font-semibold">{formatEther(BigInt(fundsRaisedOutRound||0))}</span>
                       <span className="text-gray-600">ETH</span>
@@ -314,7 +321,10 @@ const ProjectDetail = () => {
                     <p className="text-sm text-gray-600">
                       Raised from {investorsInOutRound?.length||0} donors
                     </p>
-                    <button className="mt-2 w-full bg-red-500 text-white rounded-md px-4 py-2 text-sm font-semibold" onClick={() => setShowDonateModal(true)}>
+                    <button 
+                      className="mt-3 w-full bg-red-500 hover:bg-red-600 text-white rounded-md px-4 py-2.5 text-sm font-semibold transition-colors" 
+                      onClick={() => setShowDonateModal(true)}
+                    >
                       Donate
                     </button>
                   </div>

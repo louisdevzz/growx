@@ -2,8 +2,6 @@
 
 import Header from '@/components/Header'
 import { useParams } from 'next/navigation'
-import { featuredProjects } from '@/data/projects'
-import ProjectsTab from '@/components/ProjectsTab'
 import DonationsTab from '@/components/DonationsTab'
 import { useEffect, useState, useCallback } from 'react'
 import { useAccount, useReadContract, useWatchContractEvent, useWriteContract } from 'wagmi'
@@ -12,6 +10,7 @@ import { PROJECT_CONTRACT_ABI, PROJECT_CONTRACT_ADDRESS, ROUND_MANAGEMENT_CONTRA
 import ProjectCard from '@/components/ProjectCard'
 import ProjectCardSkeleton from '@/components/ProjectCardSkeleton'
 
+const FALLBACK_ETH_PRICE = 3000; // Fallback ETH price in USD
 
 export default function FundingRoundDetail() {
   const { address,isConnected } = useAccount();
@@ -28,9 +27,6 @@ export default function FundingRoundDetail() {
   const [ownerAddresses, setOwnerAddresses] = useState<string[]>([]);
   const [showApproveModal, setShowApproveModal] = useState<boolean>(false);
   const [projectsInRound, setProjectsInRound] = useState<any[]>([]);
-  const [showDonateModal, setShowDonateModal] = useState<boolean>(false);
-  const [donationAmount, setDonationAmount] = useState<number>(0);
-  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [ethPrice, setEthPrice] = useState<number>(0);
   const { writeContractAsync,error,isError } = useWriteContract()
   // console.log('slug',slug);
@@ -39,23 +35,60 @@ export default function FundingRoundDetail() {
 
   const fetchEthPrice = useCallback(async () => {
     try {
-      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      // Try the main Coingecko API first
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd', {
+        headers: {
+          'Accept': 'application/json',
+        },
+        // Add timeout to prevent hanging
+        signal: AbortSignal.timeout(5000)
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch from primary endpoint');
+      }
+      
       const data = await response.json();
       setEthPrice(data.ethereum.usd);
     } catch (error) {
-      console.error('Error fetching ETH price:', error);
+      console.warn('Error fetching ETH price from primary endpoint:', error);
+      
+      try {
+        // Fallback to alternate Coingecko API endpoint
+        const fallbackResponse = await fetch('https://api.coingecko.com/api/v3/coins/ethereum', {
+          headers: {
+            'Accept': 'application/json',
+          },
+          signal: AbortSignal.timeout(5000)
+        });
+        
+        if (!fallbackResponse.ok) {
+          throw new Error('Failed to fetch from fallback endpoint');
+        }
+        
+        const fallbackData = await fallbackResponse.json();
+        setEthPrice(fallbackData.market_data.current_price.usd);
+      } catch (fallbackError) {
+        console.error('Error fetching ETH price from fallback endpoint:', fallbackError);
+        // Use fallback price if both API calls fail
+        setEthPrice(FALLBACK_ETH_PRICE);
+      }
     }
   }, []);
 
   useEffect(() => {
-    // Fetch initial price
     fetchEthPrice();
     
-    // Update price every 60 seconds
-    const interval = setInterval(fetchEthPrice, 60000);
+    // Increase interval to 5 minutes to avoid rate limiting
+    const interval = setInterval(fetchEthPrice, 300000);
     
     return () => clearInterval(interval);
   }, [fetchEthPrice]);
+
+  const formatTotalFundsUSD = (weiAmount: bigint) => {
+    const ethAmount = Number(weiAmount) / 10**18;
+    return (ethAmount * ethPrice).toFixed(2);
+  };
 
   const {data: totalFundsInRound} = useReadContract({
     address: ROUND_MANAGEMENT_CONTRACT,
@@ -410,7 +443,7 @@ export default function FundingRoundDetail() {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <div className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-red-600 bg-clip-text text-transparent">
-                    ~${((Number(totalFundsInRound)/10**18)*ethPrice).toFixed(4) || 0} USD
+                    ~${formatTotalFundsUSD(totalFundsInRound || BigInt(0))} USD
                   </div>
                   <div className="text-gray-500">raised from {totalInvestorsInRound?.length || 0} donors</div>
                 </div>

@@ -42,6 +42,10 @@ const THEME_COLORS = [
   }
 ];
 
+const DEFAULT_ETH_PRICE = 3000; // Giá ETH mặc định nếu API fail
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000;
+
 export default function ProjectCard({ 
   _id,
   projectId,
@@ -104,13 +108,35 @@ export default function ProjectCard({
     }
   });
 
+  const fetchWithRetry = async (url: string, retries = MAX_RETRIES): Promise<Response> => {
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+        },
+        cache: 'no-cache',
+        next: { revalidate: 60 }, // Revalidate every 60 seconds
+      });
+      
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      return response;
+    } catch (error) {
+      if (retries > 0) {
+        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+        return fetchWithRetry(url, retries - 1);
+      }
+      throw error;
+    }
+  };
+
   const fetchEthPrice = useCallback(async () => {
     try {
-      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      const response = await fetchWithRetry('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
       const data = await response.json();
       setEthPrice(data.ethereum.usd);
     } catch (error) {
-      console.error('Error fetching ETH price:', error);
+      console.warn('Error fetching ETH price, using default:', error);
+      setEthPrice(DEFAULT_ETH_PRICE);
     }
   }, []);
 
