@@ -9,9 +9,9 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="w-full border-b bg-white relative z-10">
-      <div className="max-w-full mx-auto px-6 py-3">
-        <div className="flex items-center justify-between">
+    <div className="w-full border-b bg-white relative z-20">
+      <div className="max-w-full mx-auto px-1 py-3">
+        <div className="flex items-center justify-between w-full">
           {/* Logo */}
           <Link 
             href="/" 
