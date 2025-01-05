@@ -9,7 +9,7 @@ const TWITTER_CLIENT_SECRET = process.env.NEXT_PUBLIC_TWITTER_CLIENT_SECRET;
 const authClient = new auth.OAuth2User({
   client_id: TWITTER_CLIENT_ID!,
   client_secret: TWITTER_CLIENT_SECRET!,
-  callback: 'https://www.growx.top/api/twitter/callback',
+  callback: 'http://localhost:3000/api/twitter/callback',
   scopes: ["tweet.read", "tweet.write", "users.read", "offline.access"],
 });
 

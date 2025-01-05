@@ -1,102 +1,57 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { auth } from "twitter-api-sdk";
+import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 const TWITTER_CLIENT_ID = process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID;
 const TWITTER_CLIENT_SECRET = process.env.NEXT_PUBLIC_TWITTER_CLIENT_SECRET;
-const CALLBACK_URL = 'https://www.growx.top/api/twitter/callback';
 
+// Create a confidential client since we have both client_id and client_secret
 const authClient = new auth.OAuth2User({
   client_id: TWITTER_CLIENT_ID!,
   client_secret: TWITTER_CLIENT_SECRET!,
-  callback: CALLBACK_URL,
+  callback: 'http://localhost:3000/api/twitter/callback',
   scopes: ["tweet.read", "tweet.write", "users.read", "offline.access"],
 });
 
 export async function GET(request: NextRequest) {
   try {
-    if (!TWITTER_CLIENT_ID || !TWITTER_CLIENT_SECRET) {
-      throw new Error('Twitter credentials are not configured');
-    }
-
     const { searchParams } = new URL(request.url);
     const code = searchParams.get('code');
-    const state = searchParams.get('state');
-    
-    console.log('Received callback with:', { 
-      code: code ? 'present' : 'missing',
-      state: state ? 'present' : 'missing'
-    });
+    const incomingState = searchParams.get('state');
 
     if (!code) {
-      throw new Error('Authorization code is required');
+      return NextResponse.redirect(new URL('/error?message=No authorization code provided', request.url));
     }
 
-    // Get the code verifier and stored state from cookie
-    const codeVerifier = request.cookies.get('code_verifier')?.value;
-    const storedState = request.cookies.get('oauth_state')?.value;
+    // Verify state parameter
+    const cookieStore = await cookies();
+    const storedState = cookieStore.get('oauth_state')?.value;
 
-    console.log('Cookie values:', {
-      codeVerifier: codeVerifier ? 'present' : 'missing',
-      storedState: storedState ? 'present' : 'missing'
+    if (!storedState || storedState !== incomingState) {
+      return NextResponse.redirect(new URL('/error?message=Invalid state parameter', request.url));
+    }
+
+    // Exchange the code for a token
+    const token = await authClient.requestAccessToken(code);
+
+    // Store the token in an HTTP-only cookie
+    const response = NextResponse.redirect(new URL('/', request.url));
+    response.cookies.set('twitter_token', JSON.stringify(token), {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      path: '/',
     });
 
-    if (!codeVerifier) {
-      throw new Error('Code verifier not found in cookies');
-    }
+    // Clean up the state cookie
+    response.cookies.delete('oauth_state');
 
-    // Verify state to prevent CSRF
-    if (!state || !storedState || state !== storedState) {
-      throw new Error('Invalid state parameter');
-    }
-
-    try {
-      // Exchange the code for an access token with PKCE
-      console.log('Attempting to exchange code for token...');
-      await authClient.requestAccessToken(code);
-      const tokenResponse = authClient.token;
-      console.log('Token exchange successful');
-
-      if (!tokenResponse) {
-        throw new Error('No token received from Twitter');
-      }
-
-      // Create response with redirect
-      const response = NextResponse.redirect(new URL('/tweets', request.url));
-
-      // Store the token securely
-      response.cookies.set('twitter_token', JSON.stringify(tokenResponse), {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 1 week
-      });
-
-      // Clean up the temporary cookies
-      response.cookies.delete('code_verifier');
-      response.cookies.delete('oauth_state');
-
-      return response;
-    } catch (tokenError: any) {
-      console.error('Token exchange error:', {
-        message: tokenError.message,
-        stack: tokenError.stack,
-        details: tokenError
-      });
-      throw new Error(`Token exchange failed: ${tokenError.message}`);
-    }
+    return response;
   } catch (error: any) {
-    console.error('Error in callback:', {
-      message: error.message,
-      stack: error.stack,
-      details: error
-    });
-    return NextResponse.json(
-      {
-        error: 'An error occurred during authentication.',
-        details: error.message || 'Unknown error',
-      },
-      { status: 500 }
+    console.error('Twitter callback error:', error);
+    const errorMessage = error.message || 'Authentication failed';
+    return NextResponse.redirect(
+      new URL(`/error?message=${encodeURIComponent(errorMessage)}`, request.url)
     );
   }
 } 

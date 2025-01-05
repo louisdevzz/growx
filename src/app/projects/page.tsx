@@ -1,7 +1,7 @@
 'use client'
 
+import Layout from '@/components/Layout'
 import { useCallback, useEffect, useState } from 'react'
-import Header from '@/components/Header'
 import ProjectCard from '@/components/ProjectCard'
 import ProjectCardSkeleton from '@/components/ProjectCardSkeleton'
 import { ProjectProps } from '@/types/project';
@@ -38,12 +38,9 @@ export default function ProjectsPage() {
 
   
   return (
-    <main className="min-h-screen">
-      <div className="container">
-        <Header />
-        
-        {/* Search */}
-        <div className="max-w-full px-4 sm:px-6 lg:px-8 py-12">
+    <Layout>
+      <div className="py-6 md:py-10">
+        <div className="max-w-full px-4 sm:px-6 lg:px-8">
           <div className="flex mb-6 w-full">
             <div className="flex items-center gap-2 justify-start w-full">
               <h2 className="text-base font-medium">ALL PROJECTS</h2>
@@ -69,7 +66,7 @@ export default function ProjectsPage() {
           </div>
 
           {/* Projects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
             {isLoading ? (
               <>
                 <ProjectCardSkeleton />
@@ -92,6 +89,6 @@ export default function ProjectsPage() {
           </div>
         </div>
       </div>
-    </main>
+    </Layout>
   )
 }

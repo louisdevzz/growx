@@ -41,8 +41,8 @@ export default function Home() {
         <div className="relative py-10 md:py-20">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-50 via-pink-50 to-blue-50 opacity-40 rounded-3xl blur-xl"/>
           
-          <div className="relative flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="max-w-2xl">
+          <div className="relative flex flex-col md:flex-row items-center justify-center custom:justify-between gap-8">
+            <div className=" w-full">
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 Support Projects
                 <br />
@@ -81,8 +81,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Floating Cards - Hide on mobile */}
-            <div className="relative w-full md:w-[600px] h-[400px] hidden md:block">
+            {/* Floating Cards - Hide on mobile and smaller screens */}
+            <div className="relative w-full lg:w-[600px] h-[400px] hidden custom:block">
               {/* Card 1 */}
               <div className="absolute top-0 right-0 w-72 transform rotate-6 hover:rotate-0 transition-transform float">
                 <div className="relative">
