@@ -45,7 +45,6 @@ export default function FundingRoundsPage() {
     return days;
   }
 
-
   return (
     <div className="container w-full">
       <Header />
