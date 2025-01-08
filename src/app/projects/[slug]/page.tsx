@@ -250,8 +250,8 @@ const ProjectDetail = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="flex flex-col">
-        <div className="">
-          <div className="w-full">
+        <div className="container">
+          <div className="md:w-full min-w-[300px]">
             <Header />
             
             {/* Banner Image Container */}
@@ -285,10 +285,10 @@ const ProjectDetail = () => {
                 </div>
 
                 {/* Project Title and Info */}
-                <div className="mt-4 flex justify-between items-start">
-                  <div className="flex flex-col gap-2">
+                <div className="flex flex-initial mt-4 justify-between gap-2 w-full ">
+                  <div className="flex flex-col gap-2 ">
                     <h1 className="text-2xl font-semibold mb-1">{project.name}</h1>
-                    <Link target="_blank" href={`https://scanv2-testnet.ancient8.gg/address/${project.ownerAddress}`} className="text-gray-600 text-sm hover:underline hover:text-gray-900">@{project.ownerAddress}</Link>
+                    <Link target="_blank" href={`https://scanv2-testnet.ancient8.gg/address/${project.ownerAddress}`} className="text-gray-600 text-sm hover:underline hover:text-gray-900 break-all">@{project.ownerAddress}</Link>
                     <div className={`inline-flex items-center w-fit px-3 py-1 rounded-lg text-base font-medium uppercase ${getCategoryColor(project.category)}`}>
                       {project.category}
                     </div>
@@ -306,7 +306,7 @@ const ProjectDetail = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="bg-orange-50 rounded-lg p-4">
+                  <div className=" flex flex-col flex-initial bg-orange-50 rounded-lg p-4 w-34 h-1/2 sm:max-h-[130px]">
                     <div className="flex items-baseline gap-1">
                       <span className="text-2xl font-semibold">{formatEther(BigInt(fundsRaisedOutRound||0))}</span>
                       <span className="text-gray-600">ETH</span>

@@ -38,11 +38,11 @@ export default function Home() {
         <Header />
 
         {/* Hero Section */}
-        <div className="relative py-10 md:py-20">
+        <div className="relative py-10 md:py-10 md:flex-row ">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-50 via-pink-50 to-blue-50 opacity-40 rounded-3xl blur-xl"/>
-          
-          <div className="relative flex flex-col md:flex-row items-center justify-center custom:justify-between gap-8">
-            <div className=" w-full">
+        
+          <div className="relative flex flex-raw md:flex-row justify-center custom:justify-between gap-1 md:w-full">
+            <div className="w-full">
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 Support Projects
                 <br />
@@ -79,12 +79,33 @@ export default function Home() {
                   />
                 </div>
               </div>
+          
+            {/* Stats Section */}
+            <div className="grid grid-cols-3 md:flex md:gap-16 mt-8 md:mt-16 sm:gap-4 ">
+              <div>
+                <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
+                  12.5K+
+                </p>
+                <p className="text-gray-500">Active Users</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
+                  150+
+                </p>
+                <p className="text-gray-500">Projects</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">
+                  8.2K+
+                </p>
+                <p className="text-gray-500">Contributors</p>
+              </div>
+              </div> 
             </div>
-
             {/* Floating Cards - Hide on mobile and smaller screens */}
-            <div className="relative w-full lg:w-[600px] h-[400px] hidden custom:block">
+            <div className="relative w-full hidden 1000px:block  ">
               {/* Card 1 */}
-              <div className="absolute top-0 right-0 w-72 transform rotate-6 hover:rotate-0 transition-transform float">
+              <div className="absolute top-0 right-0 w-72 transform rotate-6 hover:rotate-0 transition-transform float hidden 1000px:block">
                 <div className="relative">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400 to-blue-500 rounded-2xl blur opacity-75"></div>
                   <div className="relative bg-white rounded-2xl p-1">
@@ -132,7 +153,7 @@ export default function Home() {
               </div>
 
               {/* Card 2 */}
-              <div className="absolute top-20 right-32 w-72 transform -rotate-3 hover:rotate-0 transition-transform float" 
+              <div className="absolute top-20 right-32 w-72 transform -rotate-3 hover:rotate-0 transition-transform float hidden 1000px:block" 
                    style={{animationDelay: "0.2s"}}>
                 <div className="relative">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-400 to-purple-500 rounded-2xl blur opacity-75"></div>
@@ -181,7 +202,7 @@ export default function Home() {
               </div>
 
               {/* Card 3 */}
-              <div className="absolute top-40 right-64 w-72 transform rotate-12 hover:rotate-0 transition-transform float"
+              <div className="absolute top-40 right-64 w-72 transform rotate-12 hover:rotate-0 transition-transform float hidden 1280px:block "
                    style={{animationDelay: "0.4s"}}>
                 <div className="relative">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-2xl blur opacity-75"></div>
@@ -231,28 +252,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Stats Section */}
-          <div className="grid grid-cols-2 md:flex gap-8 md:gap-16 mt-8 md:mt-16">
-            <div>
-              <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
-                12.5K+
-              </p>
-              <p className="text-gray-500">Active Users</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
-                150+
-              </p>
-              <p className="text-gray-500">Projects</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">
-                8.2K+
-              </p>
-              <p className="text-gray-500">Contributors</p>
-            </div>
-          </div>
-        </div>
+
 
         {/* Recently viewed projects */}
         {/* <section className="py-6 md:py-10">
@@ -308,7 +308,7 @@ export default function Home() {
                 </>
               ) : (
                 projects.map((project, index) => (
-                  <div className="w-[280px] sm:w-auto flex-shrink-0 sm:flex-shrink" key={project._id}>
+                  <div className=" sm:w-auto flex-shrink-0 sm:flex-shrink" key={project._id}>
                     <ProjectCard
                       {...project}
                       index={index+1}
@@ -320,7 +320,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        
+      </div>  
       </div>
     </main>
   )

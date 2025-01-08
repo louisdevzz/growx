@@ -89,16 +89,16 @@ export const FundingRaisedTab = (
       </div>
 
       {/* Donations Table */}
-      <div className="border rounded-lg">
+      <div className="flex flex-col border rounded-lg">
         {/* Table Header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <div className="flex items-center gap-4">
+        <div className="grid grid-cols-2 p-4 border-b">
+          <div className="flex items-center gap-4  md:max-w-[600px]">
             <h3 className="font-medium">Donors</h3>
             <div className="relative">
               <input
                 type="text"
                 placeholder="Search donors"
-                className="pl-8 pr-4 py-2 border rounded-lg"
+                className="flex flex-initial w-full  pl-8  py-2 border rounded-lg"
                 value={searchTerm || ''}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -117,8 +117,8 @@ export const FundingRaisedTab = (
               </svg>
             </div>
           </div>
-          <div className="flex items-center gap-8">
-            <span className="font-medium w-20 text-right">Amount</span>
+          <div className="flex items-center">
+            <span className="font-medium w-full text-right">Amount</span>
             {/* <button className="flex items-center gap-1 w-24 justify-end">
               Date <span>↓</span>
             </button> */}
@@ -130,7 +130,11 @@ export const FundingRaisedTab = (
           {filteredDonors.map((donorInfo, index) => (
             <div key={index} className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <div className="font-medium">{donorInfo.donor}</div>
+                <div className="font-medium">{donorInfo.donor
+                                  ? `${donorInfo.donor.slice(0, 5)}...${donorInfo.donor.slice(-6)}`
+                                  : "None provided"
+                  
+                  }</div>
               </div>
               <div className="flex items-center gap-8">
                 <div className="w-30 text-right">

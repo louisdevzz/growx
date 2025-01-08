@@ -72,7 +72,9 @@ export default {
 		fadeIn: "fadeIn 0.2s ease-in-out",
       },
       screens: {
-        'custom': '1330px',
+        '1330px': '1330px',
+        '1280px': '1280px',
+        '1000px': '1000px',
       },
     },
   },
