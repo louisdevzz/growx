@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #E94F37;
-  --text: #1A1A1A;
+  --primary-color: #e94f37;
+  --text: #1a1a1a;
 }
 
 body {
@@ -92,10 +92,10 @@ body {
   padding-right: 2rem;
 }
 
-@media (max-width:768px ) {
+@media (max-width: 768px) {
   .container {
-    padding-left: 1px;
-    padding-right: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
 
@@ -103,7 +103,7 @@ body {
   .card-hover {
     @apply bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl border border-gray-100;
   }
-  
+
   .nft-gradient {
     @apply bg-gradient-to-br from-[#9EFF00] to-[#7ED321];
   }
@@ -120,41 +120,41 @@ body {
     );
     filter: blur(100px);
   }
-  
+
   .cyber-border {
     @apply relative;
   }
-  
+
   .cyber-border::before {
-    content: '';
+    content: "";
     @apply absolute -inset-0.5 bg-gradient-to-r from-green-400 to-green-500 rounded-2xl blur opacity-75;
   }
-  
+
   .cyber-text {
     @apply font-mono text-green-400;
   }
-  
+
   .cyber-glow {
     text-shadow: 0 0 10px #4ade80, 0 0 20px #4ade80, 0 0 30px #4ade80;
   }
-  
+
   .card-glow {
     @apply relative;
   }
-  
+
   .card-glow::before {
-    content: '';
+    content: "";
     @apply absolute -inset-0.5 rounded-2xl blur opacity-60;
   }
-  
+
   .card-glow-blue::before {
     @apply bg-gradient-to-r from-blue-400 to-blue-500;
   }
-  
+
   .card-glow-purple::before {
     @apply bg-gradient-to-r from-purple-400 to-purple-500;
   }
-  
+
   .card-glow-emerald::before {
     @apply bg-gradient-to-r from-emerald-400 to-emerald-500;
   }

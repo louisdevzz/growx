@@ -255,7 +255,7 @@ const ProjectDetail = () => {
             <Header />
             
             {/* Banner Image Container */}
-            <div className="relative w-full h-[300px] sm:h-[400px] overflow-hidden mt-5">
+            <div className="relative w-full shadow-lg rounded-3xl h-[300px] sm:h-[400px] overflow-hidden mt-5">
               <img 
                 src={project.coverImage} 
                 alt={project.name}
@@ -268,7 +268,7 @@ const ProjectDetail = () => {
               <div className="px-4 sm:px-8">
                 {/* Avatar and Stats */}
                 <div className="flex items-start gap-4 -mt-14 relative z-10">
-                  <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white bg-white shadow-md">
+                  <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white bg-white shadow-lg">
                     <img 
                       src={project.profileImage} 
                       alt={project.name}
@@ -276,7 +276,7 @@ const ProjectDetail = () => {
                     />
                   </div>
                   <div className="mt-16 flex items-center gap-2">
-                    <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium">
+                    <span className="bg-green-100 text-green-700 px-2 py-2 rounded-full text-xs font-medium">
                       ACTIVE
                     </span>
                     {/* <span className="text-sm text-gray-600">{project.followers} Followers</span>
@@ -286,7 +286,7 @@ const ProjectDetail = () => {
 
                 {/* Project Title and Info */}
                 <div className="flex flex-initial mt-4 justify-between gap-2 w-full ">
-                  <div className="flex flex-col gap-2 ">
+                  <div className="flex flex-col gap-2 min-w-[125px]">
                     <h1 className="text-2xl font-semibold mb-1">{project.name}</h1>
                     <Link target="_blank" href={`https://scanv2-testnet.ancient8.gg/address/${project.ownerAddress}`} className="text-gray-600 text-sm hover:underline hover:text-gray-900 break-all">@{project.ownerAddress}</Link>
                     <div className={`inline-flex items-center w-fit px-3 py-1 rounded-lg text-base font-medium uppercase ${getCategoryColor(project.category)}`}>
@@ -306,15 +306,20 @@ const ProjectDetail = () => {
                       ))}
                     </div>
                   </div>
-                  <div className=" flex flex-col flex-initial bg-orange-50 rounded-lg p-4 w-34 h-1/2 sm:max-h-[130px]">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-semibold">{formatEther(BigInt(fundsRaisedOutRound||0))}</span>
-                      <span className="text-gray-600">ETH</span>
+                  <div className=" flex-col flex-initial  bg-orange-200 rounded-lg p-4 min-w-[110px] h-1/2 sm:max-h-[130px]">
+                    <div className="flex flex-initial items-baseline gap-2">
+                      <span className="text-xs sm:text-2xl font-semibold">{formatEther(BigInt(fundsRaisedOutRound||0))}</span>
+                      <div className="flex justify-end sm:w-full">
+                        <span className="text-xs sm:text-xl sm:font-bold text-gray-950">ETH</span>
+                      </div>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <div className="hidden sm:block">
+                      <p className="text-sm text-gray-600">
                       Raised from {investorsInOutRound?.length||0} donors
-                    </p>
-                    <button className="mt-2 w-full bg-red-500 text-white rounded-md px-4 py-2 text-sm font-semibold" onClick={() => setShowDonateModal(true)}>
+                      </p>
+                    </div>
+                    <button className="mt-2 w-full bg-red-500 text-white rounded-md px-4 py-2 text-sm font-semibold" 
+                      onClick={() => setShowDonateModal(true)}>
                       Donate
                     </button>
                   </div>

@@ -154,7 +154,7 @@ export default function Home() {
 
               {/* Card 2 */}
               <div className="absolute top-20 right-32 w-72 transform -rotate-3 hover:rotate-0 transition-transform float hidden 1000px:block" 
-                   style={{animationDelay: "0.2s"}}>
+                style={{animationDelay: "0.2s"}}>
                 <div className="relative">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-400 to-purple-500 rounded-2xl blur opacity-75"></div>
                   <div className="relative bg-white rounded-2xl p-1">
@@ -203,7 +203,7 @@ export default function Home() {
 
               {/* Card 3 */}
               <div className="absolute top-40 right-64 w-72 transform rotate-12 hover:rotate-0 transition-transform float hidden 1280px:block "
-                   style={{animationDelay: "0.4s"}}>
+                  style={{animationDelay: "0.4s"}}>
                 <div className="relative">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-2xl blur opacity-75"></div>
                   <div className="relative bg-white rounded-2xl p-1">
@@ -299,7 +299,7 @@ export default function Home() {
           </div>
 
           <div className="relative">
-            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 snap-x snap-mandatory p-4">
+            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 snap-x snap-mandatory p-4">
               {isLoading ? (
                 <>
                   <ProjectCardSkeleton />

@@ -54,7 +54,7 @@ export default function ProjectCard({
   fundingSources,
   socialLinks,
   createdAt,
-  amount = 0, 
+  amount=0, 
   currency = 'ETH', 
   raised, 
   href = '#', 
@@ -65,7 +65,7 @@ export default function ProjectCard({
   roundId = ""
 }: ProjectProps) {
   const [showDonateModal, setShowDonateModal] = useState(false);
-  const [donationAmount, setDonationAmount] = useState<number>(0);
+  const [donationAmount, setDonationAmount] = useState<string|null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { writeContractAsync } = useWriteContract()
   const [ethPrice, setEthPrice] = useState<number>(0);
@@ -154,7 +154,7 @@ export default function ProjectCard({
 
 
   const clearDonation = () => {
-    setDonationAmount(0);
+    setDonationAmount(null);
     setShowConfirmModal(false)
   }
 
@@ -302,8 +302,8 @@ export default function ProjectCard({
                       [&:-webkit-autofill]:bg-white
                       [-moz-appearance:textfield]"
                     placeholder="0"
-                    value={donationAmount}
-                    onChange={(e) => setDonationAmount(Number(e.target.value))}
+                    value={donationAmount||''}
+                    onChange={(e) => setDonationAmount(e.target.value)}
                   />
                   <span className="bg-gray-50 px-3 py-2 text-gray-600 flex items-center">ETH</span>
                 </div>

@@ -91,37 +91,38 @@ export const FundingRaisedTab = (
       {/* Donations Table */}
       <div className="flex flex-col border rounded-lg">
         {/* Table Header */}
-        <div className="grid grid-cols-2 p-4 border-b">
-          <div className="flex items-center gap-4  md:max-w-[600px]">
+        <div className="flex p-4 border-b ">
+          <div className="flex flex-row items-center gap-4 w-full ">
             <h3 className="font-medium">Donors</h3>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search donors"
-                className="flex flex-initial w-full  pl-8  py-2 border rounded-lg"
-                value={searchTerm || ''}
-                onChange={(e) => setSearchTerm(e.target.value)}
+          <div className="relative w-full">
+            <input
+              type="text"
+              placeholder="Search donors"
+              className="flex flex-initial w-full  pl-8  py-2 border rounded-lg"
+              value={searchTerm || ''}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <svg
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
-              <svg
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
+            </svg>
           </div>
-          <div className="flex items-center">
+          
+          <div className="flex flex-initial items-end max-w-[100px]">
             <span className="font-medium w-full text-right">Amount</span>
             {/* <button className="flex items-center gap-1 w-24 justify-end">
               Date <span>↓</span>
             </button> */}
+          </div>
           </div>
         </div>
 

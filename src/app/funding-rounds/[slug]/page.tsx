@@ -3,7 +3,7 @@
 import Header from '@/components/Header'
 import { useParams } from 'next/navigation'
 import { featuredProjects } from '@/data/projects'
-import ProjectsTab from '@/components/ProjectsTab'
+
 import DonationsTab from '@/components/DonationsTab'
 import { useEffect, useState, useCallback } from 'react'
 import { useAccount, useReadContract, useWatchContractEvent, useWriteContract } from 'wagmi'
@@ -376,7 +376,7 @@ export default function FundingRoundDetail() {
                   investorsInRound={Number(investorsInRound) || 0} 
                   setProjectId={setProjectId}
                 /> */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 snap-x snap-mandatory p-4">
                   {isLoading ? (
                     <>
                       <ProjectCardSkeleton />
@@ -384,7 +384,7 @@ export default function FundingRoundDetail() {
                     </>
                   ) : (
                     projectsInRound.map((project, index) => (
-                      <div className="w-[280px] sm:w-auto flex-shrink-0 sm:flex-shrink" key={project._id}>
+                      <div className="w-[380px] sm:w-auto flex-shrink-0 sm:flex-shrink" key={project._id}>
                         <ProjectCard
                           {...project}
                           index={index+1}
