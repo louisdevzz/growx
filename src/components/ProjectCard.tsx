@@ -17,28 +17,16 @@ const truncate = (text: string, maxLength: number) => {
 // Định nghĩa mảng các màu gradient và text color
 const THEME_COLORS = [
   {
-    gradient: "from-blue-400 to-blue-500",
-    text: "text-blue-600"
+    gradient: "from-[#006400] to-[#98FB98]",
+    text: "text-[#006400]"
   },
   {
-    gradient: "from-purple-400 to-purple-500",
-    text: "text-purple-600"
+    gradient: "from-[#00008B] to-[#ADD8E6]",
+    text: "text-[#00008B]"
   },
   {
-    gradient: "from-pink-400 to-pink-500",
-    text: "text-pink-600"
-  },
-  {
-    gradient: "from-emerald-400 to-emerald-500",
-    text: "text-emerald-600"
-  },
-  {
-    gradient: "from-orange-400 to-orange-500",
-    text: "text-orange-600"
-  },
-  {
-    gradient: "from-cyan-400 to-cyan-500",
-    text: "text-cyan-600"
+    gradient: "from-black to-gray-600",
+    text: "text-black"
   }
 ];
 
@@ -189,10 +177,8 @@ export default function ProjectCard({
     <>
       <div className="block group h-[440px] w-[360px] sm:w-full mx-auto">
         <div className="relative transform transition-all duration-300 hover:-translate-y-1 h-full">
-          {/* Gradient border effect */}
-          <div className={`absolute -inset-0.5 bg-gradient-to-r ${getGradientColors()} rounded-2xl blur opacity-75 group-hover:opacity-100`}></div>
-          
-          <div className="relative bg-white rounded-2xl p-1 h-full">
+          <div className={`absolute -inset-0.5 ${getGradientColors()} rounded-2xl blur opacity-75 group-hover:opacity-100`}></div>
+          <div className="relative bg-white rounded-2xl border-2 border-black p-1 h-full">
             <div className="relative bg-white rounded-2xl overflow-hidden flex flex-col h-full">
               {/* Header with dynamic text color */}
               <div className={`absolute top-0 left-0 right-0 flex justify-between items-center p-3 text-xs ${getTextColor()} font-medium z-10 bg-white/80 backdrop-blur-sm`}>

@@ -23,6 +23,16 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0066FF',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -74,7 +84,17 @@ export default {
       screens: {
         'custom': '1330px',
       },
+      backgroundImage: {
+        'gradient-primary': 'linear-gradient(to right, var(--tw-gradient-stops))',
+      },
+      gradientColorStops: {
+        'purple-500': '#8B5CF6',
+        'pink-500': '#EC4899',
+      }
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require('@tailwindcss/line-clamp'),
+  ],
 } satisfies Config;

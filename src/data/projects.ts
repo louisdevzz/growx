@@ -1,93 +1,91 @@
 export interface Project {
-  id?: string;
-  title: string;
-  handle?: string;
+  id: number;
+  name: string;
   description: string;
+  totalFunding: number;
+  targetFunding: number;
   image: string;
-  tags: string[];
-  amount: number;
-  currency: string;
-  raised?: boolean;
-  donors?: number;
-  category?: string;
-  daysLeft?: string | number;
-  isApproved?: boolean;
-  followers?: number;
-  following?: number;
-  whyPublicGood?: string;
-  teamMembers?: string;
-  githubRepos?: string;
-  smartContracts?: string;
-  overview?: string[];
+  category: string;
+  createdAt: string;
+  creator: {
+    name: string;
+    avatar: string;
+  };
 }
 
-export const featuredProjects: Project[] = [
+export const projects: Project[] = [
   {
-    id: "1",
-    title: "Food Bank Wallet",
-    handle: "@0x000",
-    description: "Redistributed all funds to approved public goods on Potlock registry. Used by YEAR of CHEF for auto-redistribution of royalties",
-    image: "/assets/projects/nft1.png",
-    tags: ["Health"],
-    amount: 35.20,
-    currency: "ETH",
-    donors: 18,
-    isApproved: true,
-    followers: 6,
-    following: 1,
-    whyPublicGood: "Automatically gives back to public goods",
-    teamMembers: "No team members to display",
-    githubRepos: "None provided",
-    smartContracts: "None provided",
-    overview: [
-      "Redistributed all funds to approved public goods on Potlock registry",
-      "Used by YEAR of CHEF for auto-redistribution of royalties"
-    ]
+    id: 1,
+    name: "EcoTech Solutions",
+    description: "Revolutionary sustainable technology for reducing carbon emissions in urban areas.",
+    totalFunding: 500000,
+    targetFunding: 1000000,
+    image: "/projects/eco-tech.jpg",
+    category: "Sustainability",
+    createdAt: "2024-03-15",
+    creator: {
+      name: "Sarah Johnson",
+      avatar: "/avatars/sarah.jpg"
+    }
   },
   {
-    id: "2",
-    title: "YEAR OF THE CHEF",
-    handle: "@0x000",
-    description: "NFT series of 2024 hand drawn design chef NFTs for public goods supporters",
-    image: "/assets/projects/nft2.png",
-    tags: ["Health"],
-    amount: 497.26,
-    currency: "ETH",
-    donors: 42,
-    isApproved: true,
-    followers: 12,
-    following: 3,
-    whyPublicGood: "Supporting public goods through NFT art",
-    teamMembers: "Chef Artists Collective",
-    githubRepos: "None provided",
-    smartContracts: "yearofthechef.near",
-    overview: [
-      "Limited edition NFT collection featuring hand-drawn chef designs",
-      "Portion of sales automatically redistributed to public goods",
-      "Supporting the intersection of art and public goods funding"
-    ]
+    id: 2,
+    name: "HealthAI Assistant",
+    description: "AI-powered healthcare assistant for personalized medical recommendations.",
+    totalFunding: 350000,
+    targetFunding: 500000,
+    image: "/projects/health-ai.jpg",
+    category: "Healthcare",
+    createdAt: "2024-03-14",
+    creator: {
+      name: "Dr. Michael Chen",
+      avatar: "/avatars/michael.jpg"
+    }
   },
   {
-    id: "3",
-    title: "PotLock",
-    handle: "@0x000",
-    description: "PotLock is bringing funding to the table. First public goods funding platform to...",
-    image: "/assets/projects/nft3.png",
-    tags: ["Health"],
-    amount: 624.48,
-    currency: "ETH",
-    donors: 156,
-    isApproved: true,
-    followers: 89,
-    following: 24,
-    whyPublicGood: "Platform enabling public goods funding",
-    teamMembers: "PotLock Core Team",
-    githubRepos: "github.com/PotLock",
-    smartContracts: "potlock.near",
-    overview: [
-      "First public goods funding platform on NEAR",
-      "Enabling transparent and efficient distribution of funds",
-      "Building infrastructure for sustainable public goods funding"
-    ]
-  }
+    id: 3,
+    name: "Project Gamma",
+    description: "A community-driven project to enhance local education systems.",
+    totalFunding: 250000,
+    targetFunding: 250000,
+    image: "/projects/gamma.jpg",
+    category: "Education",
+    createdAt: "2024-03-13",
+    creator: {
+      name: "John Doe",
+      avatar: "/avatars/john.jpg"
+    }
+  },
+  {
+    id: 4,
+    name: "Project Delta",
+    description: "A healthcare project designed to improve patient outcomes.",
+    totalFunding: 400000,
+    targetFunding: 400000,
+    image: "/projects/delta.jpg",
+    category: "Healthcare",
+    createdAt: "2024-03-12",
+    creator: {
+      name: "Jane Smith",
+      avatar: "/avatars/jane.jpg"
+    }
+  },
+  {
+    id: 5,
+    name: "Project Epsilon",
+    description: "A tech startup focused on AI and machine learning innovations.",
+    totalFunding: 600000,
+    targetFunding: 600000,
+    image: "/projects/epsilon.jpg",
+    category: "Technology",
+    createdAt: "2024-03-11",
+    creator: {
+      name: "Emily Davis",
+      avatar: "/avatars/emily.jpg"
+    }
+  },
 ];
+
+export function getProjects(): Project[] {
+  return projects;
+}

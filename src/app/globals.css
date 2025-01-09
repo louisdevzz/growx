@@ -3,12 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #E94F37;
-  --text: #1A1A1A;
-}
-
-body {
-  color: var(--text);
+  --primary-green: #32CD32;
+  --light-green: #98FB98;
+  --primary-blue: #4169E1;
+  --light-blue: #87CEEB;
 }
 
 .hero {

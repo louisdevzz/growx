@@ -1,116 +1,63 @@
-'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
-import WalletButton from '@/components/WalletButton'
-import Image from 'next/image'
+import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   return (
-    <div className="w-full border-b bg-white relative z-20">
-      <div className="max-w-full mx-auto px-1 py-3">
-        <div className="flex items-center justify-between w-full">
-          {/* Logo */}
-          <Link 
-            href="/" 
-            className="flex items-center text-3xl font-bold gap-2 no-underline cursor-pointer transition-all duration-200"
-          >
-            <span className="text-[#4169E1]">
-              GROWX
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden custom:flex gap-10">
-            <Link 
-              href="/projects" 
-              className="text-base font-medium no-underline text-gray-900 hover:text-gray-700 transition-colors"
-            >
-              Projects
-            </Link>
-            <Link 
-              href="/funding-rounds" 
-              className="text-base font-medium no-underline text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Funding rounds
-            </Link>
-            <Link 
-              href="/investors" 
-              className="text-base font-medium no-underline text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Investors
-            </Link>
+    <header className="fixed top-0 left-0 right-0 bg-white z-50">
+      <div className="container mx-auto h-[72px] flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-1 pl-4">
+          <span className="text-2xl font-bold tracking-tight uppercase">
+            GrowX
+          </span>
+        </Link>
+        <div className='flex items-center flex-row'>
+          <nav className="hidden md:block flex-1 mr-16">
+            <ul className="flex items-center">
+              <li className="mr-12">
+                <Link 
+                  href="/" 
+                  className="text-sm text-black flex items-center px-3 py-1.5 border border-[#eaeaea] rounded-full"
+                >
+                  <span className="mr-1.5">•</span>
+                  Home
+                </Link>
+              </li>
+              <li className="mr-12">
+                <Link 
+                  href="#how-it-works" 
+                  className="text-sm text-gray-500 hover:text-black px-3 py-1.5 border border-[#eaeaea] rounded-full"
+                >
+                  How it works
+                </Link>
+              </li>
+              <li className="mr-12">
+                <Link 
+                  href="#capabilities" 
+                  className="text-sm text-gray-500 hover:text-black px-3 py-1.5 border border-[#eaeaea] rounded-full"
+                >
+                  Capabilities
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="#resources" 
+                  className="text-sm text-gray-500 hover:text-black px-3 py-1.5 border border-[#eaeaea] rounded-full"
+                >
+                  Resource hub
+                </Link>
+              </li>
+            </ul>
           </nav>
-
-          {/* Desktop Wallet Button */}
-          <div className="hidden custom:flex">
-            <WalletButton />
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="custom:hidden p-2"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          <Button 
+            variant="default" 
+            className="bg-black text-white hover:bg-black/90 rounded-full text-[13px] font-medium px-5 h-9 mr-4"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
+            GET QUOTE
+          </Button>
         </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="custom:hidden absolute top-full left-0 right-0 bg-white border-b shadow-lg">
-            <div className="px-4 py-3 space-y-4">
-              <Link 
-                href="/projects" 
-                className="block text-base font-medium text-gray-900 hover:text-gray-700"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Projects
-              </Link>
-              <Link 
-                href="/funding-rounds" 
-                className="block text-base font-medium text-gray-600 hover:text-gray-900"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Funding rounds
-              </Link>
-              <Link 
-                href="/investors" 
-                className="block text-base font-medium text-gray-600 hover:text-gray-900"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Investors
-              </Link>
-              <div className="pt-4">
-                <WalletButton />
-              </div>
-            </div>
-          </div>
-        )}
       </div>
-    </div>
+    </header>
   )
 }
+
