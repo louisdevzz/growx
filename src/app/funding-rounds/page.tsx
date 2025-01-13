@@ -129,7 +129,7 @@ export default function FundingRoundsPage() {
           <p className="text-xl mb-4">to Get Your Contributions Amplified.</p>
           {
             managerAddress === address && !isLoadingManagerAddress ? (
-              <Link href="/create-funding-rounds">
+              <Link href="/funding-rounds/create">
                 <button className="px-8 py-4 bg-white text-black font-semibold rounded-xl border-2 border-black hover:bg-black hover:text-white transition-all">
                   Create Funding Round
                 </button>

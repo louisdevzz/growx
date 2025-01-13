@@ -59,7 +59,7 @@ export default function Home() {
                     Explore Projects
                   </button>
                 </Link>
-                <Link href="/create-project">
+                <Link href="/projects/create">
                   <button className="px-8 py-4 bg-white text-black font-semibold rounded-xl border-2 border-black hover:bg-black hover:text-white transition-all">
                     Create Project
                   </button>

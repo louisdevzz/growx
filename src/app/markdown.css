@@ -1,0 +1,19 @@
+[data-color-mode*='light'] .wmde-markdown-var, [data-color-mode*='light'] .wmde-markdown {
+  --color-canvas-default: #ffffff;
+  --color-canvas-subtle: #f8f9fa;
+  --color-border-default: #d0d7de;
+  --color-border-muted: #d8dee4;
+  color: #24292f;
+}
+
+.w-md-editor {
+  --md-editor-box-shadow: none !important;
+}
+
+.w-md-editor-toolbar {
+  border-radius: 0.75rem 0.75rem 0 0 !important;
+}
+
+.w-md-editor-text {
+  border-radius: 0 0 0.75rem 0.75rem !important;
+} 

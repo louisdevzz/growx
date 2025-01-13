@@ -64,7 +64,7 @@ export default function Header() {
                     All Projects
                   </Link>
                   <Link
-                    href="/projects/my-projects"
+                    href="/projects/me"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     onClick={() => setIsProjectsDropdownOpen(false)}
                   >

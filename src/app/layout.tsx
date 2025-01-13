@@ -6,6 +6,10 @@ import { Space_Grotesk } from 'next/font/google'
 import { Analytics } from "@vercel/analytics/react"
 import { Suspense } from 'react'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import '@uiw/react-md-editor/markdown-editor.css';
+import '@uiw/react-markdown-preview/markdown.css';
+import './markdown.css';
+
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] })
 
